@@ -268,6 +268,12 @@ class InternalServiceIntakeShowcaseTests(unittest.TestCase):
         self.assertEqual(200, status)
         self.assertEqual("applied", state["request"]["status"])
 
+    def test_mock_image_does_not_embed_default_secret(self) -> None:
+        dockerfile = (ROOT / "showcases/internal-service-intake/mock-api/Dockerfile").read_text()
+        self.assertNotIn("local-demo-api-key", dockerfile)
+        self.assertNotIn("MOCK_API_KEY:-", dockerfile)
+        self.assertIn('CMD ["python", "/app/app.py"]', dockerfile)
+
     def test_compose_is_loopback_only_and_has_no_fixed_token_defaults(self) -> None:
         compose = (ROOT / "showcases/internal-service-intake/docker-compose.yml").read_text()
         self.assertIn('127.0.0.1:5678:5678', compose)
