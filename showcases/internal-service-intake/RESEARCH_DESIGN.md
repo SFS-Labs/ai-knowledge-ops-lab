@@ -44,7 +44,7 @@ The illustrated potential is better communicated to non-technical readers by a [
 | Claim | Evidentiary status |
 |---|---|
 | Volvo group transitions 9,454 across original historical log | **VERIFIED, exact-source MD5; CI #27 Volvo audit step** |
-| NLBSE original source labels and published test size | **SOURCE-PUBLISHED**; full-file verification and diagnostic score separately versioned |
+| NLBSE original source labels + full 142,320 test cases | **EXECUTED in CI #29**: 49.25% keyword Accuracy/Micro-F1, 41.49% Macro-F1; **541 duplicate-ID rows, 5 label conflicts**. No LLM inference on NLBSE. |
 | Previous n8n / local Qwen / SQLite E2E | **VERIFIED in historical exact-head CI #25** with 100 tests |
 | Original 22/32 pilot hybrid outcome | **POST-HOC synthetic pilot, not prospective customer validation** |
 | AI reduced Volvo handoffs or customer expenditure | **NOT MEASURED, NOT CLAIMED** |
@@ -66,6 +66,6 @@ The last two commands access external public source archives; a network error is
 
 **Observed cross-source conclusion:** Both original sources have now been directly read. The NLBSE baseline is **only 49.25% on its actual full test set**; Volvo group transitions are **9,454 historical observations**. They do NOT share a test population or show any effect of our AI on Volvo operations. Missing client economics remain explicitly unmeasured.
 
-**Audit artifacts:** [Machine-readable business/data contract](evaluation/research_contract.json) · [Cost math with disclosure controls](evaluation/research_methods.py) · [Original Volvo measured aggregates](evaluation/evidence/volvo-2013-source-audit-ci27.json) · [NLBSE source-integrity audit](evaluation/nlbse_source.py) · [Historical decision evolution](HYBRID_DECISION_RECORD.md).
+**Audit artifacts:** [Machine-readable business/data contract](evaluation/research_contract.json) · [Cost math with disclosure controls](evaluation/research_methods.py) · [Original Volvo measured aggregates](evaluation/evidence/volvo-2013-source-audit-ci27.json) · [NLBSE observed full test evidence](evaluation/evidence/nlbse2023-full-test-ci29.json) · [NLBSE source-integrity audit](evaluation/nlbse_source.py) · [Historical decision evolution](HYBRID_DECISION_RECORD.md).
 
 **Attribution:** The owner insisted on scientific scrutiny, discovered the field-specific hybrid-routing hypothesis and corrected the data-selection direction to business-first; AI-assisted implementation and analysis are identified as such. No claims of unaided senior engineering, client engagements, measured profits or proven cognitive superiority.
