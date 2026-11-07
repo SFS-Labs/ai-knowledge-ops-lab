@@ -1,0 +1,81 @@
+{
+  "evidence_kind": "Executed full 142,320-row original published NLBSE 2023 test dataset; local deterministic keyword baseline, NOT LLM inference",
+  "run_url": "https://github.com/SFS-Labs/ai-knowledge-ops-lab/actions/runs/42412917843",
+  "job_id": 128524708898,
+  "source_commit": "8b17c1edfe9605c307e5f0cb94b5aa1deeba31f2",
+  "measured_utc": "2026-11-07",
+  "source": {
+    "publisher": "NLBSE 2023",
+    "url": "https://github.com/nlbse2023/issue-report-classification",
+    "dataset_url": "https://tickettagger.blob.core.windows.net/datasets/nlbse23-issue-classification-test.csv.tar.gz",
+    "sha256_downloaded_archive": "f625dc78af6139b94623004dcbe575b5dfb6dc3293b7e9fa2fa109352d1cdf0e",
+    "redistribution": "none; no raw GitHub issue text stored in this repository"
+  },
+  "observed_issue_count": 142320,
+  "observed_source_label_counts": {
+    "bug": 74781,
+    "documentation": 6252,
+    "feature": 52797,
+    "question": 8490
+  },
+  "observed_missing_title_and_body": 0,
+  "unique_issue_ids": 141779,
+  "repeated_issue_id_rows": 541,
+  "repeated_issue_id_label_conflicts": 5,
+  "independent_observation_claim": false,
+  "header_fields": [
+    "author_association",
+    "body",
+    "id",
+    "labels",
+    "title"
+  ],
+  "labels_are_source_harmonized": true,
+  "observed_test_model_accuracy": null,
+  "observed_urgency_or_volvo_linkage": null,
+  "official_full_test_checked": true,
+  "known_label_limit": "GitHub owner labels may be noisy and mapped from synonyms; repeated IDs mean rows are not necessarily independent, not adjudicated ground truth.",
+  "observed_keyword_baseline": {
+    "accuracy": 0.49251,
+    "micro_F1": 0.49251,
+    "macro_F1": 0.41494,
+    "class_metrics": {
+      "bug": {
+        "support": 74781,
+        "predicted": 31594,
+        "precision": 0.85928,
+        "recall": 0.36303,
+        "f1": 0.51042
+      },
+      "documentation": {
+        "support": 6252,
+        "predicted": 9674,
+        "precision": 0.27589,
+        "recall": 0.4269,
+        "f1": 0.33518
+      },
+      "feature": {
+        "support": 52797,
+        "predicted": 74225,
+        "precision": 0.48333,
+        "recall": 0.67949,
+        "f1": 0.56486
+      },
+      "question": {
+        "support": 8490,
+        "predicted": 26827,
+        "precision": 0.16409,
+        "recall": 0.51849,
+        "f1": 0.24929
+      }
+    },
+    "experiment_type": "SFS deterministic keyword baseline run on genuine NLBSE test text; NOT local LLM inference",
+    "prompt_or_model_used": false
+  },
+  "limitations": [
+    "Real software issue types, not the legacy 4 B2B service domains",
+    "No case-level linkage to Volvo or measured ticket economics",
+    "Dataset license for derived display excerpts requires independent review",
+    "No LLM-vs-rules performance experiment executed merely by source profiling"
+  ]
+}
