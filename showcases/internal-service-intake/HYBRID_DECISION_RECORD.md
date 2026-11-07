@@ -110,3 +110,26 @@ The project owner explicitly rejected turning the existing code into a finished 
 - [Executable economic sensitivity](evaluation/economics.py) makes the missing customer costs explicit; the two observed proxy break-even conditions are **C(missed high)/C(false high) = 21/4 = 5.25** (hybrid vs LLM) and **17×C(category misroute) > 32×C(LLM inference)** (hybrid vs rules), ignoring review differences. Neither is a realized ROI.
 
 **Decision principle:** Independent evidence before p-values; customer loss and veto constraints before “best model”; integrity of negative outcomes before resume polish. This is the operator skill being demonstrated. The latest additions are IMPLEMENTED only and must pass fresh exact-head CI before being called verified.
+
+
+## 9. Binding completion standard: the decision, not the feature
+
+A decision artifact is **done at the bounded demonstration level**, not when an arbitrarily large project or synthetic sample exists. Every completed decision must clear five explicit gates:
+
+| Gate | Required proof | This case now |
+|---|---|---|
+| **30-second comprehension** | Problem, hypothesis, measured change, strongest counterexample and decision immediately visible | **IMPLEMENTED** in [brief](DECISION_EVIDENCE_BRIEF.md), checked by [decision gate](evaluation/decision_gate.py) |
+| **Intellectual honesty** | Alternatives, confounders/post-hoc selection, missing evidence and a falsifier | **DOCUMENTED** in DR-001 / DR-002 and source-attributed [case manifest](DECISION_CASE.json) |
+| **Reproducibility** | Real source observations, fixed code, replay and tests that can fail on altered claims | **IMPLEMENTED**, requires exact-head test |
+| **Technical verification** | Successful tests and relevant E2E on the **same exact repository HEAD**; adverse paths checked | **PENDING** for recent hybrid/method commits; CI #24 verifies only earlier SHA `d02a76f` |
+| **Explicit decision and stop rule** | Keep/revise/reject, named conditions to reopen and who owns any action | **DECIDED:** keep as bounded experiment, no auto-approval or deploy; stop further synthetic development after CI unless new independent/client evidence changes the decision |
+
+**How the rule is enforced:** [`evaluation/decision_gate.py`](evaluation/decision_gate.py) checks the 30-second word budget, the pilot's numbers against actual frozen inference observations, source provenance, disclosed selection bias, conditional business ratio and current-head-verification boundary. [`tests/test_decision_gate.py`](../../tests/test_decision_gate.py) injects falsified figures and unjustified ROI/CI claims; they must be rejected. This is a **completeness and contradiction guard**, not an independent peer review.
+
+**Scope of points 1 and 2:**
+1. **Statistical validation:** implement the pre-registered study protocol and integrity tooling now; perform the prospective 480-case collection/inference **only when truly independent case sources, credible labeling and an explicit recruiting/customer decision justify the additional cost**. Never use self-generated paraphrase volume as fake sample size.
+2. **Business validation:** execute the counterfactual and cost-sensitivity analysis now; claim an economically optimal policy **only after a genuine customer's cost/SLA/case-mix inputs support it**. Without those, the correct result is a conditional decision frontier, not an imaginary ROI.
+
+A recruiter should not have to inspect code to understand the question. A technical reviewer must be able to inspect the code and discover what would make the conclusion wrong. **Both must be possible; neither replaces the other.**
+
+**Completion status is therefore:** decision trace + 30-second explanation **IMPLEMENTED**, original pilot **VERIFIED on historical SHA**, current hybrid/method changes **NOT YET VERIFIED on exact HEAD**, customer optimality and prospective generalization **NOT ESTABLISHED**. The prospective study and customer economic proof are **optional future evidence gates, not prerequisites for paid market entry**.
