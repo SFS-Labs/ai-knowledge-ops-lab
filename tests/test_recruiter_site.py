@@ -20,7 +20,8 @@ class StaticRecruiterDemoTests(unittest.TestCase):
                         "Volvo", "NLBSE", "synthetisch", "nicht auf Fallniveau",
                         "kein Ergebnis dieser öffentlichen Datensätze"]:
             self.assertIn(keyword.casefold(),self.page.casefold())
-        self.assertIn("Originalarchiv",self.page)\n        self.assertIn("9.454",self.page)
+        self.assertIn("Originalarchiv",self.page)
+        self.assertIn("9.454",self.page)
 
     def test_no_public_llm_or_client_secrets(self):
         for forbidden in ["api.openai.com", "webhook/internal-service-intake",
