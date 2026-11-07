@@ -8,7 +8,7 @@
 
 **Counterexample:** Rules missed **5/9** high-urgency cases. When missed incidents are expensive, the higher-accuracy hybrid can still be the worse business decision.
 
-**Decision:** Implement traceable hybrid routing; send conflicts to manual review; keep approval separate. Require independent validation before claiming business value. Current changes await CI.
+**Decision:** Implement traceable hybrid routing; send conflicts to manual review; keep approval separate. Require independent validation before claiming business value. The original hybrid passed CI #25; later research changes have separate verification gates.
 
 ## The part I would defend in an interview
 
@@ -22,16 +22,16 @@ This also explains why the pilot McNemar p-value of 0.00342 is **exploratory, no
 
 | Inspect | Direct evidence | What it does **not** prove |
 |---|---|---|
-| Genuine inference | [CI #24 on historical exact SHA `d02a76f`](https://github.com/SFS-Labs/ai-knowledge-ops-lab/actions/runs/42399345922) and [36 frozen outputs](evaluation/evidence/ci24-observed-model-output.json) | Current Draft HEAD passing CI |
+| Genuine inference | [CI #25, 100 tests and real local LLM/n8n E2E](https://github.com/SFS-Labs/ai-knowledge-ops-lab/actions/runs/42405856175) and [36 frozen pilot outputs](evaluation/evidence/ci24-observed-model-output.json) | Generalizable customer performance or current research-dataset LLM quality |
 | Comparison | [Post-hoc replay](evaluation/compare_routing.py) and [paired statistics](evaluation/study_statistics.py) | Generalization to customers or a prospective result |
 | Changed decision | [Source-attributed policy implementation](mock-api/semantic.py) and [tests](../../tests/test_hybrid_policy.py) | Verified human approver or automatic approval |
 | Business trade-off | [Cost sensitivity](evaluation/economics.py) | Observed € savings or universally optimal strategy |
-| Independent challenge | [Prospective study plan](STUDY_PROTOCOL_V1.md) and [data integrity checks](evaluation/holdout_gate.py) | 480 cases already collected or independently labeled |
-| Completion criterion | [Machine-checkable decision gate](evaluation/decision_gate.py) and [decision record](DECISION_CASE.json) | Remote CI success before an exact-HEAD run |
+| Independent challenge | [New business-first NLBSE/Volvo design](RESEARCH_DESIGN.md), [native class contract](evaluation/research_contract.json) and [original-data audits](evaluation/nlbse_source.py) | Same-case matching between the two source populations, customer impact or actual AI savings |
+| Completion criterion | [Machine-checkable decision gate](evaluation/decision_gate.py) and [decision record](DECISION_CASE.json) | Independent confirmation of any later exact-release-head CI conclusion |
 
-**Decision status:** Original local-model technical chain **VERIFIED** at SHA `d02a76f`; hybrid change and method code **IMPLEMENTED, pending exact-HEAD CI**. No customer deployment, measured ROI or independently verified human authorization.
+**Decision status:** Original local LLM/n8n/hybrid engineering **VERIFIED** in CI #25 at `d4a8391` (100 tests). **New source-data research** is separately gated and cannot inherit the historical CI result. No customer deployment, measured ROI or independently verified human authorization.
 
-**Work boundary:** The next controlled step is exact-HEAD CI on [existing Draft PR #9](https://github.com/SFS-Labs/ai-knowledge-ops-lab/pull/9), deliberately not initiated here. Independent holdout collection and customer-cost validation occur **only when credible sources and a concrete commercial decision justify them**, not as a prerequisite for applying to paid delivery roles.
+**Current business-first continuation:** The [60-second static illustration](../../docs/index.html) combines real Volvo process-aggregate evidence with explicit assumptions, while [NLBSE issue-class labels](RESEARCH_DESIGN.md) form an independent classification stream. Actual customer-cost validation would require consented tickets and intervention data and is **not a prerequisite for paid delivery roles**.
 
 ## Attribution and deeper examination
 
