@@ -8,11 +8,11 @@
 
 **Technische Entscheidung:** Drei Routing-Varianten wurden auf 32 gelabelten synthetischen Fällen ausgewertet: LLM-only **10/32**, Regeln **11/32**, retrospektiver Hybrid **22/32** gemeinsam korrekt. Gegenbefund: Der Hybrid übersah **5/9** als dringend gelabelte Fälle. Eine höhere Gesamtquote rechtfertigt daher noch keine wirtschaftliche oder operative Freigabe. [Entscheidungsprotokoll](showcases/internal-service-intake/HYBRID_DECISION_RECORD.md).
 
-**[Arbeitsprobe in 60 Sekunden: Architektur, Umsetzung, Tests und Entscheidung](https://sfs-labs.github.io/ai-knowledge-ops-lab/)** · [Technische Beschreibung](showcases/internal-service-intake/README.md) · [CI #31](https://github.com/SFS-Labs/ai-knowledge-ops-lab/actions/runs/42413698800).
+**[Arbeitsprobe in 60 Sekunden: Architektur, Umsetzung, Tests und Entscheidung](https://sfs-labs.github.io/ai-knowledge-ops-lab/)** · [Browser-Qwen-Demo (Beta; ohne n8n-Backend)](https://sfs-labs.github.io/ai-knowledge-ops-lab/live.html) · [Technische Beschreibung](showcases/internal-service-intake/README.md) · [CI #31](https://github.com/SFS-Labs/ai-knowledge-ops-lab/actions/runs/42413698800).
 
 **Rolle / Beitrag:** Technische Problemstrukturierung, Hypothese und Evaluation, Auswahl der Prüfkriterien, mit AI-Unterstützung implementierter und verifizierter Code. Erfahrung im Technical Onboarding mit Kunden; Zielrolle: kundennahes, bezahltes B2B AI Implementation Engineering. Der Prototyp ist lokal ausgeführt und getestet, kein behaupteter Kunden-Deployment-Nachweis.
 
-**Weitere Datenevidenz:** Separater [NLBSE-/Volvo-Quellen-Audit](showcases/internal-service-intake/RESEARCH_DESIGN.md) mit tatsächlich gemessenen offenen Datensätzen. Er wurde **nicht** als LLM-vs.-Baseline-Beweis oder realisierter Kunden-ROI interpretiert.
+**Echte NLBSE-Modellqualität:** Separater [vollständig ausgeführter Qwen-vs.-Baseline-Diagnosetest](showcases/internal-service-intake/evaluation/NLBSE_REAL_LLM_EVALUATION.md) auf 96 echten Software-Issues: Qwen **42,71 % Accuracy / 35,64 % Macro-F1** gegenüber Keyword-Regeln **44,79 % / 42,75 %**. Das LLM erkannte keinen der 24 Question-Fälle. Dieser negative Befund ist veröffentlicht; ein korrigierter Prompt wird auf getrennten, vorher festgelegten Originalfällen nachgeprüft. Der [Volvo-Prozessaudit](showcases/internal-service-intake/RESEARCH_DESIGN.md) bleibt eine getrennte Datenquelle ohne behaupteten Kunden-ROI.
 
 Das Repository enthält daneben die frühere SEC-Disclosure-/Knowledge-Ops-Arbeit. Diese ist technisch und methodisch vom AI-Service-Intake getrennt.
 
