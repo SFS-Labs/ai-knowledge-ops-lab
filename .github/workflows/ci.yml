@@ -173,16 +173,21 @@ jobs:
           python - "$start_ms" "$end_ms" <<'PY'
           import json
           import sys
+          sys.path.insert(0, "showcases/internal-service-intake/mock-api")
+          from semantic import examine_model_response
           response = json.load(open("/tmp/sfs-smoke-response.json", encoding="utf-8"))
           output = response["choices"][0]["message"]["content"]
           assert isinstance(output, str) and output.strip(), "no LLM output"
+          examined = examine_model_response(response)
           print(json.dumps({
               "genuine_local_model_response": True,
+              "validated_model_output_present": examined["validated_model_output"] is not None,
+              "review_reason": examined["review_reason"],
               "latency_ms": int(sys.argv[2]) - int(sys.argv[1]),
-              "raw_llm_output": output,
               "model_runtime": "ggml-org llama.cpp server-b12019",
               "input_source": "synthetic unstructured German B2B request"
           }, ensure_ascii=False))
+          assert examined["validated_model_output"] is not None, "schema-constrained smoke output failed independent validation"
           PY
 
       - name: Real n8n-to-model-to-SQLite E2E, negative approval, restart and audit
