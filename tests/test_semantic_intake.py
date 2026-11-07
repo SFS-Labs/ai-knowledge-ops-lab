@@ -25,6 +25,20 @@ class SemanticIntakeTests(unittest.TestCase):
         obj.update(changes)
         return {"choices": [{"message": {"content": json.dumps(obj)}}]}
 
+    def test_model_transport_classifies_n8n_body_failures_without_error_text(self):
+        examples = [
+            ("The value in the \"JSON Body\" field is not valid JSON", "json_body_invalid"),
+            ("JSON parameter needs to be valid JSON", "json_body_invalid"),
+            ("ExpressionError: Cannot read properties of undefined", "expression_evaluation"),
+            ("Bad request - please check your parameters", "model_api_request_rejected"),
+        ]
+        for raw, classification in examples:
+            with self.subTest(raw=raw):
+                result = model_transport_diagnostic({"error": raw})
+                self.assertEqual(classification, result["error_class"])
+                self.assertEqual(len(raw), result["error_length"])
+                self.assertNotIn(raw, json.dumps(result))
+
     def test_model_transport_diagnostic_never_preserves_secret_message(self):
         bad = {"error": {"statusCode": 400,
                          "message": "400 Bad Request token=SUPER-SECRET-STRING"}}
