@@ -4,7 +4,8 @@
 > The argument includes the retrospective **22/32** hybrid pair result, its **5/9 missed urgent** counterexample, source-attributed implementation and explicit falsification criteria. This is **post-hoc synthetic evidence**, not a customer deployment or proven ROI.
 >
 > **Exact-SHA verified baseline:** [CI #24](https://github.com/SFS-Labs/ai-knowledge-ops-lab/actions/runs/42399345922) (68 tests and real local LLM/n8n/SQLite E2E, including 36 real CPU inferences) passed on commit `d02a76f856acf62725eb5ec402802e6bb5febeae`.
-> **Current Draft PR HEAD:** includes a subsequent *experimental hybrid routing/decision trace* and frozen observation replay; its full CI/E2E is **not yet verified**. No merge/deployment.
+> **Current Draft PR HEAD:** includes experimental hybrid routing, source-attributed decision traces, and [DR-002: a pre-specified 480-case study and economic loss protocol](STUDY_PROTOCOL_V1.md).
+> These later changes are **not yet verified by exact-HEAD CI**. No 480-case dataset, real client costs, merge or deployment exists. The [paired-statistics](evaluation/study_statistics.py), [economic-sensitivity](evaluation/economics.py) and [holdout integrity gate](evaluation/holdout_gate.py) are implemented but await tests.
 
 
 This showcase is a bounded, offline demonstration of one internal service-intake path:
