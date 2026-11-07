@@ -122,6 +122,24 @@ class SemanticIntakeTests(unittest.TestCase):
         self.assertNotIn("}}", expression[3:-2],
                          "Premature n8n template closing braces truncate nested JSON expression")
 
+    def test_rejected_approval_routes_to_response_without_apply(self):
+        path = (Path(__file__).resolve().parents[1] /
+                "showcases/internal-service-intake/n8n/workflow.internal-service-intake.v1.json")
+        workflow = json.loads(path.read_text(encoding="utf-8"))[0]
+        node = next(n for n in workflow["nodes"] if n["name"] == "Approval Decision Is Approve")
+        self.assertEqual(2, node["typeVersion"])
+        conditions = node["parameters"]["conditions"]
+        self.assertNotIn("string", conditions, "Legacy v1 condition is invalid for n8n IF v2")
+        self.assertEqual("strict", conditions["options"]["typeValidation"])
+        predicate = conditions["conditions"][0]
+        self.assertEqual("={{ $json.decision }}", predicate["leftValue"])
+        self.assertEqual("approve", predicate["rightValue"])
+        self.assertEqual({"type": "string", "operation": "equals"},
+                         predicate["operator"])
+        routes = workflow["connections"]["Approval Decision Is Approve"]["main"]
+        self.assertEqual("Apply Approved Request", routes[0][0]["node"])
+        self.assertEqual("Respond Approval", routes[1][0]["node"])
+
     def test_n8n_text_path_does_not_connect_directly_to_approval_or_apply(self):
         path = (Path(__file__).resolve().parents[1] /
                 "showcases/internal-service-intake/n8n/workflow.internal-service-intake.v1.json")
