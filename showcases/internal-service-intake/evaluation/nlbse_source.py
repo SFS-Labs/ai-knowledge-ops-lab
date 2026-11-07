@@ -23,8 +23,46 @@ MAX_ARCHIVE_SIZE = 120 * 1024 * 1024
 MAX_EXTRACTED_SIZE = 350 * 1024 * 1024
 
 
+def keyword_baseline(title, body):
+    """One frozen, deliberately simple no-training English issue-type heuristic.
+
+    Returns a label from the published NLBSE issue-type taxonomy; does not
+    classify SLA urgency, old SFS service domains, or human author identity.
+    """
+    t = (str(title)[:450] + " " + str(body)[:1000]).lower()
+    words = " " + t.replace("/", " ").replace("_", " ").replace("-", " ") + " "
+    if any(k in words for k in (" documentation ", " docs ", " readme ", " wiki ", " typo ")):
+        return "documentation"
+    if any(k in words for k in (" exception ", " failure ", " bug ", " crash ", " broken ", " error ", " fails ", " not working ")):
+        return "bug"
+    if "?" in t or any(k in words for k in (" question ", " how do ", " how to ", " why does ", " help me ")):
+        return "question"
+    return "feature"
+
+
+def classification_scores(confusion, labels, total):
+    """Class-level precision/recall/F1; never infer model performance here."""
+    by_class={}
+    for cat in EXPECTED:
+        tp=confusion.get((cat,cat),0)
+        predicted=sum(v for (gold,pred),v in confusion.items() if pred==cat)
+        actual=labels.get(cat,0)
+        precision=(tp/predicted) if predicted else 0.
+        recall=(tp/actual) if actual else 0.
+        f1=(2*precision*recall/(precision+recall)) if precision+recall else 0.
+        by_class[cat]={"support":actual,"predicted":predicted,
+                       "precision":round(precision,5),"recall":round(recall,5),"f1":round(f1,5)}
+    hits=sum(confusion.get((name,name),0) for name in EXPECTED)
+    return {"accuracy":round(hits/total,5),"micro_F1":round(hits/total,5),
+            "macro_F1":round(sum(by_class[x]["f1"] for x in EXPECTED)/len(EXPECTED),5),
+            "class_metrics":dict(sorted(by_class.items())),
+            "experiment_type":"SFS deterministic keyword baseline run on genuine NLBSE test text; NOT local LLM inference",
+            "prompt_or_model_used":False}
+
+
 def profile_rows(rows, *, require_published_counts=True):
     labels = Counter()
+    confusion = Counter()
     n = 0
     seen_ids = set()
     empty_text = 0
@@ -48,6 +86,7 @@ def profile_rows(rows, *, require_published_counts=True):
         body = row.get("body") or row.get("Body") or ""
         empty_text += not (str(title).strip() or str(body).strip())
         labels[label] += 1
+        confusion[(label, keyword_baseline(title,body))] += 1
         n += 1
     if n == 0:
         raise ValueError("empty_issue_dataset")
@@ -63,6 +102,7 @@ def profile_rows(rows, *, require_published_counts=True):
         "observed_urgency_or_volvo_linkage": None,
         "official_full_test_checked": bool(require_published_counts),
         "known_label_limit": "GitHub owner labels may be noisy and mapped from synonyms; not adjudicated independent truth.",
+        "observed_keyword_baseline": classification_scores(confusion, labels, n),
     }
 
 
