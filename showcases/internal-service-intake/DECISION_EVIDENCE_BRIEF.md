@@ -1,31 +1,40 @@
-# SFS Labs | Decision Evidence Brief — B2B AI Intake
+# The decision is the evidence | B2B AI intake
 
-**Read time:** ~2 minutes. **Purpose:** assess a candidate's technical judgment and research discipline, not the visual complexity of a demo.
+## In 30 seconds
 
-## Business problem
+**Problem:** A real local B2B-AI intake pipeline worked, but choosing one classifier was the wrong question: LLM-only classified both fields correctly in **10/32** labeled cases; rules-only in **11/32**.
 
-Incoming B2B requests must be classified by service type and urgency before an authorized operator decides what happens next. A working LLM integration alone is not enough: accuracy, escalation risk, review workload and business costs can favor different components.
+**Hypothesis:** Give category to the validated LLM and urgency to deterministic rules. The **post-hoc** hybrid replay reached **22/32**.
 
-## What changed as we examined the evidence
+**Counterexample:** Rules missed **5/9** high-urgency cases. When missed incidents are expensive, the higher-accuracy hybrid can still be the worse business decision.
 
-1. **Observed reality, not a staged demo.** A pinned local Qwen model ran real HTTP inference through n8n and SQLite with separate simulated approval, rejection, restart and outage checks. [CI #24: exact-SHA green](https://github.com/SFS-Labs/ai-knowledge-ops-lab/actions/runs/42399345922). Its 36 genuinely executed model responses, including 32 labeled cases, were frozen for inspection.
-2. **Counterintuitive result.** Model category was right **30/32**, keyword baseline **13/32**. But model urgency was right only **10/32**, keyword urgency **24/32**. A single-method winner was the wrong framing.
-3. **Operator hypothesis.** Assign **category to validated semantic extraction**, **urgency to deterministic rules**, and keep **authorization separate**. The post-hoc combined accuracy was **22/32** versus **10/32 model-only** and **11/32 rules-only**. A source-attributed experimental policy and tests were added on the same Draft PR.
-4. **Adversarial challenge to our own idea.** The keyword rules missed **5/9 high-urgency** examples; the LLM missed **1/9**, but generated **21 false high** alerts. Our conditional miss-cost / false-alert-cost break-even was **5.25**. So hybrid pair accuracy does not establish that the hybrid is optimal for a real customer.
-5. **Methodological correction.** The observed paired exact McNemar p-value of **0.00342** is **not confirmatory**, because the hybrid idea was selected from those very observations. Instead of inflating the same synthetic dataset, we specified a prospective **480-case planning target** with independent case-family provenance, two blinded labels, pre-inference lock and falsification criteria. **Those 480 cases do not exist yet.**
+**Decision:** Implement traceable hybrid routing; send conflicts to manual review; keep approval separate. Require independent validation before claiming business value. Current changes await CI.
 
-## Decision
+## The part I would defend in an interview
 
-**Use the hybrid as a bounded experiment, not a production claim.** Disagreements, malformed output and missing information go to manual review. The model never grants approval. Prospective evidence and a customer's documented SLA, cost and review constraints must determine whether the hybrid actually wins.
+The relevant skill is **not** selecting the technology with the best headline metric. It is assigning responsibility by comparative advantage, finding the counterexample that could reverse the decision and refusing an economic or statistical claim without appropriate evidence.
 
-## What a hiring manager can verify
+**Question to challenge the decision:** If the customer loses far more from an overlooked high-priority request than from an unnecessary escalation, would I still choose the hybrid? **Not necessarily.** On the observed synthetic pilot, the hybrid avoids 21 false-high calls but adds four missed-high cases compared with LLM-only. Ignoring other costs, the economic preference flips when `C(missed high) / C(false high)` crosses **5.25**. The calculation is conditional; no customer cost figures have been observed.
 
-- [Full decision record and alternative hypotheses](HYBRID_DECISION_RECORD.md)
-- [Prospective evaluation protocol and economic loss criteria](STUDY_PROTOCOL_V1.md)
-- [Frozen observed model outputs](evaluation/evidence/ci24-observed-model-output.json)
-- [Reproduce pairwise comparison](evaluation/compare_routing.py), [paired statistics](evaluation/study_statistics.py), [economic break-even](evaluation/economics.py), [integrity gate](evaluation/holdout_gate.py)
-- [Current Draft PR with implementation and tests](https://github.com/SFS-Labs/ai-knowledge-ops-lab/pull/9)
+This also explains why the pilot McNemar p-value of 0.00342 is **exploratory, not confirmatory**: the hypothesis was chosen after seeing the data. Enlarging the same test set with paraphrases would not solve that methodological flaw.
 
-**Evidence boundaries:** The original model/n8n E2E passed on commit `d02a76f`. The later hybrid and study tools are **IMPLEMENTED / NOT YET EXACT-HEAD CI VERIFIED**. No external customer, paid deployment, independently verified human identity, proven ROI or objectively quantified comparison to other applicants is claimed.
+## Reproduce, challenge, or reject the decision
 
-**Contribution attribution:** The project owner developed the hybrid-routing question and insisted on scientific/methodological scrutiny; AI assistance supported analysis, implementation and documentation. The work sample demonstrates *how decisions are made and corrected* rather than claiming unaided authorship of all code.
+| Inspect | Direct evidence | What it does **not** prove |
+|---|---|---|
+| Genuine inference | [CI #24 on historical exact SHA `d02a76f`](https://github.com/SFS-Labs/ai-knowledge-ops-lab/actions/runs/42399345922) and [36 frozen outputs](evaluation/evidence/ci24-observed-model-output.json) | Current Draft HEAD passing CI |
+| Comparison | [Post-hoc replay](evaluation/compare_routing.py) and [paired statistics](evaluation/study_statistics.py) | Generalization to customers or a prospective result |
+| Changed decision | [Source-attributed policy implementation](mock-api/semantic.py) and [tests](../../tests/test_hybrid_policy.py) | Verified human approver or automatic approval |
+| Business trade-off | [Cost sensitivity](evaluation/economics.py) | Observed € savings or universally optimal strategy |
+| Independent challenge | [Prospective study plan](STUDY_PROTOCOL_V1.md) and [data integrity checks](evaluation/holdout_gate.py) | 480 cases already collected or independently labeled |
+| Completion criterion | [Machine-checkable decision gate](evaluation/decision_gate.py) and [decision record](DECISION_CASE.json) | Remote CI success before an exact-HEAD run |
+
+**Decision status:** Original local-model technical chain **VERIFIED** at SHA `d02a76f`; hybrid change and method code **IMPLEMENTED, pending exact-HEAD CI**. No customer deployment, measured ROI or independently verified human authorization.
+
+**Work boundary:** The next controlled step is exact-HEAD CI on [existing Draft PR #9](https://github.com/SFS-Labs/ai-knowledge-ops-lab/pull/9), deliberately not initiated here. Independent holdout collection and customer-cost validation occur **only when credible sources and a concrete commercial decision justify them**, not as a prerequisite for applying to paid delivery roles.
+
+## Attribution and deeper examination
+
+The project owner proposed the component-level hybrid-routing hypothesis and demanded explicit methodological and business counterchecks. The AI assistant supported computation, adverse-case analysis, implementation and documentation. No claim of unaided authorship or quantified superiority to a candidate cohort is made.
+
+Read [DR-001: the full reasoning trail](HYBRID_DECISION_RECORD.md) for alternatives, falsifiers and limitations; read [DR-002: the conditional research protocol](STUDY_PROTOCOL_V1.md) only if the sampling or economic evaluation is the topic of the discussion.
