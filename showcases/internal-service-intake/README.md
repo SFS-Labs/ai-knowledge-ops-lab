@@ -18,6 +18,51 @@ It is intentionally isolated from the repository's research pipeline and from RE
 - **Version:** Compose uses `n8nio/n8n:2.46.6`. In the run above the actual n8n audit still flagged **Official risky nodes** (Code/HTTP Request). The earlier outdated-instance warning was absent. An audit command with exit 0 is **not** a clean security clearance.
 - **Evidence boundary:** The above run concerns its exact historical SHA. Any later change to this PR (including documentation or API-key hardening) requires a new exact-head deterministic CI/E2E run before release; older green runs must never be relabeled as current-head verification.
 
+## Staged local-LLM free-text path — NOT YET VERIFIED
+
+The original structured intake remains supported. A new synthetic free-text webhook,
+internal-service-intake-text, accepts request_id, requester, and genuinely
+unstructured free_text. Its X-INTAKE-TOKEN is checked before model execution.
+
+**Intended route:** authenticated n8n webhook → strict text/identity/size checks →
+persistent request-id/hash preflight before inference → fixed local
+llama.cpp HTTP endpoint → independent JSON-schema-shaped validation in
+mock-api/semantic.py → deterministic review policy → pending SQLite record
+with raw output, validated output, policy and audit → separate simulated
+approval token → existing apply operation.
+
+Malformed, ambiguous, unavailable or suspicious model results may be routed to
+manual_review. A model cannot grant approval or provide executable commands
+or outbound URLs. The existing credentials are possession-based demonstration
+tokens, **not independently verified people or separation of duties**.
+
+**Evidence boundary:** This LLM extension is committed in Draft PR #9, but the
+new real-model E2E and its 36-case evaluation have NOT passed an exact-HEAD run.
+Do not claim real inference, model accuracy, latency, production readiness or
+business outcomes on the basis of an unexecuted test script.
+
+The existing manually dispatched .github/workflows/ci.yml runs the model gate
+only on the PR branch and only after the unit suite. It uses the official
+Apache-2.0 Qwen2.5-1.5B-Instruct-GGUF Q4_K_M weights at revision
+dd26da440ef0330c47919d1ecae0966d24022222, SHA256
+6a1a2eb6d15622bf3c96857206351ba97e1af16c30d7a74ee38970e434e9407e,
+with pinned llama.cpp server-b12019 CPU image, on a free public-repo standard
+GitHub runner. Model weights are excluded from git/artifacts. The test first
+runs real CPU inference, then actual n8n/model/SQLite approval and audit checks,
+then evaluates 36 pre-labeled synthetic cases in evaluation/cases.jsonl
+against the baseline defined in mock-api/semantic.py.
+
+**Recruiter view (conditional on a successful run):**
+15 s: unstructured request, genuine local proposal, independent policy and audit.
+90 s: inspect raw/validated output, duplicate response and denied approval.
+5 min: follow the model runtime/weights, fixed API flow, evaluation metrics,
+timeout and prompt-injection tests, restart persistence and exact-SHA Actions logs.
+
+Limitations: synthetic-only, temporary CPU runner, no persistent hosting,
+no production SLA, no human-identity proof, no independent human reviewer.
+Concurrent first-time requests can infer twice; SQLite registration stays
+atomic. Existing n8n Code/HTTP risky-node audit findings require review.
+
 ## Security and data constraints
 
 - Synthetic data only; do not send production data.
