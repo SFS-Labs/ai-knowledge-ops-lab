@@ -161,7 +161,7 @@ jobs:
             "temperature": 0,
             "max_tokens": 160,
             "stream": false,
-            "response_format": {"type":"json_schema", "schema": {"type":"object","properties":{"service_type":{"type":"string","enum":["analytics","automation","integration","incident-response"]},"urgency":{"type":"string","enum":["low","medium","high"]},"summary":{"type":"string"},"missing_information":{"type":"array","items":{"type":"string"}}},"required":["service_type","urgency","summary","missing_information"],"additionalProperties":false}}
+            "response_format": {"type":"json_schema", "json_schema": {"name":"service_intake", "schema": {"type":"object","properties":{"service_type":{"type":"string","enum":["analytics","automation","integration","incident-response"]},"urgency":{"type":"string","enum":["low","medium","high"]},"summary":{"type":"string"},"missing_information":{"type":"array","items":{"type":"string"}}},"required":["service_type","urgency","summary","missing_information"],"additionalProperties":false}}}
           }
           JSON
           start_ms=$(date +%s%3N)
@@ -236,10 +236,18 @@ jobs:
           curl --fail-with-body --silent --show-error \
             http://127.0.0.1:8080/v1/intake/request/REQ-SEM-LIVE-001 \
             -H "X-MOCK-API-KEY: $MOCK_API_KEY" > /tmp/sfs-state.json
-          jq -e '.request.status=="pending" and ((.request.payload_json | fromjson).validated_model_output != null) and
+          if ! jq -e '.request.status=="pending" and ((.request.payload_json | fromjson).validated_model_output != null) and
                  ((.request.payload_json | fromjson).raw_model_output | length > 0) and
                  ([.audit[].event_type] | index("model_evaluated") != null) and
-                 ([.audit[].event_type] | index("apply_executed") == null)' /tmp/sfs-state.json
+                 ([.audit[].event_type] | index("apply_executed") == null)' /tmp/sfs-state.json; then
+            echo "semantic model output not validated; sanitized persisted diagnostic:"
+            jq '{status:.request.status, classification:.request.classification,
+                 policy_decision:(.request.payload_json | fromjson | .policy_decision),
+                 review_reason:(.request.payload_json | fromjson | .review_reason),
+                 validated_model_output_present:((.request.payload_json | fromjson | .validated_model_output) != null),
+                 audit_events:[.audit[].event_type]}' /tmp/sfs-state.json
+            exit 1
+          fi
           denied=$(curl --silent --show-error -o /tmp/sfs-denied.json -w '%{http_code}' \
             -X POST http://127.0.0.1:5678/webhook/internal-service-intake-approval \
             -H "Content-Type: application/json" -H "X-APPROVAL-TOKEN: wrong" -d "$approval")
