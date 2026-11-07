@@ -14,6 +14,8 @@ from pathlib import Path
 from typing import Any
 from urllib.parse import urlparse
 
+from semantic import semantic_preflight, semantic_register
+
 REQUEST_ID_PATTERN = re.compile(r"^REQ-[A-Z0-9-]{3,40}$")
 SERVICE_TYPES = {"analytics", "automation", "integration", "incident-response"}
 URGENCIES = {"low", "medium", "high"}
@@ -110,6 +112,8 @@ class IntakeStore:
                 (request_id, request_hash, classification, json.dumps(payload["payload"], sort_keys=True), "pending", ts, ts),
             )
             self._audit(conn, request_id, "registered", {"classification": classification, "request_hash": request_hash})
+            if "model_evaluation" in payload:
+                self._audit(conn, request_id, "model_evaluated", payload["model_evaluation"])
             return {
                 "duplicate": False,
                 "request_id": request_id,
@@ -305,6 +309,16 @@ def make_handler(config: ApiConfig, store: IntakeStore):
             body = self._read_json()
             if body is None:
                 self._json_response(HTTPStatus.BAD_REQUEST, {"error": "invalid_json"})
+                return
+
+            if parsed.path == "/v1/intake/preflight-text":
+                status, result = semantic_preflight(store, body)
+                self._json_response(status, result)
+                return
+
+            if parsed.path == "/v1/intake/register-text":
+                status, result = semantic_register(store, body)
+                self._json_response(status, result)
                 return
 
             if parsed.path == "/v1/intake/register":
