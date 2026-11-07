@@ -2,6 +2,15 @@ name: ci
 
 'on':
   workflow_dispatch:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'docs/index.html'
+      - 'README.md'
+      - 'tests/test_recruiter_site.py'
+      - 'tests/test_decision_gate.py'
+      - 'showcases/internal-service-intake/**'
+      - '.github/workflows/ci.yml'
 permissions:
   contents: read
 
@@ -21,6 +30,7 @@ jobs:
 
 
   research-sources:
+    if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     timeout-minutes: 12
     permissions:
@@ -42,6 +52,7 @@ jobs:
         run: python showcases/internal-service-intake/evaluation/nlbse_source.py
 
   n8n-audit:
+    if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
@@ -114,7 +125,7 @@ jobs:
   # This job uses no paid API, GPU, new account, background scheduler or uploaded model artifact.
   llm-feasibility:
     needs: [test]
-    if: github.ref == 'refs/heads/copilot/build-isolated-ai-service-showcase'
+    if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/copilot/build-isolated-ai-service-showcase'
     runs-on: ubuntu-latest
     timeout-minutes: 40
     permissions:

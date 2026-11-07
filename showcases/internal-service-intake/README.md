@@ -1,6 +1,6 @@
 # Business-first service-intake decision case (synthetic local stack)
 
-**30–60-second nontechnical explanation:** [Static interactive scenario](../../docs/index.html) → [Data architecture & source-truth boundaries](RESEARCH_DESIGN.md) → [Historical hybrid decision](DECISION_EVIDENCE_BRIEF.md).
+**30–60-second nontechnical explanation:** [Candidate-first decision case](../../docs/index.html) → [Data architecture & source-truth boundaries](RESEARCH_DESIGN.md) → [Historical hybrid decision](DECISION_EVIDENCE_BRIEF.md).
 
 **The decision:** Can a service desk recognize the *type* of request and avoid avoidable internal handoffs without missing urgent incidents? Start with the business outcome, **not** a fixed AI stack or a predefined service taxonomy.
 
@@ -10,11 +10,11 @@
 | **How does work flow?** Volvo IT 2013 | incident event log; **9,454 observed transitions between groups** across **7,554 incidents / 65,533 events** | [Real original archive MD5-verified in CI #27](https://github.com/SFS-Labs/ai-knowledge-ops-lab/actions/runs/42411756411), individual source-audit step SUCCESS |
 | **What might it cost?** Destatis sector rate | **€58.50 per hour worked**, Germany 2025 Information & Communication | [Official statistic](https://www.destatis.de/DE/Presse/Pressemitteilungen/2026/04/PD26_148_624.html); not Volvo labor costs |
 
-**Hard boundary:** NLBSE issues and Volvo incidents are two **separate, unjoinable samples**. An observed group transition is not a proved avoidable handoff. Working hours saved, avoided incident losses and net ROI require explicit *assumptions or new customer data*. The published static calculator shows assumptions openly.
+**Hard boundary:** NLBSE issues and Volvo incidents are two **separate, unjoinable samples**. An observed group transition is not a proved avoidable handoff. Working hours saved, avoided incident losses and net ROI require explicit *assumptions or new customer data*. The scenario assumptions are fully documented in [research_methods.py](evaluation/research_methods.py); the public work sample prioritizes the engineering decision over hypothetical ROI figures.
 
 **Technical prototype:** Authenticated local n8n 2.46.6 → local Qwen model → SQLite mock API; independent review/approval gate, rejection, idempotency and restart. **[CI #25 passed 100 tests and the real local LLM E2E](https://github.com/SFS-Labs/ai-knowledge-ops-lab/actions/runs/42405856175)** at immutable `d4a8391`. The original 32 labeled synthetic cases were an exploratory *different taxonomy*; don't transfer their hybrid 22/32 to NLBSE or Volvo.
 
-**Release semantics:** This is safe to **publish as static code + documentation** after exact-HEAD CI and review. It is not a hosted automation service. No production SLA, verified human identity, external customer or measured AI ROI. The latest source-research additions require their own exact-HEAD CI.
+**Release semantics:** This is safe to **publish as static code + documentation** after exact-HEAD CI and review. It is not a hosted automation service. No production SLA, verified human identity, external customer or measured AI ROI. The original release passed [exact-HEAD CI #31](https://github.com/SFS-Labs/ai-knowledge-ops-lab/actions/runs/42413698800); later documentation changes need their own review.
 
 **Research reproducibility (Python 3.12, no paid API):**
 

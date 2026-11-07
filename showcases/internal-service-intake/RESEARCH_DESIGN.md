@@ -23,7 +23,7 @@ Given **9,454 observed group changes** in Volvo and a verified **German 2025 emp
 
 For **5%** and **5 minutes**, the conditional gross scenario is **€2,304.41 across the historical dataset**. It is **NOT an observed saving**, nor a forecast for a specific business. Net benefit could be zero or negative after LLM inference, review, monitoring, deployment and missed-critical-case costs. Duration between historical events is **not** measured active working time.
 
-The illustrated potential is better communicated to non-technical readers by a [static interactive page](../../docs/index.html) than by exposing n8n webhooks or an unprotected AI model. Source code, tests, the cited original archive and the observable assumptions remain available to the technical reviewer.
+The economic scenario is reproducible through [research_methods.py](evaluation/research_methods.py). The [recruiter-facing personal work sample](../../docs/index.html) explains the decision and its counterexample first; it does not present a hypothetical ROI widget as an observed result. Source code, tests, the cited original archive and the observable assumptions remain available to the technical reviewer.
 
 **Official rate:** [Destatis, 29 April 2026, 2025 sector Information & Communication €58.50 per hour](https://www.destatis.de/DE/Presse/Pressemitteilungen/2026/04/PD26_148_624.html), not a Volvo employee or client-specific cost.
 
@@ -62,7 +62,7 @@ python showcases/internal-service-intake/evaluation/volvo_process.py
 python showcases/internal-service-intake/evaluation/nlbse_source.py
 ```
 
-The last two commands access external public source archives; a network error is a **BLOCKED** source run, not a verified metric. The benchmark script audits the full test file and reports a rules-only comparator; it does **not** execute a new LLM on 142,320 issues. Aggregates are source-backed, model comparisons need real inference runs. The static HTML needs no API and performs only local arithmetic.
+The last two commands access external public source archives; a network error is a **BLOCKED** source run, not a verified metric. The benchmark script audits the full test file and reports a rules-only comparator; it does **not** execute a new LLM on 142,320 issues. Aggregates are source-backed, model comparisons need real inference runs. The public case page is static HTML with no network requests, model endpoint or ROI widget.
 
 **Observed cross-source conclusion:** Both original sources have now been directly read. The NLBSE baseline is **only 49.25% on its actual full test set**; Volvo group transitions are **9,454 historical observations**. They do NOT share a test population or show any effect of our AI on Volvo operations. Missing client economics remain explicitly unmeasured.
 

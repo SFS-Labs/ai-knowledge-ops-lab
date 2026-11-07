@@ -24,7 +24,7 @@ Therefore the newer evidence architecture has **two deliberately unlinked stream
 1. NLBSE 2023 actual harmonized source issue types `bug/feature/question/documentation` for genuine software-request classification. Source labels remain source labels; no imaginary urgency or ROI.
 2. MD5-verified Volvo BPIC 2013 incidents for actual process traces; **9,454 observed group transitions** in **7,554 incidents**, source audited in [CI #27](https://github.com/SFS-Labs/ai-knowledge-ops-lab/actions/runs/42411756411). These transitions are not proof of preventable work.
 
-The €58.50/h 2025 Destatis information-and-communication average is used only for **explicit hypothetical scenario costs**. It is not Volvo wage data. The [research contract](evaluation/research_contract.json) and [static interactive demo](../../docs/index.html) make the boundary machine-readable and understandable to non-technical reviewers.
+The €58.50/h 2025 Destatis information-and-communication average is used only for **explicit hypothetical scenario costs**. It is not Volvo wage data. The [research contract](evaluation/research_contract.json) and [candidate-first work sample](../../docs/index.html) explain the decision to non-technical reviewers; the underlying cost model remains machine-readable.
 
 ## Binding completion standard — the decision, not feature count
 
