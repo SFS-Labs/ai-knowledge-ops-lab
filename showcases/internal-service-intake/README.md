@@ -1,14 +1,10 @@
-# Internal service intake showcase (synthetic-only)
+# Internal service intake | Decision-first AI engineering (synthetic-only)
 
-> **2-minute entry point for customer/recruiting review:** [Decision Evidence Brief](DECISION_EVIDENCE_BRIEF.md). It summarizes hypothesis → counterexample → verification → economic decision limits.
+> **30-second result:** Which component should decide what? The LLM was better at category recognition, the deterministic baseline at overall urgency. Combining them got both labels right in **22/32** exploratory cases, vs **10/32** LLM-only and **11/32** rules-only. But keyword urgency missed **5/9** high-priority cases. **The business answer depends on the cost of those misses.**
 >
-> **Start with the decision, not the code:** [DR-001: why a validated LLM should supply category, deterministic rules should propose urgency, and disagreements require review](HYBRID_DECISION_RECORD.md).
-> The argument includes the retrospective **22/32** hybrid pair result, its **5/9 missed urgent** counterexample, source-attributed implementation and explicit falsification criteria. This is **post-hoc synthetic evidence**, not a customer deployment or proven ROI.
+> **Start with the reasoning:** [91-word hypothesis → counterexample → revised decision](DECISION_EVIDENCE_BRIEF.md). [Complete operator decision record](HYBRID_DECISION_RECORD.md) · [prospective protocol](STUDY_PROTOCOL_V1.md) · [machine-checked evidence gate](evaluation/decision_gate.py).
 >
-> **Exact-SHA verified baseline:** [CI #24](https://github.com/SFS-Labs/ai-knowledge-ops-lab/actions/runs/42399345922) (68 tests and real local LLM/n8n/SQLite E2E, including 36 real CPU inferences) passed on commit `d02a76f856acf62725eb5ec402802e6bb5febeae`.
-> **Current Draft PR HEAD:** includes experimental hybrid routing, source-attributed decision traces, and [DR-002: a pre-specified 480-case study and economic loss protocol](STUDY_PROTOCOL_V1.md).
-> These later changes are **not yet verified by exact-HEAD CI**. No 480-case dataset, real client costs, merge or deployment exists. The [paired-statistics](evaluation/study_statistics.py), [economic-sensitivity](evaluation/economics.py) and [holdout integrity gate](evaluation/holdout_gate.py) are implemented but await tests.
-
+> **Evidence boundary:** [Genuine E2E CI #24](https://github.com/SFS-Labs/ai-knowledge-ops-lab/actions/runs/42399345922) passed at its historical SHA only. Hybrid/method changes remain **IMPLEMENTED, not exact-HEAD CI VERIFIED**. No 480-case independent evaluation, measured customer ROI, merge or deployment.
 
 This showcase is a bounded, offline demonstration of one internal service-intake path:
 
