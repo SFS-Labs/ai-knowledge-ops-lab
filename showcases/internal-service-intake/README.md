@@ -22,16 +22,19 @@ It is intentionally isolated from the repository's research pipeline and from RE
 ## Quick start
 
 ```bash
-cd /home/runner/work/ai-knowledge-ops-lab/ai-knowledge-ops-lab/showcases/internal-service-intake
+cd showcases/internal-service-intake
+export INTERNAL_INTAKE_TOKEN="$(openssl rand -hex 32)"
+export APPROVAL_TOKEN="$(openssl rand -hex 32)"
+export MOCK_API_KEY="$(openssl rand -hex 32)"
 docker compose up --build -d
 ```
 
-Open `http://localhost:5678` and sign in with local basic-auth values (`demo` / `demo-pass` by default).
+Open `http://localhost:5678` and complete n8n local owner setup. This is a local synthetic demonstration, not production identity management. Keep generated tokens private. n8n Code-node environment access is enabled for this demo and requires additional isolation in production.
 
 ## Import workflow (reproducible)
 
 1. In n8n UI, open **Workflows → Import from File**.
-2. Import `/home/runner/work/ai-knowledge-ops-lab/ai-knowledge-ops-lab/showcases/internal-service-intake/n8n/workflow.internal-service-intake.v1.json`.
+2. Import `showcases/internal-service-intake/n8n/workflow.internal-service-intake.v1.json`.
 3. Activate the workflow.
 
 Webhook paths:
@@ -39,9 +42,9 @@ Webhook paths:
 - Intake: `POST http://localhost:5678/webhook/internal-service-intake`
 - Approval: `POST http://localhost:5678/webhook/internal-service-intake-approval`
 
-Required request header for both webhooks:
+Required request headers (distinct credentials):
 
-- `X-INTAKE-TOKEN: local-intake-token` (or your override value)
+- `X-INTAKE-TOKEN: $INTERNAL_INTAKE_TOKEN` for intake; `X-APPROVAL-TOKEN: $APPROVAL_TOKEN` for approval.
 
 ## Nontechnical demo script
 
@@ -56,8 +59,7 @@ Required request header for both webhooks:
 ### Example curl commands
 
 ```bash
-export INTAKE_TOKEN="local-intake-token"
-export MOCK_API_KEY="local-demo-api-key"
+export INTAKE_TOKEN="$INTERNAL_INTAKE_TOKEN"
 
 curl -sS -X POST "http://localhost:5678/webhook/internal-service-intake" \
   -H "Content-Type: application/json" \
@@ -72,7 +74,7 @@ curl -sS -X POST "http://localhost:5678/webhook/internal-service-intake" \
 
 curl -sS -X POST "http://localhost:5678/webhook/internal-service-intake-approval" \
   -H "Content-Type: application/json" \
-  -H "X-INTAKE-TOKEN: ${INTAKE_TOKEN}" \
+  -H "X-APPROVAL-TOKEN: ${APPROVAL_TOKEN}" \
   -d '{
     "request_id": "REQ-DEMO-001",
     "approver": "human.reviewer",
@@ -114,7 +116,7 @@ Covered scenarios:
 
 ## n8n security audit status
 
-Attempted command:
+Audit has not yet been run. To attempt it in an environment with Docker:
 
 ```bash
 docker compose run --rm n8n n8n audit

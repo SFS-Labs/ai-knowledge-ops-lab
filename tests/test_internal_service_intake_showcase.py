@@ -219,6 +219,13 @@ class InternalServiceIntakeShowcaseTests(unittest.TestCase):
         self.assertEqual(200, status)
         self.assertEqual("applied", state["request"]["status"])
 
+    def test_compose_is_loopback_only_and_has_no_fixed_token_defaults(self) -> None:
+        compose = (ROOT / "showcases/internal-service-intake/docker-compose.yml").read_text()
+        self.assertIn('127.0.0.1:5678:5678', compose)
+        self.assertIn('127.0.0.1:8080:8080', compose)
+        self.assertNotIn('local-intake-token', compose)
+        self.assertNotIn('local-demo-api-key', compose)
+
     def test_workflow_has_bounded_retries_timeouts_and_approval_boundary(self) -> None:
         workflow_export = json.loads(WORKFLOW.read_text(encoding="utf-8"))[0]
         nodes = {node["name"]: node for node in workflow_export["nodes"]}
@@ -230,7 +237,7 @@ class InternalServiceIntakeShowcaseTests(unittest.TestCase):
             self.assertEqual(3000, node["parameters"]["options"]["timeout"])
 
         self.assertIn("x-intake-token", nodes["Validate Intake Webhook"]["parameters"]["jsCode"])
-        self.assertIn("x-intake-token", nodes["Validate Approval Webhook"]["parameters"]["jsCode"])
+        self.assertIn("x-approval-token", nodes["Validate Approval Webhook"]["parameters"]["jsCode"])
 
         approval_connections = workflow_export["connections"]["Approval Decision Is Approve"]["main"]
         true_branch_nodes = {edge["node"] for edge in approval_connections[0]}

@@ -3,16 +3,15 @@ services:
     image: n8nio/n8n:1.74.2
     restart: unless-stopped
     ports:
-      - "5678:5678"
+      - "127.0.0.1:5678:5678"
     environment:
       N8N_HOST: localhost
       N8N_PROTOCOL: http
       N8N_PORT: 5678
-      N8N_BASIC_AUTH_ACTIVE: "true"
-      N8N_BASIC_AUTH_USER: ${N8N_BASIC_AUTH_USER:-demo}
-      N8N_BASIC_AUTH_PASSWORD: ${N8N_BASIC_AUTH_PASSWORD:-demo-pass}
-      INTERNAL_INTAKE_TOKEN: ${INTERNAL_INTAKE_TOKEN:-local-intake-token}
-      MOCK_API_KEY: ${MOCK_API_KEY:-local-demo-api-key}
+      N8N_BLOCK_ENV_ACCESS_IN_NODE: "false"
+      APPROVAL_TOKEN: ${APPROVAL_TOKEN:?Set APPROVAL_TOKEN}
+      INTERNAL_INTAKE_TOKEN: ${INTERNAL_INTAKE_TOKEN:?Set INTERNAL_INTAKE_TOKEN}
+      MOCK_API_KEY: ${MOCK_API_KEY:?Set MOCK_API_KEY}
       N8N_DIAGNOSTICS_ENABLED: "false"
       N8N_PERSONALIZATION_ENABLED: "false"
       GENERIC_TIMEZONE: UTC
@@ -27,10 +26,10 @@ services:
       context: ./mock-api
     restart: unless-stopped
     ports:
-      - "8080:8080"
+      - "127.0.0.1:8080:8080"
     environment:
-      MOCK_API_KEY: ${MOCK_API_KEY:-local-demo-api-key}
-    command: ["python", "/app/app.py", "--db-path", "/data/intake.db", "--api-key", "${MOCK_API_KEY:-local-demo-api-key}"]
+      MOCK_API_KEY: ${MOCK_API_KEY:?Set MOCK_API_KEY}
+    command: ["python", "/app/app.py", "--db-path", "/data/intake.db", "--api-key", "${MOCK_API_KEY:?Set MOCK_API_KEY}"]
     volumes:
       - mock_api_data:/data
 

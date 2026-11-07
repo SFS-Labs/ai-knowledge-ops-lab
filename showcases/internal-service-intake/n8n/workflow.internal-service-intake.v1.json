@@ -101,7 +101,7 @@
       {
         "parameters": {
           "mode": "runOnceForEachItem",
-          "jsCode": "const headers = $json.headers ?? {};\nconst token = headers['x-intake-token'];\nif (!token || token !== $env.INTERNAL_INTAKE_TOKEN) { throw new Error('unauthorized_approval_webhook'); }\nconst body = $json.body ?? {};\nfor (const key of ['request_id','approver','decision','rationale']) { if (!(key in body)) { throw new Error(`missing_${key}`); } }\nif (!/^REQ-[A-Z0-9-]{3,40}$/.test(body.request_id)) { throw new Error('invalid_request_id'); }\nif (!['approve','reject'].includes(body.decision)) { throw new Error('invalid_decision'); }\nreturn [{ json: body }];"
+          "jsCode": "const headers = $json.headers ?? {};\nconst token = headers['x-approval-token'];\nif (!token || token !== $env.APPROVAL_TOKEN) { throw new Error('unauthorized_approval_webhook'); }\nconst body = $json.body ?? {};\nfor (const key of ['request_id','approver','decision','rationale']) { if (!(key in body)) { throw new Error(`missing_${key}`); } }\nif (!/^REQ-[A-Z0-9-]{3,40}$/.test(body.request_id)) { throw new Error('invalid_request_id'); }\nif (!['approve','reject'].includes(body.decision)) { throw new Error('invalid_decision'); }\nreturn [{ json: body }];"
         },
         "id": "ValidateApproval",
         "name": "Validate Approval Webhook",
