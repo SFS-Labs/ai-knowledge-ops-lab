@@ -24,7 +24,7 @@ are **not yet exact-HEAD verified or deployed**.
 **More important than the GitHub link is the decision record:**
 [DR-001 — comparative advantage, falsification and business-risk tradeoffs](showcases/internal-service-intake/HYBRID_DECISION_RECORD.md).
 It documents the operator's hypothesis, the 22/32 post-hoc hybrid result,
-the five missed critical cases under keyword urgency, source-attributed
+the five missed high-urgency labels under keyword urgency, source-attributed
 AI-assisted implementation, tests and what would invalidate the approach.
 It does not claim customer outcome or production readiness. The main research pipeline is separate
 and remains the recorded/replay-based pipeline described below.
