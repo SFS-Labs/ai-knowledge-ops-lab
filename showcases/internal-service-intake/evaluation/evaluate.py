@@ -46,7 +46,7 @@ def infer(text: str) -> tuple[dict | None, float, str | None]:
         "messages": [{"role": "system", "content": PROMPT},
                      {"role": "user", "content": text}],
         "temperature": 0, "max_tokens": 192, "stream": False,
-        "response_format": {"type": "json_schema", "schema": MODEL_RESPONSE_SCHEMA},
+        "response_format": {"type": "json_schema", "json_schema": {"name": "service_intake", "schema": MODEL_RESPONSE_SCHEMA}},
     }
     started = time.perf_counter()
     request = Request(ENDPOINT, data=json.dumps(req).encode("utf-8"),
