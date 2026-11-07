@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="de"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; base-uri 'none'; object-src 'none'; form-action 'none'; style-src 'unsafe-inline'; script-src 'self' https://esm.run; connect-src 'self' https://esm.run https://cdn.jsdelivr.net https://raw.githubusercontent.com https://huggingface.co https://*.huggingface.co https://*.hf.co https://*.xethub.hf.co; worker-src 'self' blob:; img-src 'none'">
+<meta name="description" content="Technischer Browser-Demonstrator: echte lokale Qwen2.5-Inferenz für Software-Issue-Typen, ohne Serveranfragen an SFS.">
+<title>Live-Modell | SFS AI Implementation</title>
+<style>
+:root{color-scheme:light;--paper:#f8f8f5;--ink:#1d2925;--accent:#194a39;--line:#dce3dc}
+*{box-sizing:border-box}body{font:16px/1.6 -apple-system,BlinkMacSystemFont,Segoe UI,Arial,sans-serif;color:var(--ink);background:var(--paper);margin:0}
+main,header,footer{max-width:850px;padding:28px;margin:auto}header{border-bottom:1px solid var(--line)}
+h1{font:normal clamp(32px,6vw,48px)/1.16 Georgia,serif;margin:14px 0}
+h2{font-size:19px}a{color:var(--accent)}p{margin:12px 0 20px}
+label{display:block;font-weight:700;margin:21px 0 7px}
+textarea,select,button{font:inherit;border-radius:5px}textarea,select{width:100%;border:1px solid #9daaa0;padding:11px;background:white;color:var(--ink)}
+textarea{min-height:150px;resize:vertical}
+button{cursor:pointer;background:var(--accent);color:white;border:0;padding:12px 19px;margin:18px 10px 18px 0}
+button:disabled{opacity:.5;cursor:not-allowed}button:focus-visible,textarea:focus-visible,select:focus-visible,a:focus-visible{outline:3px solid #648c77;outline-offset:3px}
+article{border:1px solid var(--line);background:white;padding:22px;border-radius:5px}
+small{display:block;color:#58655e}
+#progress,#status{font-size:14px;overflow-wrap:anywhere}#output{white-space:pre-wrap;font-size:18px;font-weight:600}
+.warning{border-left:3px solid #b28b4b;background:#f5f0e4;padding:10px 15px;font-size:14px}
+footer{border-top:1px solid var(--line);font-size:13px}
+@media(max-width:600px){main,header,footer{padding:20px}article{padding:16px}button{display:block;width:100%;margin:12px 0}}
+</style></head><body>
+<header><a href="./">← Arbeitsprobe</a> · <strong>SFS / Sigma Finance Systems</strong></header>
+<main>
+<p><small>Interaktiver technischer Demonstrator · Browser-Inferenz · BETA</small></p>
+<h1>Software-Anfrage mit einem echten Sprachmodell klassifizieren.</h1>
+<p>Das Modell ordnet einen Software-Issue-Typ einer von vier Kategorien zu: <strong>Bug, Feature, Question oder Documentation</strong>. Die Modellberechnung erfolgt – bei kompatibler Hardware – direkt im Browser. Keine kostenpflichtige Modell-API und kein SFS-Backend.</p>
+<article>
+<label for="model">Modellvariante</label>
+<select id="model"><option value="Qwen2.5-1.5B-Instruct-q4f16_1-MLC">Qwen2.5 1.5B – gleiche Modellfamilie und Größe wie im lokalen Workflow</option><option value="Qwen2.5-0.5B-Instruct-q4f16_1-MLC">Qwen2.5 0.5B – ressourcenschonende Mobile-Variante</option></select>
+<small>Andere Quantisierung und Runtime als das lokal mit llama.cpp evaluierte Modell; die 0.5B-Option ist zudem ein anderes Modell. Die Browser-Ergebnisse sind keine veröffentlichte NLBSE-Evaluationskennzahl.</small>
+<label for="issue">Anfragetext (10–1.200 Zeichen)</label>
+<textarea id="issue" minlength="10" maxlength="1200" spellcheck="true">Seit dem letzten Update stürzt unsere Reporting-Anwendung ab, wenn wir eine CSV-Datei exportieren. Könnt ihr diesen Fehler beheben?</textarea>
+<div><button type="button" id="load">Modell lokal laden</button><button type="button" id="classify" disabled>Klassifizieren</button></div>
+<p id="status" role="status">Modell noch nicht geladen. WebGPU und ausreichend verfügbarer Speicher sind erforderlich.</p>
+<progress id="progress" max="1" value="0" hidden style="width:100%"></progress>
+<div id="result" hidden aria-live="polite"><h2>Modellvorhersage</h2><div id="output"></div><small>Nur Vorschlag des Sprachmodells, kein genehmigtes Routing und keine Freigabe.</small></div>
+</article>
+<div class="warning"><strong>Kompatibilität:</strong> Die erste Nutzung lädt Modellgewichte in den Browsercache (erhebliche Datenmenge). iPhones, ältere GPUs, begrenzter Speicher und manche Browser können die Ausführung ablehnen. Es erfolgt kein stiller Fallback auf simulierte Antworten oder einen kostenpflichtigen Cloud-Dienst.</div>
+<h2>Welche Pipeline läuft hier tatsächlich?</h2>
+<p>Diese Browser-Demo führt <strong>Qwen-Modellinferenz und validierte Ausgabe</strong> aus. Sie führt bei diesem Aufruf <strong>nicht</strong> n8n-Orchestrierung, Python-API, SQLite-Speicherung oder Approval aus. Die vollständige lokale Integration und ihre automatisierten End-to-End-Tests sind separat im <a href="https://github.com/SFS-Labs/ai-knowledge-ops-lab/actions/runs/42413698800">GitHub-Actions-Nachweis</a> und im <a href="https://github.com/SFS-Labs/ai-knowledge-ops-lab/tree/main/showcases/internal-service-intake">Quellcode</a> dokumentiert.</p>
+<p>Der Browser-Demonstrator nutzt die vier realen NLBSE-Klassifikationsklassen. Die ältere synthetische Service-Triage im n8n-Workflow verwendet eine davon unterschiedliche Taxonomie und zusätzlich Dringlichkeits-/Freigabeentscheidungen. Beides wird nicht gleichgesetzt.</p>
+</main>
+<footer>Mathias Steinbach · AI Implementation / Technical Delivery · <a href="./">Zur Arbeitsprobe</a> · <a href="https://github.com/SFS-Labs/ai-knowledge-ops-lab">GitHub</a></footer>
+<script type="module" src="./live.js"></script>
+</body></html>
