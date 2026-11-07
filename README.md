@@ -1,45 +1,14 @@
 # AI Knowledge Operations Lab
 
-> **30-second decision sample | B2B AI delivery.** A working local AI pipeline raised a harder question: *Should the LLM or deterministic rules decide each field?* On 32 labeled synthetic cases, hybrid routing got both correct in **22/32** versus **10/32** (LLM-only) and **11/32** (rules-only). But rules missed **5/9** high-urgency cases; the business winner depends on error costs. **The post-hoc pilot is not proof of customer value.** [See the 91-word decision and its counterexample](showcases/internal-service-intake/DECISION_EVIDENCE_BRIEF.md).
+> **30-second decision sample · B2B AI Delivery.** Better classification is only valuable when it improves business operations. Our first 32 labeled **synthetic** cases suggested a 22/32 hybrid score versus 10/32 LLM-only and 11/32 rules-only; the rules also missed 5/9 high-priority cases. **That was exploratory, not customer evidence.** [Read the original decision and counterexample](showcases/internal-service-intake/DECISION_EVIDENCE_BRIEF.md).
 >
-> **Status:** prior real model/n8n E2E [verified on its exact historical SHA](https://github.com/SFS-Labs/ai-knowledge-ops-lab/actions/runs/42399345922); subsequent hybrid/method additions await exact-HEAD CI. No deployment or customer ROI claim.
+> **Now business-first with two real sources:** NLBSE 2023 (software-issue classes **bug / feature / question / documentation**, published 1.4M+ issues, not our older four classes) and original Volvo BPIC 2013 (**7,554 incidents, 65,533 events, 9,454 MD5-verified observed group transitions**). We **never join** these independent populations or claim that AI caused avoided handoffs.
+>
+> **Recruiter:** [60-second interactive business illustration](docs/index.html) · **Technical reviewer:** [Source-backed research design](showcases/internal-service-intake/RESEARCH_DESIGN.md) · [Machine-readable evidence contract](showcases/internal-service-intake/evaluation/research_contract.json).
+>
+> **Verification boundary:** Local n8n/LLM/SQLite E2E passed [CI #25](https://github.com/SFS-Labs/ai-knowledge-ops-lab/actions/runs/42405856175) (100 tests) at historical SHA `d4a8391`; original Volvo source audit passed as a step of [CI #27](https://github.com/SFS-Labs/ai-knowledge-ops-lab/actions/runs/42411756411), whose overall run failed during new research tests. **The current research additions await exact-HEAD CI**; no public n8n/LLM service or measured customer ROI. A future static site requires only GitHub Pages, not credentials or customer infrastructure.
 
-Applied AI research operations for turning real public company disclosures into structured, source-linked knowledge with deterministic quality controls.
-
-> **The core research pipeline below uses recorded/replay results; the separate isolated service-intake experiment has verified historical local-model inference.**
-
-**Milestone M1: recorded, source-linked research pipeline.** A working Python CLI and static replay demonstrate ingestion, deterministic validation, auditable model-output import and review routing. A three-source in-session AI extraction is recorded. This is an evolving research project; isolated model experiments, reviewed labels and held-out evaluation remain open. See [milestone evidence and next steps](docs/milestone-m1.md).
-
-## Isolated B2B service-intake demonstration (Draft, synthetic-only)
-
-A separate [n8n + SQLite service-intake showcase](showcases/internal-service-intake/README.md)
-demonstrates deterministic authenticated intake, duplicate handling, simulated approval
-and an auditable persisted operation. The earlier real Docker/n8n verification is
-documented at its original exact SHA.
-
-The synthetic free-text path uses a real local open-weight LLM, independent
-validation, a separate approval gate and manual-review fallback.
-[CI #24](https://github.com/SFS-Labs/ai-knowledge-ops-lab/actions/runs/42399345922)
-verified its real model/n8n/SQLite E2E and 36 inferences on **that exact SHA**
-(d02a76f). Subsequent experimental hybrid-decision changes in
-[Draft PR #9](https://github.com/SFS-Labs/ai-knowledge-ops-lab/pull/9)
-are **not yet exact-HEAD verified or deployed**.
-
-**For a hiring manager: [2-minute decision evidence brief](showcases/internal-service-intake/DECISION_EVIDENCE_BRIEF.md).** It starts with the operator's hypothesis, its strongest counterexample and the testable economic break-even, not a feature list.
-
-**More important than the GitHub link is the decision record:**
-[DR-001 — comparative advantage, falsification and business-risk tradeoffs](showcases/internal-service-intake/HYBRID_DECISION_RECORD.md).
-It documents the operator's hypothesis, the 22/32 post-hoc hybrid result,
-the five missed high-urgency labels under keyword urgency, source-attributed
-AI-assisted implementation, tests and what would invalidate the approach.
-The [prospective 480-case study protocol](showcases/internal-service-intake/STUDY_PROTOCOL_V1.md)
-and [executable cost-sensitivity model](showcases/internal-service-intake/evaluation/economics.py)
-expose both statistical-selection bias and the break-even threshold between
-missed high-priority cases and false escalations. **The 480 independent cases
-have NOT been collected or evaluated.** The study plan is not a confirmed
-finding, and customer economic superiority has not been proven.
-It does not claim customer outcome or production readiness. The main research pipeline is separate
-and remains the recorded/replay-based pipeline described below.
+This repository also retains its earlier **SEC disclosure → source-linked knowledge** research pipeline, documented separately below. It is not equivalent to the newer service-intake experiment.
 
 ## Start here
 
