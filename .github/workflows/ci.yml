@@ -37,7 +37,7 @@ jobs:
           export INTERNAL_INTAKE_TOKEN="$(openssl rand -hex 32)"
           export APPROVAL_TOKEN="$(openssl rand -hex 32)"
           export MOCK_API_KEY="$(openssl rand -hex 32)"
-          trap 'docker compose down --volumes --remove-orphans' EXIT
+          trap 'rc=$?; if [ "$rc" -ne 0 ]; then docker compose logs --no-color --tail=120 n8n mock-api; fi; docker compose down --volumes --remove-orphans' EXIT
           docker compose up --build -d
           ready=false
           for attempt in {1..60}; do
