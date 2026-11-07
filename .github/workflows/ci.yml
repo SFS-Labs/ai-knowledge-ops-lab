@@ -18,3 +18,26 @@ jobs:
           python-version: '3.12'
       - name: Run unit tests
         run: python -m unittest discover -s tests -v
+
+  n8n-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout without stored credentials
+        uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608
+        with:
+          persist-credentials: false
+      - name: Start local synthetic stack, import workflow and run n8n audit
+        shell: bash
+        working-directory: showcases/internal-service-intake
+        run: |
+          set -euo pipefail
+          export INTERNAL_INTAKE_TOKEN="$(openssl rand -hex 32)"
+          export APPROVAL_TOKEN="$(openssl rand -hex 32)"
+          export MOCK_API_KEY="$(openssl rand -hex 32)"
+          trap 'docker compose down --volumes --remove-orphans' EXIT
+          docker compose up --build -d
+          docker compose exec -T n8n n8n import:workflow --input=/opt/n8n-import/workflow.internal-service-intake.v1.json
+          docker compose exec -T n8n n8n audit
