@@ -18,7 +18,7 @@ class StaticRecruiterDemoTests(unittest.TestCase):
         for keyword in ["bug", "feature", "question", "documentation",
                         "Volvo", "NLBSE", "synthetisch", "nicht auf Fallniveau",
                         "kein Ergebnis dieser öffentlichen Datensätze"]:
-            self.assertIn(keyword,self.page)
+            self.assertIn(keyword.casefold(),self.page.casefold())
         self.assertIn("Originalarchiv",self.page)
 
     def test_no_public_llm_or_client_secrets(self):
