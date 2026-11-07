@@ -6,6 +6,7 @@
 - **Data source:** https://github.com/nlbse2023/issue-report-classification
 - **Label limitations:** source GitHub labels were normalized by benchmark organizers; they are not independently adjudicated ground truth. The published test CSV has no project ID column. The full original test also contains 541 repeated issue-ID rows and five conflicting labels; these are excluded entirely from the diagnostic sample.
 - **Frozen model:** actual CPU inference using Qwen2.5-1.5B-Instruct GGUF Q4_K_M and pinned llama.cpp server; original model SHA256 `6a1a2eb6d15622bf3c96857206351ba97e1af16c30d7a74ee38970e434e9407e`.
+- **Original competition rules:** official submissions require the **entire** 142,320-row held-out test, with no sampling/rebalancing, and evaluate micro-F1. Our stratified diagnostic is intentionally not an official submission. The original [NLBSE competition repository](https://github.com/nlbse2023/issue-report-classification) licenses its own code under AGPL-3.0; that does **not** establish blanket republication rights to third-party GitHub issue bodies. We only publish derived decisions, hashes and aggregate statistics, never original text.
 - **No customer claim:** a real public software-issue dataset is not B2B customer service-ticket data. Neither urgency, handoff savings nor economic outcomes were measured by this study.
 
 ## Original genuine 96-case diagnostic (v1, preserve unchanged)
