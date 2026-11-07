@@ -48,7 +48,7 @@ conditional gross labor potential (€)
   × external sector labor cost €/h
 ```
 
-At 9,454 observed changes, **5% hypothetical preventability and five hypothetical minutes** imply **€2,304.41 gross across the entire historical log**. This value is a sensitivity illustration, **not measured savings**. [`research_methods.py`](evaluation/research_methods.py) enforces numerical validity and attaches explicit noncausality disclosures. [Static interactive demo](../../docs/index.html) makes the assumptions adjustable, with no public LLM/webhook/API.
+At 9,454 observed changes, **5% hypothetical preventability and five hypothetical minutes** imply **€2,304.41 gross across the entire historical log**. This value is a sensitivity illustration, **not measured savings**. [`research_methods.py`](evaluation/research_methods.py) enforces numerical validity and attaches explicit noncausality disclosures. [Scenario code](evaluation/research_methods.py) makes the assumptions independently adjustable. The [personal work sample](../../docs/index.html) concentrates on the decision process; no public LLM/webhook/API.
 
 The datasets have **no per-request correspondence**: a correct NLBSE issue-class prediction cannot be used to claim a specific Volvo group handoff was avoided. Even the historical classification/handoff correlation within one dataset could not alone identify the intervention effect.
 
