@@ -148,11 +148,21 @@
       {
         "parameters": {
           "conditions": {
-            "string": [
+            "options": {
+              "caseSensitive": true,
+              "leftValue": "",
+              "typeValidation": "strict",
+              "version": 2
+            },
+            "combinator": "and",
+            "conditions": [
               {
-                "value1": "={{$json.decision}}",
-                "operation": "equal",
-                "value2": "approve"
+                "leftValue": "={{ $json.decision }}",
+                "rightValue": "approve",
+                "operator": {
+                  "type": "string",
+                  "operation": "equals"
+                }
               }
             ]
           }
