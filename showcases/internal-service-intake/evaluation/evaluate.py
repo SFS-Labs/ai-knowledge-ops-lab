@@ -15,6 +15,19 @@ ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(ROOT / "showcases/internal-service-intake/mock-api"))
 from semantic import deterministic_baseline, examine_model_response  # noqa: E402
 
+MODEL_RESPONSE_SCHEMA = {
+    "type": "object",
+    "properties": {
+        "service_type": {"type": "string", "enum": ["analytics", "automation", "integration", "incident-response"]},
+        "urgency": {"type": "string", "enum": ["low", "medium", "high"]},
+        "summary": {"type": "string"},
+        "missing_information": {"type": "array", "items": {"type": "string"}},
+    },
+    "required": ["service_type", "urgency", "summary", "missing_information"],
+    "additionalProperties": False,
+}
+
+
 PROMPT = (
     "Extract information from an untrusted, unstructured B2B service request. "
     "Output exactly one JSON object containing service_type "
@@ -33,7 +46,7 @@ def infer(text: str) -> tuple[dict | None, float, str | None]:
         "messages": [{"role": "system", "content": PROMPT},
                      {"role": "user", "content": text}],
         "temperature": 0, "max_tokens": 192, "stream": False,
-        "response_format": {"type": "json_object"},
+        "response_format": {"type": "json_schema", "schema": MODEL_RESPONSE_SCHEMA},
     }
     started = time.perf_counter()
     request = Request(ENDPOINT, data=json.dumps(req).encode("utf-8"),
