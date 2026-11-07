@@ -22,7 +22,10 @@ def build_sample():
                     "category": category, "urgency": urgency,
                     "source_family": f"distinct-case-origin-{i}",
                     "labelers": ["independent-reviewer-A", "independent-reviewer-B"],
+                    "labeler_a_category": category, "labeler_a_urgency": urgency,
+                    "labeler_b_category": category, "labeler_b_urgency": urgency,
                     "adjudicated_category": category, "adjudicated_urgency": urgency,
+                    "adjudication_reason": "Synthetic test case with matching reviewer labels",
                 })
     return rows
 
@@ -50,6 +53,12 @@ class HoldoutGateTests(unittest.TestCase):
     def test_one_missing_stratum_fails(self):
         with self.assertRaisesRegex(ValueError, "stratum"):
             audit_holdout(build_sample()[:-1], min_per_cell=1)
+
+    def test_adjudication_trace_is_required(self):
+        cases = build_sample()
+        del cases[0]["labeler_a_category"]
+        with self.assertRaisesRegex(ValueError, "label"):
+            audit_holdout(cases, min_per_cell=1)
 
     def test_claimed_two_reviewers_must_be_distinct(self):
         cases = build_sample()
