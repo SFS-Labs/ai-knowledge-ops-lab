@@ -1,6 +1,6 @@
 # SFS Decision Engineering — business-led evidence, not demo-led storytelling
 
-**Status: Real source audits and fixed rule benchmark VERIFIED as individual CI #29 steps; exact final release HEAD and public static hosting pending.** This document is the canonical research and recruiting explanation. Original project: Sigma Finance Systems (SFS), synthetic-local implementation + independently sourced public evidence.
+**Status: Source data VERIFIED in original audit jobs (NLBSE full-test + Volvo), separate from release verification. For the final publication commit, consult [exact-HEAD GitHub Actions](https://github.com/SFS-Labs/ai-knowledge-ops-lab/actions/workflows/ci.yml). Public hosting is static only; no production AI service.** This document is the canonical research and recruiting explanation. Original project: Sigma Finance Systems (SFS), synthetic-local implementation + independently sourced public evidence.
 
 ## The 30-second question
 
