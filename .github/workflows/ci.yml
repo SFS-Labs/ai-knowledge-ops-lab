@@ -113,6 +113,8 @@ jobs:
           test "$GITHUB_REPOSITORY" = SFS-Labs/ai-knowledge-ops-lab
           test "$GITHUB_REF" = refs/heads/copilot/build-isolated-ai-service-showcase
           test "$RUNNER_OS" = Linux
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          echo "exact_sha=$GITHUB_SHA"
           echo "manual_only=true public_standard_runner=ubuntu-latest"
           free -h
           df -h /tmp
@@ -209,7 +211,7 @@ jobs:
           docker compose exec -T n8n n8n import:workflow --input=/opt/n8n-import/workflow.internal-service-intake.v1.json
           docker compose exec -T n8n n8n audit > /tmp/sfs-llm-n8n-audit.log
           echo "Actual n8n audit findings:"
-          grep -E -i 'risk|warning|node|error|vulnerab|instance' /tmp/sfs-llm-n8n-audit.log | head -n 35 || true
+          sed -n '1,140p' /tmp/sfs-llm-n8n-audit.log
           docker compose exec -T n8n n8n publish:workflow --id=sfsIntakeDemo01
           docker compose restart n8n
           ready=false
