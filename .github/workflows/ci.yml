@@ -47,3 +47,16 @@ jobs:
           if [ "$ready" != true ]; then docker compose logs --no-color n8n; exit 1; fi
           docker compose exec -T n8n n8n import:workflow --input=/opt/n8n-import/workflow.internal-service-intake.v1.json
           docker compose exec -T n8n n8n audit
+          docker compose exec -T n8n n8n update:workflow --all --active=true
+          docker compose restart n8n
+          ready=false
+          for attempt in {1..60}; do
+            if curl --fail --silent http://127.0.0.1:5678/healthz >/dev/null; then ready=true; break; fi
+            sleep 2
+          done
+          if [ "$ready" != true ]; then docker compose logs --no-color n8n; exit 1; fi
+          intake='{"request_id":"REQ-E2E-001","requester":"synthetic","service_type":"analytics","urgency":"medium","justification":"Synthetic test request for review"}'
+          approval='{"request_id":"REQ-E2E-001","approver":"reviewer","decision":"approve","rationale":"Synthetic demo approval"}'
+          curl --fail-with-body --silent --show-error -X POST http://127.0.0.1:5678/webhook/internal-service-intake -H "Content-Type: application/json" -H "X-INTAKE-TOKEN: $INTERNAL_INTAKE_TOKEN" -d "$intake" | jq -e '.request_id=="REQ-E2E-001" and .status=="pending"'
+          curl --fail-with-body --silent --show-error -X POST http://127.0.0.1:5678/webhook/internal-service-intake-approval -H "Content-Type: application/json" -H "X-APPROVAL-TOKEN: $APPROVAL_TOKEN" -d "$approval" | jq -e '.status=="applied"'
+          curl --fail-with-body --silent --show-error http://127.0.0.1:8080/v1/intake/request/REQ-E2E-001 -H "X-MOCK-API-KEY: $MOCK_API_KEY" | jq -e '.request.status=="applied" and ([.audit[].event_type] | index("apply_executed") != null)'
