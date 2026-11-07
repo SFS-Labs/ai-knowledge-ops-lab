@@ -35,7 +35,7 @@ def profile_rows(rows, *, require_published_counts=True):
         if not isinstance(row, dict):
             raise ValueError("invalid_row")
         # Source labels are normalized by NLBSE organizers, not by SFS.
-        label = (row.get("label") or row.get("Label") or "").strip().lower()
+        label = (row.get("labels") or row.get("label") or row.get("Label") or "").strip().lower()
         if label not in EXPECTED:
             raise ValueError("unexpected_source_label_" + label[:80])
         id_value = str(row.get("id") or row.get("Id") or row.get("issue_id") or "").strip()
