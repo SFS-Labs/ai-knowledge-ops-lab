@@ -1,61 +1,164 @@
 <!doctype html>
-<html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="description" content="Wie B2B-AI-Implementierung durch überprüfbare Entscheidungen statt Modell-Hype wirtschaftlich wird – reale Datensätze, prüfbare Grenzen, hypothetische Kosten.">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data:; connect-src 'none'; base-uri 'none'; form-action 'none'">
-<title>Decision Engineering | SFS Labs</title>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Mathias Steinbach. Eine konkrete Arbeitsprobe zu AI Implementation, wissenschaftlichem Denken und technischen Entscheidungen: Hypothese, Gegenbeweis und verifizierte Umsetzung.">
+<meta name="color-scheme" content="light">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'none'; img-src data:; connect-src 'none'; form-action 'none'; base-uri 'none'">
+<title>Mathias Steinbach | AI Implementation – eine Entscheidung, die ich geprüft habe</title>
 <style>
-:root{color-scheme:dark;--bg:#07111d;--panel:#111e2b;--line:#2a4052;--text:#eff7f8;--muted:#9aafbb;--teal:#5bd9c0;--gold:#d5c697}
-*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:radial-gradient(ellipse at 82% -7%,#17423f 0,transparent 42%),var(--bg);color:var(--text);font:16px/1.55 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
-.container{max-width:1090px;margin:auto;padding:0 22px}.top{height:73px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:18px}.brand{font-weight:780;letter-spacing:.13em;font-size:.9rem}.brand span{color:var(--teal)}.top a, a{color:var(--teal);text-underline-offset:4px}.top a{font-size:.86rem}.hero{padding:67px 0 40px}.eyebrow{color:var(--teal);font-size:.75rem;font-weight:800;letter-spacing:.19em;text-transform:uppercase}h1{font-size:clamp(2.25rem,5.7vw,4.5rem);line-height:1.08;letter-spacing:-.045em;margin:19px 0 18px;max-width:940px}h1 em{color:var(--teal);font-style:normal}.lead{font-size:1.13rem;color:#c4d4dc;max-width:790px}.pill{display:inline-block;margin:10px 0 0;padding:7px 11px;font-size:.73rem;color:#d7eae8;border:1px solid #42685e;border-radius:50px}.actions{display:flex;flex-wrap:wrap;gap:11px;margin:25px 0 0}.button{background:var(--teal);color:#05221b;padding:11px 18px;text-decoration:none;border-radius:8px;font-weight:740}.button.secondary{color:var(--text);background:none;border:1px solid var(--line)}.section{padding:29px 0 35px}.section h2{font-size:clamp(1.4rem,3.2vw,2rem);letter-spacing:-.02em;margin:0 0 13px}.muted{color:var(--muted)}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}.card{background:linear-gradient(180deg,#142534,#0e1b29);border:1px solid var(--line);border-radius:14px;padding:23px}.card h3{margin:0 0 10px;font-size:1.14rem}.tag{color:var(--teal);font-size:.75rem;font-weight:800;letter-spacing:.08em}.metric{font-size:clamp(1.75rem,4vw,2.5rem);font-weight:800;letter-spacing:-.035em;color:#fff}.factual{border-left:3px solid var(--teal);padding-left:15px;margin:17px 0}.warning{border:1px solid #8f7552;background:#29231c;padding:14px 18px;border-radius:10px;color:#e8d9bd;font-size:.9rem}.split{display:grid;grid-template-columns:1fr 1.05fr;gap:24px}.result{font-size:clamp(2rem,5vw,3.4rem);font-weight:800;color:var(--teal)}.controls{display:grid;gap:17px}.controls label{display:block;font-weight:680}.controls input{display:block;width:100%;margin:8px 0 4px;accent-color:var(--teal)}.controls small{color:var(--muted)}.flow{display:flex;gap:7px;flex-wrap:wrap;align-items:center}.flow span{border:1px solid var(--line);background:var(--panel);border-radius:8px;padding:8px 13px;font-size:.86rem}.flow b{color:var(--teal)}.statline{display:flex;flex-wrap:wrap;gap:35px;padding:18px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}.statline .metric{font-size:1.65rem}footer{border-top:1px solid var(--line);padding:25px 0 50px;color:var(--muted);font-size:.85rem}ul{padding-left:20px}li{margin-bottom:7px}
-@media(max-width:760px){.grid,.split{grid-template-columns:1fr}.hero{padding-top:42px}.statline{gap:17px}.top{height:auto;padding-top:15px;padding-bottom:15px}.hero h1{font-size:2.7rem}}
-</style></head><body>
-<header class="container top"><div class="brand">SFS <span>LABS</span> / DECISION ENGINEERING</div><a href="https://github.com/SFS-Labs/ai-knowledge-ops-lab">Source &amp; Audit Trail</a></header>
-<main class="container">
-<section class="hero" aria-labelledby="headline"><div class="eyebrow">B2B AI · Evidence-first implementation</div>
-<h1 id="headline">Nicht das Modell entscheidet über den Nutzen. <em>Die Geschäftsentscheidung.</em></h1>
-<p class="lead">Wir prüfen, welche AI- und Regelkomponenten für welche Aufgabe geeignet sind – und wann ein scheinbar besseres Ergebnis <strong>wirtschaftlich schlechter</strong> sein kann.</p>
-<div class="flow" aria-label="Ablauf"><span>Geschäftsproblem</span><b>→</b><span>echte Daten</span><b>→</b><span>Gegenprobe</span><b>→</b><span>Kostenmodell</span><b>→</b><span>Entscheidung</span></div>
-<div class="pill">Reale öffentliche Datenquellen · reproduzierbare Logik · keine Kundendaten, kein Live-LLM</div>
-<div class="actions"><a class="button" href="#business">Den Geschäftseffekt sehen</a><a class="button secondary" href="#evidence">Evidenz und Grenzen prüfen</a></div>
-</section>
-<section class="section" id="business"><div class="eyebrow">In unter 60 Sekunden verständlich</div><h2>Der Business Case: weniger Reibung, weniger vermeidbarer Aufwand</h2>
-<p class="muted">Ein Service-Team bekommt unterschiedliche Software-Anfragen. Manche sind Fehler, andere neue Funktionen, Fragen oder Dokumentation. Falsches Routing kann zusätzliche Übergaben verursachen. Aber nicht jede beobachtete Übergabe ist vermeidbar.</p>
-<div class="grid">
-<div class="card"><div class="tag">STRANG 01 · KLASSIFIKATION</div><h3>Was ist die Anfrage?</h3><div class="metric">49,25 %</div><p>Bug · Feature · Question · Documentation. Die Klassen stammen aus einem echten, veröffentlichten Issue-Benchmark – nicht aus unserer Vertriebsstory. <strong>49,25 %</strong> ist die tatsächlich erreichte Genauigkeit einer einfachen, selbst ausgeführten Regel-Baseline.</p><p class="muted">NLBSE 2023: 1.418.201 publizierte Fälle, davon <strong>142.320 vollständig überprüft</strong>; 541 wiederholte Issue-IDs (5 Labelkonflikte). <strong>Unser LLM wurde hier noch nicht getestet.</strong></p></div>
-<div class="card"><div class="tag">STRANG 02 · PROZESS</div><h3>Was kostet die Bearbeitung?</h3><div class="metric">9.454 Gruppenwechsel</div><p>In 7.554 echten IT-Incident-Fällen wurden 65.533 Ereignisse und 9.454 Wechsel der Bearbeitungsgruppe aus dem MD5-geprüften Originalarchiv gemessen. Gruppenwechsel sind ein Prozessindikator, keine belegten vermeidbaren Arbeiten.</p><p class="muted">Volvo BPI 2013; keine gemeinsame Fallbasis mit NLBSE. Keine gemessene Wirkung unserer AI.</p></div>
-</div></section>
-<section class="section"><div class="eyebrow">Interaktive Wirtschaftlichkeit · ausschließlich Szenario</div><h2>Was <em>wäre</em> eine vermiedene Übergabe wert?</h2>
-<p class="muted">Die Eingaben unten sind illustrative Annahmen, <strong>keine aus Volvo gemessenen AI-Einsparungen</strong>. Die 58,50 €/Arbeitsstunde sind ein offizieller deutscher Sektordurchschnitt 2025 und kein Volvo-Personalkostensatz.</p>
-<div class="split">
-<div class="card controls">
-<div><label for="transitions">Beobachtete Gruppenwechsel (Originaldatensatz: 9.454): <output id="n">9454</output></label><input id="transitions" type="range" min="0" max="10000" step="1" value="9454"></div>
-<div><label for="avoid">Davon hypothetisch vermeidbar: <output id="a">5 %</output></label><input id="avoid" type="range" min="0" max="60" step="5" value="5"></div>
-<div><label for="minutes">Hypothetisch eingesparte Arbeitsminuten je Übergabe: <output id="m">5</output></label><input id="minutes" type="range" min="0" max="30" step="1" value="5"></div>
-<small>Referenz: 58,50 €/Arbeitsstunde · Destatis, Information &amp; Kommunikation 2025.</small>
-</div>
-<div class="card"><div class="tag">BEDINGTER POTENZIALWERT · KEIN REALISIERTER ROI</div>
-<div class="result" id="eur" aria-live="polite">2.304,41 €</div><p>Hypothetisch vermeidbare Bruttoarbeitskosten im gewählten Szenario.</p>
-<p id="math" class="muted">9454 × 5 % × 5 Min. ÷ 60 × 58,50 €</p><div class="warning">Betrieb, Review, Qualität und Eskalationsrisiko sind nicht eingepreist. Der tatsächliche Nutzen kann null oder negativ sein. Der Datensatz beweist nicht, dass unsere AI Übergaben verhindert.</div></div>
-</div></section>
-<section class="section" id="evidence"><div class="eyebrow">Für technische Entscheider</div><h2>Die Beweiskette ist bewusst zweigeteilt.</h2>
-<p>Die Datensätze werden <strong>nicht auf Fallniveau verbunden</strong>. Klassifikationsleistung und Prozesskosten sind deshalb zwei getrennte Aussagen. Ein gemeinsamer Customer-ROI wäre derzeit erfunden.</p>
-<div class="statline"><div><div class="metric">142.320</div><div class="muted">vollständig gemessene Regelbaseline</div></div><div><div class="metric">9.454</div><div class="muted">gemessene Gruppenwechsel</div></div><div><div class="metric">58,50 €</div><div class="muted">deutsche Sektorreferenz / h</div></div></div>
-<ul><li><strong>Historisch validiert:</strong> Die bisherige lokale n8n-/LLM-/SQLite-Integration bestand CI #25 mit 100 Python-Tests. Die 32 Fälle der früheren Hybrid-Pilotstudie waren synthetisch und sind <strong>kein Ergebnis dieser öffentlichen Datensätze</strong>.</li>
-<li><strong>Quellenprüfung:</strong> Das Volvo-Originalarchiv und die 9.454 Gruppenwechsel wurden im <a href="https://github.com/SFS-Labs/ai-knowledge-ops-lab/actions/runs/42411756411">GitHub-Actions-Quellenlauf #27</a> mit MD5-Check geprüft. Der <a href="https://github.com/SFS-Labs/ai-knowledge-ops-lab/actions/runs/42412917843">NLBSE-Quellenlauf #29</a> prüfte alle 142.320 Testzeilen und maß 49,25 % Accuracy und 41,49 % Macro-F1 für unsere einfache Keyword-Baseline. <strong>Kein LLM-Ergebnis, kein Kundennutzen-Nachweis.</strong></li>
-<li><strong>Unbewiesen:</strong> Eine zusätzliche Übergabe ist tatsächlich vermeidbar; real eingesparte Personalkosten; generalisierbarer Modellvorteil; Produktionsreife.</li></ul>
-<p><a href="https://github.com/SFS-Labs/ai-knowledge-ops-lab/blob/main/showcases/internal-service-intake/evaluation/research_contract.json">Forschungsvertrag</a> · <a href="https://github.com/SFS-Labs/ai-knowledge-ops-lab/blob/main/showcases/internal-service-intake/evaluation/research_methods.py">Ausführbare Annahmenkontrollen</a> · <a href="https://github.com/SFS-Labs/ai-knowledge-ops-lab/pull/9">Decision Record / ursprünglicher Hypothesentest</a></p></section>
-<section class="section"><h2>Quellen und Verantwortungsgrenzen</h2>
-<ul><li><a href="https://github.com/nlbse2023/issue-report-classification">NLBSE 2023</a> – reale öffentliche GitHub-Issues, Typenlabels teilweise harmonisiert, 90/10 Split; kein Dringlichkeits-/Kostenlabel.</li>
-<li><a href="https://doi.org/10.4121/uuid:500573e6-accc-4b0c-9576-aa5468b10cee">4TU.ResearchData: Volvo IT BPI 2013</a> – reales Incident-Eventlog, keine direkt nachgewiesenen AI-Kosteneinsparungen.</li>
-<li><a href="https://www.destatis.de/DE/Presse/Pressemitteilungen/2026/04/PD26_148_624.html">Destatis 2025</a> – durchschnittliche Arbeitgeber-Arbeitskosten in Information und Kommunikation: 58,50 €/h.</li></ul>
-<p class="muted">Demonstration einer Forschungs- und Entscheidungsarchitektur; kein produktives Service-Desk-System. Keine öffentlichen n8n-Webhooks, keine Cloud-Inferenz, keine echten Kunden- oder Zugangsdaten.</p>
-</section></main>
-<footer><div class="container">SFS Labs · Sigma Finance Systems · Transparent demonstriert: reale Ausgangsdaten, getrennte Evidenzstränge, hypothetische Verbesserung. <a href="https://github.com/SFS-Labs/ai-knowledge-ops-lab">Code und Historie</a></div></footer>
-<script>
-(()=>{const fmt=new Intl.NumberFormat("de-DE",{style:"currency",currency:"EUR"});const el=id=>document.getElementById(id);
-const update=()=>{const n=+el("transitions").value,a=+el("avoid").value,m=+el("minutes").value;
-el("n").textContent=String(n);el("a").textContent=a+" %";el("m").textContent=String(m);
-el("eur").textContent=fmt.format(n*a/100*m/60*58.5);
-el("math").textContent=n+" × "+a+" % × "+m+" Min. ÷ 60 × 58,50 €";};
-for(const id of ["transitions","avoid","minutes"])el(id).addEventListener("input",update);update();})();
-</script></body></html>
+:root{--paper:#f8f8f5;--white:#ffffff;--ink:#1d2925;--shade:#55615b;--soft:#edf2ed;--line:#dce3dc;--accent:#246650;--accent-dark:#194a39;--warm:#f1eee6}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;font-size:16px;line-height:1.62;-webkit-font-smoothing:antialiased}
+a{color:var(--accent-dark);text-underline-offset:4px}
+a:hover{text-decoration-thickness:2px}
+a:focus-visible,summary:focus-visible{outline:3px solid #59886a;outline-offset:5px;border-radius:3px}
+.shell{max-width:1060px;padding:0 28px;margin:0 auto}
+header{background:var(--paper);border-bottom:1px solid var(--line)}
+.header{min-height:78px;display:flex;align-items:center;justify-content:space-between;gap:20px}
+.name{font-size:15px;letter-spacing:.01em;font-weight:750}
+.header-sub{color:var(--shade);font-size:12px;display:block;line-height:1.3;margin-top:2px}
+.header-right{display:flex;align-items:center;gap:25px;font-size:13px;white-space:nowrap}
+.header-right a{text-decoration:none;font-weight:650}
+.hero{padding:80px 0 80px;display:grid;grid-template-columns:minmax(0,1.45fr) minmax(250px,.65fr);gap:62px;align-items:center}
+.eyebrow{color:var(--accent-dark);font-size:11px;letter-spacing:.16em;font-weight:800;text-transform:uppercase}
+h1,h2,.thought{font-family:Georgia,"Times New Roman",serif;font-weight:400;letter-spacing:-.045em}
+h1{font-size:clamp(40px,5.35vw,66px);line-height:1.1;margin:18px 0 26px;max-width:650px}
+h1 span{color:var(--accent)}
+.lede{font-size:19px;max-width:640px;line-height:1.59;letter-spacing:-.01em}
+.lede strong{font-weight:700}
+.actions{display:flex;gap:13px;flex-wrap:wrap;align-items:center;margin:33px 0 22px}
+.primary{background:var(--accent-dark);color:white;padding:13px 20px;border-radius:4px;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;font-weight:690;font-size:14px}
+.primary:hover{background:#0d3628}
+.secondary{font-weight:670;font-size:14px;padding:10px 4px;text-decoration-thickness:1px}
+.facts{font-size:12px;color:var(--shade);line-height:1.7}
+.facts b{color:var(--ink)}
+.note{padding:30px 27px;border:1px solid #bfd1c4;background:var(--soft);border-radius:3px}
+.note-kicker{font-size:11px;color:var(--accent-dark);font-weight:750;letter-spacing:.1em;text-transform:uppercase}
+.thought{font-size:clamp(23px,2.45vw,30px);line-height:1.31;margin:19px 0 17px}
+.note p:last-child{font-size:14px;line-height:1.6;color:#48584d;margin-bottom:0}
+.rule{border-top:1px solid var(--line)}
+section{scroll-margin-top:26px}
+.story{padding:69px 0 64px}
+h2{font-size:clamp(29px,3.65vw,41px);line-height:1.17;margin:12px 0 18px;max-width:780px}
+.intro{color:var(--shade);max-width:770px;margin:0 0 34px}
+.steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px}
+.step{border-top:2px solid var(--accent);padding:20px 12px 4px 0}
+.step-index{font-weight:750;font-size:12px;color:var(--accent)}
+.step h3{font-size:19px;line-height:1.28;letter-spacing:-.025em;margin:14px 0 10px}
+.step p{font-size:15px;line-height:1.64;margin:0;color:#394840}
+.effect{padding:40px 0 57px}
+.case{padding:33px 39px;background:var(--warm);border-left:4px solid #8d8068}
+.case-head{font-size:12px;font-weight:750;color:#696252;letter-spacing:.09em;text-transform:uppercase}
+.example{font-family:Georgia,"Times New Roman",serif;font-size:clamp(20px,2.9vw,28px);line-height:1.4;max-width:780px;margin:18px 0 16px}
+.case p:last-child{margin:0;font-size:15px;max-width:800px}
+.material{padding:70px 0 66px;background:var(--white);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.material-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:68px;align-items:start}
+.material-grid p{max-width:640px}
+.material-grid .text{font-size:16px}
+.checks{border-top:1px solid var(--line);margin-top:4px}
+.check{display:grid;grid-template-columns:125px 1fr;gap:15px;padding:15px 0;border-bottom:1px solid var(--line);font-size:14px}
+.check strong{font-size:12px;color:var(--accent-dark);text-transform:uppercase;letter-spacing:.04em}
+.check span{color:#415149}
+small,.caption{font-size:12px;color:var(--shade)}
+.details{padding:56px 0 50px}
+.details h2{margin-bottom:9px}
+details{border-bottom:1px solid var(--line);padding:18px 0}
+summary{font-weight:750;cursor:pointer;list-style:none;display:flex;justify-content:space-between;gap:20px}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";font-size:22px;line-height:1;color:var(--accent)}
+details[open] summary::after{content:"−"}
+details .inner{font-size:14px;color:#34463d;max-width:840px;padding:9px 0 0}
+details ul{padding-left:20px}
+details li{margin:8px 0}
+.nums{font-variant-numeric:tabular-nums}
+.end{background:#1b3029;color:#f6f8f4;padding:56px 0 61px}
+.end-inner{display:grid;grid-template-columns:1.1fr .9fr;gap:45px;align-items:center}
+.end h2{font-family:Georgia,"Times New Roman",serif;letter-spacing:-.04em;margin:0 0 16px;color:#fff}
+.end p{margin:0;color:#d8e5db;max-width:600px}
+.end .contact{display:flex;flex-direction:column;gap:11px;align-items:flex-start}
+.end .contact a{color:#f6f8f4}
+.end .contact a.primary{background:#d5e9d6;color:#163526}
+.end small{color:#c2d3c8}
+footer{padding:25px 0 30px;font-size:12px;color:var(--shade)}
+.footer{display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap}
+@media(max-width:770px){.shell{padding:0 20px}.header{min-height:68px}.header-right{gap:13px}.hero{display:block;padding:45px 0 53px}.note{margin-top:38px;padding:24px}.story{padding:49px 0}.steps,.material-grid,.end-inner{grid-template-columns:1fr;gap:26px}.material{padding:49px 0}.step{padding-top:16px}.case{padding:24px 22px}.effect{padding:4px 0 46px}.check{grid-template-columns:105px 1fr}.details{padding:42px 0}.end{padding:43px 0}.facts{font-size:11px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<header><div class="shell header">
+ <div><div class="name">Mathias Steinbach</div><span class="header-sub">AI Implementation · kundennahes Engineering</span></div>
+ <nav class="header-right" aria-label="Seitennavigation"><a href="#entscheidung">Arbeitsprobe</a><a href="#nachweise">Nachweise</a><a href="#kontakt">Kontakt</a></nav>
+</div></header>
+<main>
+ <section class="shell hero" aria-labelledby="headline">
+  <div>
+   <div class="eyebrow">Eine echte technische Entscheidung. Keine Produktwerbung.</div>
+   <h1 id="headline">Die Trefferquote stieg. <span>Ich habe trotzdem weitergefragt.</span></h1>
+   <p class="lede">Bei einer AI-gestützten Pipeline für Serviceanfragen war die kombinierte Lösung im Vergleich deutlich besser. <strong>Dann zeigte sich der Haken: Fünf von neun dringlichen Testfällen wurden zu niedrig priorisiert.</strong> Mich interessierte nicht mehr nur, was richtig klassifiziert wurde – sondern welche Fehlentscheidung im Betrieb teuer werden könnte.</p>
+   <div class="actions"><a class="primary" href="#entscheidung">Meine Entscheidung nachvollziehen</a><a class="secondary" href="https://github.com/SFS-Labs/ai-knowledge-ops-lab">Code und Tests ansehen</a></div>
+   <div class="facts">Lokale Modellinferenz tatsächlich ausgeführt · n8n / SQLite · <a href="https://github.com/SFS-Labs/ai-knowledge-ops-lab/actions/runs/42413698800">vollständige CI erfolgreich</a></div>
+  </div>
+  <aside class="note" aria-label="Mein Arbeitsmaßstab">
+   <div class="note-kicker">Worauf es mir ankommt</div>
+   <div class="thought">„Ich will nicht nur zeigen, dass etwas funktioniert. Ich will wissen, unter welchen Bedingungen ich meine Entscheidung revidieren müsste.“</div>
+   <p>Das ist für mich der Unterschied zwischen einer überzeugenden Demonstration und einer verantwortbaren technischen Entscheidung.</p>
+  </aside>
+ </section>
+ <div class="rule"></div>
+ <section id="entscheidung" class="shell story">
+  <div class="eyebrow">Der Fall · unter einer Minute</div>
+  <h2>Was ich anders gemacht habe</h2>
+  <p class="intro">Ich wollte keine weitere AI-Demo bauen, die mit einer hübschen Trefferquote endet. Der interessante Teil begann dort, wo die eigene Hypothese angreifbar wurde.</p>
+  <div class="steps">
+   <article class="step"><span class="step-index">01 / Umgesetzt</span><h3>Erst eine funktionierende Strecke.</h3><p>Eine lokale Anfragen-Pipeline mit Sprachmodell, Regeln, API, Speicherung und getrenntem Prüfpfad. Kein Foliendiagramm: Die End-to-End-Strecke lief in GitHub Actions.</p></article>
+   <article class="step"><span class="step-index">02 / Widerlegt</span><h3>Dann den eigenen Ansatz angegriffen.</h3><p>Ich habe dem Sprachmodell die Kategorie und Regeln die Priorität zugeordnet. Die Kombination gewann bei der Gesamtquote – übersah aber mehr dringliche Fälle als das Modell allein.</p></article>
+   <article class="step"><span class="step-index">03 / Konsequenz</span><h3>Die Frage neu gestellt.</h3><p>Wenn ein übersehener kritischer Vorgang viel teurer ist als ein Fehlalarm, kann der nominelle Sieger die schlechtere Lösung sein. Deshalb blieb die Freigabe getrennt; die Kostenannahmen sind prüfbar.</p></article>
+  </div>
+ </section>
+ <section class="shell effect" aria-labelledby="praxis"><div class="case">
+  <div class="case-head">Illustrativer Servicefall · kein Kundenticket</div>
+  <div class="example" id="praxis">„Seit dem Update lassen sich keine Rechnungen exportieren. Heute ist Monatsabschluss.“</div>
+  <p>Der Text weist auf einen Softwarefehler hin. Aber seine <strong>betriebliche Dringlichkeit</strong> lässt sich nicht aus dem Fehlertyp allein ableiten. Genau hier beginnt die Entscheidung über Rückfragen, Priorisierung und menschliche Freigabe. <strong>Das ist die Art von Problem, die ich im Kundenkontext lösen möchte.</strong></p>
+ </div></section>
+ <section class="material" id="nachweise"><div class="shell material-grid">
+  <div>
+   <div class="eyebrow">Nachvollziehbar, nicht behauptet</div>
+   <h2>Die Entscheidung steht nicht nur auf dieser Seite.</h2>
+   <p class="text">Im Repository liegen Workflow, Tests, echte lokale Modellaufrufe, die Gegenüberstellung der Verfahren und die wirtschaftlichen Sensitivitäten. Wer tiefer einsteigen möchte, kann meine Schlussfolgerung selbst prüfen – einschließlich der Fälle, in denen sie nicht trägt.</p>
+   <p><a href="https://github.com/SFS-Labs/ai-knowledge-ops-lab/blob/main/showcases/internal-service-intake/HYBRID_DECISION_RECORD.md">Entscheidungsprotokoll lesen</a> · <a href="https://github.com/SFS-Labs/ai-knowledge-ops-lab/actions/runs/42413698800">CI-Nachweis öffnen</a></p>
+  </div>
+  <div class="checks" aria-label="Prüfbare Fakten">
+   <div class="check"><strong>Implementiert</strong><span>Lokales LLM → n8n → API/SQLite; Review- und Freigabepfad separat</span></div>
+   <div class="check"><strong>Verglichen</strong><span class="nums">32 gelabelte Testszenarien, drei Routing-Ansätze, offen gelegte Gegenbeispiele</span></div>
+   <div class="check"><strong>Verifiziert</strong><span>100 Python-Tests in CI #25; vier erfolgreiche Prüfjobs in CI #31</span></div>
+   <div class="check"><strong>Übertragbar</strong><span>Hypothesen prüfen, Grenzen erkennen, Anforderungen ändern und technische Entscheidungen begründen</span></div>
+  </div>
+ </div></section>
+ <section class="shell details">
+  <div class="eyebrow">Für alle, die genauer hinsehen möchten</div>
+  <h2>Was diese Arbeitsprobe belegt – und was nicht</h2>
+  <p class="intro">Die kurze Geschichte ist die Essenz. Die Zahlen und Grenzen stehen hier, damit sich die Entscheidung überprüfen lässt – nicht, um sie im ersten Bildschirm zu rechtfertigen.</p>
+  <details><summary>Messwerte und Gegenbeweis</summary><div class="inner">
+   <p>In 32 gelabelten <strong>synthetischen</strong> Testfällen waren Kategorie und Priorität gleichzeitig korrekt bei Sprachmodell allein <strong>10/32</strong>, Regeln allein <strong>11/32</strong> und rückblickender Kombination <strong>22/32</strong>. Die kombinierte Prioritätslogik übersah <strong>5 von 9</strong> als dringend gelabelten Fällen; beim Sprachmodell allein war es <strong>1 von 9</strong>, allerdings mit erheblich mehr Fehlalarmen. Die Kombination wurde <strong>nach Sichtung der Fälle</strong> entwickelt. Dieser Vergleich ist daher explorativ, kein unabhängig bestätigter Leistungsvorteil.</p>
+   <p>Die Fehlerkostenentscheidung hängt von realen SLAs, Review-Aufwand und Eskalationskosten ab. <a href="https://github.com/SFS-Labs/ai-knowledge-ops-lab/blob/main/showcases/internal-service-intake/evaluation/economics.py">Berechnung und Annahmen</a>.</p>
+  </div></details>
+  <details><summary>Wie ich meine Forschungsfrage korrigiert habe</summary><div class="inner">
+   <p>Zu Beginn standen vier selbst definierte Servicekategorien. Die öffentlichen Daten passten dazu nicht sauber. Statt die Quellen passend zu machen, habe ich die Reihenfolge geändert: <strong>Geschäftsaufgabe → passende Klassifikation → geeignete Daten → Messung → Entscheidung.</strong></p>
+   <p>Die realen NLBSE-Software-Issues dienen einem separaten Klassifikationsvergleich; Volvo-Prozesslogs zeigen Bearbeitungsverläufe. Die Datensätze sind nicht miteinander verknüpft. Auf 142.320 NLBSE-Testzeilen erreichte eine einfache Regelbaseline 49,25 % Accuracy; 9.454 Gruppenwechsel wurden aus dem Volvo-Originalarchiv ermittelt. Diese beiden Messungen sind keine nachgewiesene Wirkung unserer AI auf Kundenkosten. <a href="https://github.com/SFS-Labs/ai-knowledge-ops-lab/blob/main/showcases/internal-service-intake/RESEARCH_DESIGN.md">Forschungsdesign und Quellen</a>.</p>
+  </div></details>
+  <details><summary>Mein Beitrag und die technischen Grenzen</summary><div class="inner">
+   <p>Meine Beiträge liegen in Fragestellung, Hypothese, Gegenprüfung, Qualitätsmaßstab und der Entscheidung über den Arbeitsumfang. Implementierung und Auswertung waren <strong>AI-gestützt</strong>; der Code und die tatsächlichen Testläufe sind einsehbar. Die technische Pipeline wurde lokal ausgeführt und automatisiert geprüft. Es handelt sich um eine eigenständige Arbeitsprobe, nicht um einen bezahlten AI-Kundenauftrag oder ein produktives Service-Desk-System.</p>
+   <p><a href="https://github.com/SFS-Labs/ai-knowledge-ops-lab">Repository und Versionshistorie</a> · <a href="https://github.com/SFS-Labs/ai-knowledge-ops-lab/pull/9">Entwicklung und Review</a>.</p>
+  </div></details>
+ </section>
+ <section class="end" id="kontakt"><div class="shell end-inner">
+  <div><div class="eyebrow" style="color:#b8d8c1">Über mich / nächste Aufgabe</div><h2>Ich möchte diese Denkweise in echte B2B-AI-Projekte einbringen.</h2><p>Ich arbeite im Technical Onboarding mit Kunden und studiere Finance &amp; Capital Markets. Mein nächster Schritt ist kundennahes AI Engineering: Anforderungen verstehen, integrieren, testen, ausliefern und im Betrieb Verantwortung übernehmen.</p></div>
+  <div class="contact"><a class="primary" href="mailto:contact@sfs-labs.dev?subject=Gespr%C3%A4ch%20zu%20AI%20Implementation">Kontakt aufnehmen</a><a href="https://github.com/SFS-Labs/ai-knowledge-ops-lab">Technische Arbeitsprobe auf GitHub</a><small>AI Implementation · Solutions / Customer Engineering · Technical Delivery</small></div>
+ </div></section>
+</main>
+<footer><div class="shell footer"><span>Mathias Steinbach · Arbeitsprobe, keine Produktpräsentation</span><span>Technische Dokumentation bei SFS Labs / Sigma Finance Systems</span></div></footer>
+</body></html>
