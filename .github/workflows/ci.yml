@@ -214,6 +214,8 @@ jobs:
           done
           if [ "$ready" != true ]; then echo "llm_stack_not_ready"; exit 1; fi
           docker compose exec -T n8n n8n import:workflow --input=/opt/n8n-import/workflow.internal-service-intake.v1.json
+          # Separate DNS/network availability from actual workflow-node failures.
+          docker compose exec -T n8n node -e 'fetch("http://model:8080/health").then(r => {if (!r.ok) process.exitCode = 1; console.log("n8n_to_model_health_http=" + r.status)}).catch(e => {console.error("n8n_to_model_unreachable", e.code || e.name); process.exitCode = 1})'
           docker compose exec -T n8n n8n audit > /tmp/sfs-llm-n8n-audit.log
           echo "Actual n8n audit findings:"
           sed -n '1,140p' /tmp/sfs-llm-n8n-audit.log
@@ -249,6 +251,7 @@ jobs:
             jq '{status:.request.status, classification:.request.classification,
                  policy_decision:(.request.payload_json | fromjson | .policy_decision),
                  review_reason:(.request.payload_json | fromjson | .review_reason),
+                 model_transport_diagnostic:(.request.payload_json | fromjson | .model_transport_diagnostic),
                  validated_model_output_present:((.request.payload_json | fromjson | .validated_model_output) != null),
                  audit_events:[.audit[].event_type]}' /tmp/sfs-state.json
             exit 1
