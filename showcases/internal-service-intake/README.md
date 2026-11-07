@@ -6,7 +6,7 @@
 
 | Evidence stream | Source classes/metrics | Current measured provenance |
 |---|---|---|
-| **What is it?** NLBSE 2023 | `bug`, `feature`, `question`, `documentation` – actual harmonized source issue labels; **not** Analytics/Automation/Integration/Incident Response | 1,418,201 source-published issues, 142,320 original-test cases; full-source audit separately gated |
+| **What is it?** NLBSE 2023 | `bug`, `feature`, `question`, `documentation` – actual harmonized source issue labels; **not** Analytics/Automation/Integration/Incident Response | [Full official 142,320 test audited in CI #29](https://github.com/SFS-Labs/ai-knowledge-ops-lab/actions/runs/42412917843): 49.25% keyword Accuracy, 41.49% Macro-F1; 541 repeated IDs (5 label conflicts), no NLBSE LLM inference |
 | **How does work flow?** Volvo IT 2013 | incident event log; **9,454 observed transitions between groups** across **7,554 incidents / 65,533 events** | [Real original archive MD5-verified in CI #27](https://github.com/SFS-Labs/ai-knowledge-ops-lab/actions/runs/42411756411), individual source-audit step SUCCESS |
 | **What might it cost?** Destatis sector rate | **€58.50 per hour worked**, Germany 2025 Information & Communication | [Official statistic](https://www.destatis.de/DE/Presse/Pressemitteilungen/2026/04/PD26_148_624.html); not Volvo labor costs |
 
