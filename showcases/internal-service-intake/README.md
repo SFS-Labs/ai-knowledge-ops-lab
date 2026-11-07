@@ -1,70 +1,31 @@
-# Internal service intake | Decision-first AI engineering (synthetic-only)
+# Business-first service-intake decision case (synthetic local stack)
 
-> **30-second result:** Which component should decide what? The LLM was better at category recognition, the deterministic baseline at overall urgency. Combining them got both labels right in **22/32** exploratory cases, vs **10/32** LLM-only and **11/32** rules-only. But keyword urgency missed **5/9** high-priority cases. **The business answer depends on the cost of those misses.**
->
-> **Start with the reasoning:** [91-word hypothesis → counterexample → revised decision](DECISION_EVIDENCE_BRIEF.md). [Complete operator decision record](HYBRID_DECISION_RECORD.md) · [prospective protocol](STUDY_PROTOCOL_V1.md) · [machine-checked evidence gate](evaluation/decision_gate.py).
->
-> **Evidence boundary:** [Genuine E2E CI #24](https://github.com/SFS-Labs/ai-knowledge-ops-lab/actions/runs/42399345922) passed at its historical SHA only. Hybrid/method changes remain **IMPLEMENTED, not exact-HEAD CI VERIFIED**. No 480-case independent evaluation, measured customer ROI, merge or deployment.
+**30–60-second nontechnical explanation:** [Static interactive scenario](../../docs/index.html) → [Data architecture & source-truth boundaries](RESEARCH_DESIGN.md) → [Historical hybrid decision](DECISION_EVIDENCE_BRIEF.md).
 
-This showcase is a bounded, offline demonstration of one internal service-intake path:
+**The decision:** Can a service desk recognize the *type* of request and avoid avoidable internal handoffs without missing urgent incidents? Start with the business outcome, **not** a fixed AI stack or a predefined service taxonomy.
 
-**Synthetic request → authenticated webhook → strict input validation → deduplication → deterministic classification → explicit human approval → state-changing mock API → persisted result + audit evidence.**
+| Evidence stream | Source classes/metrics | Current measured provenance |
+|---|---|---|
+| **What is it?** NLBSE 2023 | `bug`, `feature`, `question`, `documentation` – actual harmonized source issue labels; **not** Analytics/Automation/Integration/Incident Response | 1,418,201 source-published issues, 142,320 original-test cases; full-source audit separately gated |
+| **How does work flow?** Volvo IT 2013 | incident event log; **9,454 observed transitions between groups** across **7,554 incidents / 65,533 events** | [Real original archive MD5-verified in CI #27](https://github.com/SFS-Labs/ai-knowledge-ops-lab/actions/runs/42411756411), individual source-audit step SUCCESS |
+| **What might it cost?** Destatis sector rate | **€58.50 per hour worked**, Germany 2025 Information & Communication | [Official statistic](https://www.destatis.de/DE/Presse/Pressemitteilungen/2026/04/PD26_148_624.html); not Volvo labor costs |
 
-It is intentionally isolated from the repository's research pipeline and from REA.
+**Hard boundary:** NLBSE issues and Volvo incidents are two **separate, unjoinable samples**. An observed group transition is not a proved avoidable handoff. Working hours saved, avoided incident losses and net ROI require explicit *assumptions or new customer data*. The published static calculator shows assumptions openly.
 
-## Contents
+**Technical prototype:** Authenticated local n8n 2.46.6 → local Qwen model → SQLite mock API; independent review/approval gate, rejection, idempotency and restart. **[CI #25 passed 100 tests and the real local LLM E2E](https://github.com/SFS-Labs/ai-knowledge-ops-lab/actions/runs/42405856175)** at immutable `d4a8391`. The original 32 labeled synthetic cases were an exploratory *different taxonomy*; don't transfer their hybrid 22/32 to NLBSE or Volvo.
 
-- `docker-compose.yml` — isolated local stack with pinned `n8n` image and persistent volumes.
-- `n8n/workflow.internal-service-intake.v1.json` — importable, versioned workflow export.
-- `mock-api/app.py` + `mock-api/Dockerfile` — minimal persisted mock API using SQLite.
+**Release semantics:** This is safe to **publish as static code + documentation** after exact-HEAD CI and review. It is not a hosted automation service. No production SLA, verified human identity, external customer or measured AI ROI. The latest source-research additions require their own exact-HEAD CI.
 
-## Verified evidence (7 November 2026)
+**Research reproducibility (Python 3.12, no paid API):**
 
-- **Pre-hardening snapshot `0518333ab87b8881c314c7682265630b8c71d4ed`:** [successful GitHub Actions run #42381091511](https://github.com/SFS-Labs/ai-knowledge-ops-lab/actions/runs/42381091511). GitHub-hosted Docker imported and published the workflow, ran the synthetic intake and approval webhooks, checked wrong-token non-application, duplicate/idempotent intake, the persisted audit trail, and replay after container restart. The complete repository unit suite passed **46 tests**.
-- **Version:** Compose uses `n8nio/n8n:2.46.6`. In the run above the actual n8n audit still flagged **Official risky nodes** (Code/HTTP Request). The earlier outdated-instance warning was absent. An audit command with exit 0 is **not** a clean security clearance.
-- **Evidence boundary:** The above run concerns its exact historical SHA. Any later change to this PR (including documentation or API-key hardening) requires a new exact-head deterministic CI/E2E run before release; older green runs must never be relabeled as current-head verification.
+```sh
+python -m unittest discover -s tests -v
+python showcases/internal-service-intake/evaluation/research_methods.py
+python showcases/internal-service-intake/evaluation/volvo_process.py
+python showcases/internal-service-intake/evaluation/nlbse_source.py
+```
 
-## Local-LLM free-text path — CI #24 VERIFIED; subsequent hybrid policy pending verification
-
-The original structured intake remains supported. A new synthetic free-text webhook,
-internal-service-intake-text, accepts request_id, requester, and genuinely
-unstructured free_text. Its X-INTAKE-TOKEN is checked before model execution.
-
-**Intended route:** authenticated n8n webhook → strict text/identity/size checks →
-persistent request-id/hash preflight before inference → fixed local
-llama.cpp HTTP endpoint → independent JSON-schema-shaped validation in
-mock-api/semantic.py → deterministic review policy → pending SQLite record
-with raw output, validated output, policy and audit → separate simulated
-approval token → existing apply operation.
-
-Malformed, ambiguous, unavailable or suspicious model results may be routed to
-manual_review. A model cannot grant approval or provide executable commands
-or outbound URLs. The existing credentials are possession-based demonstration
-tokens, **not independently verified people or separation of duties**.
-
-**Evidence boundary:** The historical [Actions #42392952295](https://github.com/SFS-Labs/ai-knowledge-ops-lab/actions/runs/42392952295) was a failing intermediate debugging run and must not be presented as the final status. The later [CI #24 on SHA d02a76f](https://github.com/SFS-Labs/ai-knowledge-ops-lab/actions/runs/42399345922) passed all three jobs, genuine local LLM/n8n/SQLite E2E and the real 36-case evaluation. These results belong **only to that exact commit**. The hybrid modification made *after* CI #24 is a new unverified HEAD, with its own regression tests and post-hoc frozen-output replay. Neither CI run establishes production readiness, validated reviewer identity, business benefit or model superiority on customer data.
-
-The existing manually dispatched .github/workflows/ci.yml runs the model gate
-only on the PR branch and only after the unit suite. It uses the official
-Apache-2.0 Qwen2.5-1.5B-Instruct-GGUF Q4_K_M weights at revision
-dd26da440ef0330c47919d1ecae0966d24022222, SHA256
-6a1a2eb6d15622bf3c96857206351ba97e1af16c30d7a74ee38970e434e9407e,
-with pinned llama.cpp server-b12019 CPU image, on a free public-repo standard
-GitHub runner. Model weights are excluded from git/artifacts. The test first
-runs real CPU inference, then actual n8n/model/SQLite approval and audit checks,
-then evaluates 36 pre-labeled synthetic cases in evaluation/cases.jsonl
-against the baseline defined in mock-api/semantic.py.
-
-**Recruiter view (conditional on a successful run):**
-15 s: unstructured request, genuine local proposal, independent policy and audit.
-90 s: inspect raw/validated output, duplicate response and denied approval.
-5 min: follow the model runtime/weights, fixed API flow, evaluation metrics,
-timeout and prompt-injection tests, restart persistence and exact-SHA Actions logs.
-
-Limitations: synthetic-only, temporary CPU runner, no persistent hosting,
-no production SLA, no human-identity proof, no independent human reviewer.
-Concurrent first-time requests can infer twice; SQLite registration stays
-atomic. Existing n8n Code/HTTP risky-node audit findings require review.
+Source audits require access to public original archives; never re-publish raw issue text or identify individuals. See [Data contract](evaluation/research_contract.json), [source-audit evidence](evaluation/evidence/volvo-2013-source-audit-ci27.json), [business analysis](RESEARCH_DESIGN.md) and [evaluation caveats](STUDY_PROTOCOL_V1.md).
 
 ## Security and data constraints
 
@@ -75,7 +36,7 @@ atomic. Existing n8n Code/HTTP risky-node audit findings require review.
 - Both ports bind to host loopback. n8n Code nodes can read environment variables in this isolated demo (`N8N_BLOCK_ENV_ACCESS_IN_NODE=false`); this is a **material security limitation**, not a production configuration.
 - Separate intake and approval bearer tokens protect demo endpoints, but possession of the approval token **does not establish a verified human identity or independent authorization**. The approver identifier is caller-supplied. Do not reuse this gate for external customer operations.
 - Official risky Code and HTTP nodes are retained only for the bounded local workflow. Do not expose n8n to the public network or import untrusted workflows.
-- The isolated n8n container explicitly disables the unused public REST API, Swagger UI and community-package installation. The local workflow webhooks remain necessary for the bounded demo. These config changes are **pending fresh exact-head Docker verification**, not independently validated in the historical CI run.
+- The isolated n8n container explicitly disables the unused public REST API, Swagger UI and community-package installation. The local workflow webhooks remain necessary for the bounded demo. The bounded configuration was exercised in [CI #25](https://github.com/SFS-Labs/ai-knowledge-ops-lab/actions/runs/42405856175) on its exact historical SHA. This does not constitute a production security approval.
 
 ## Quick start
 
@@ -197,7 +158,7 @@ Risk boundaries: use only synthetic data, keep 5678/8080 loopback-only, grant lo
 1. Record `git rev-parse HEAD` and the exact Actions run ID for the same SHA.
 2. Require all repository tests to pass, Docker workflow import/publish, real authenticated intake/approval webhooks, wrong-token negative path, duplicate and restart recovery.
 3. Inspect the **actual findings** of `n8n audit`, not merely its exit code. Classify changes affecting security separately.
-4. Keep this draft unmerged until independent review and explicit owner approval.
+4. Merge/release only after an explicit authorized decision and exact-head verification. A safe static research page may be published; the webhook/LLM containers are never a public deployment target.
 
 ## Shutdown
 
