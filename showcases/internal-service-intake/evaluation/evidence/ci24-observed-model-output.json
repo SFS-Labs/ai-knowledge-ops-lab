@@ -1,0 +1,319 @@
+{
+  "evidence_kind": "Observed model inference; not simulation, not held-out validation",
+  "source_url": "https://github.com/SFS-Labs/ai-knowledge-ops-lab/actions/runs/42399345922",
+  "source_run_id": 42399345922,
+  "source_commit": "d02a76f856acf62725eb5ec402802e6bb5febeae",
+  "observed_on_utc": "2026-11-07",
+  "dataset_path": "showcases/internal-service-intake/evaluation/cases.jsonl",
+  "model_identity": "Qwen2.5-1.5B-Instruct-GGUF Q4_K_M; llama.cpp CPU",
+  "sample_size": 36,
+  "labeled": 32,
+  "ambiguous": 4,
+  "model_observations": [
+    {
+      "id": "SYN-001",
+      "valid": true,
+      "model_service_type": "analytics",
+      "model_urgency": "high",
+      "error": null,
+      "route": "manual_review"
+    },
+    {
+      "id": "SYN-002",
+      "valid": true,
+      "model_service_type": "analytics",
+      "model_urgency": "high",
+      "error": null,
+      "route": "manual_review"
+    },
+    {
+      "id": "SYN-003",
+      "valid": true,
+      "model_service_type": "analytics",
+      "model_urgency": "high",
+      "error": null,
+      "route": "manual_review"
+    },
+    {
+      "id": "SYN-004",
+      "valid": true,
+      "model_service_type": "analytics",
+      "model_urgency": "high",
+      "error": null,
+      "route": "manual_review"
+    },
+    {
+      "id": "SYN-005",
+      "valid": true,
+      "model_service_type": "analytics",
+      "model_urgency": "high",
+      "error": null,
+      "route": "manual_review"
+    },
+    {
+      "id": "SYN-006",
+      "valid": true,
+      "model_service_type": "analytics",
+      "model_urgency": "high",
+      "error": null,
+      "route": "manual_review"
+    },
+    {
+      "id": "SYN-007",
+      "valid": true,
+      "model_service_type": "analytics",
+      "model_urgency": "low",
+      "error": null,
+      "route": "manual_review"
+    },
+    {
+      "id": "SYN-008",
+      "valid": true,
+      "model_service_type": "analytics",
+      "model_urgency": "high",
+      "error": null,
+      "route": "manual_review"
+    },
+    {
+      "id": "SYN-009",
+      "valid": true,
+      "model_service_type": "automation",
+      "model_urgency": "high",
+      "error": null,
+      "route": "manual_review"
+    },
+    {
+      "id": "SYN-010",
+      "valid": true,
+      "model_service_type": "automation",
+      "model_urgency": "high",
+      "error": null,
+      "route": "manual_review"
+    },
+    {
+      "id": "SYN-011",
+      "valid": true,
+      "model_service_type": "automation",
+      "model_urgency": "high",
+      "error": null,
+      "route": "manual_review"
+    },
+    {
+      "id": "SYN-012",
+      "valid": true,
+      "model_service_type": "automation",
+      "model_urgency": "high",
+      "error": null,
+      "route": "manual_review"
+    },
+    {
+      "id": "SYN-013",
+      "valid": true,
+      "model_service_type": "automation",
+      "model_urgency": "high",
+      "error": null,
+      "route": "manual_review"
+    },
+    {
+      "id": "SYN-014",
+      "valid": true,
+      "model_service_type": "automation",
+      "model_urgency": "low",
+      "error": null,
+      "route": "manual_review"
+    },
+    {
+      "id": "SYN-015",
+      "valid": true,
+      "model_service_type": "automation",
+      "model_urgency": "high",
+      "error": null,
+      "route": "manual_review"
+    },
+    {
+      "id": "SYN-016",
+      "valid": true,
+      "model_service_type": "integration",
+      "model_urgency": "high",
+      "error": null,
+      "route": "manual_review"
+    },
+    {
+      "id": "SYN-017",
+      "valid": true,
+      "model_service_type": "integration",
+      "model_urgency": "high",
+      "error": null,
+      "route": "manual_review"
+    },
+    {
+      "id": "SYN-018",
+      "valid": false,
+      "model_service_type": null,
+      "model_urgency": null,
+      "error": null,
+      "route": "manual_review"
+    },
+    {
+      "id": "SYN-019",
+      "valid": true,
+      "model_service_type": "integration",
+      "model_urgency": "high",
+      "error": null,
+      "route": "manual_review"
+    },
+    {
+      "id": "SYN-020",
+      "valid": true,
+      "model_service_type": "integration",
+      "model_urgency": "high",
+      "error": null,
+      "route": "manual_review"
+    },
+    {
+      "id": "SYN-021",
+      "valid": true,
+      "model_service_type": "integration",
+      "model_urgency": "high",
+      "error": null,
+      "route": "manual_review"
+    },
+    {
+      "id": "SYN-022",
+      "valid": true,
+      "model_service_type": "integration",
+      "model_urgency": "high",
+      "error": null,
+      "route": "manual_review"
+    },
+    {
+      "id": "SYN-023",
+      "valid": true,
+      "model_service_type": "incident-response",
+      "model_urgency": "high",
+      "error": null,
+      "route": "manual_review"
+    },
+    {
+      "id": "SYN-024",
+      "valid": true,
+      "model_service_type": "incident-response",
+      "model_urgency": "high",
+      "error": null,
+      "route": "manual_review"
+    },
+    {
+      "id": "SYN-025",
+      "valid": true,
+      "model_service_type": "incident-response",
+      "model_urgency": "high",
+      "error": null,
+      "route": "manual_review"
+    },
+    {
+      "id": "SYN-026",
+      "valid": true,
+      "model_service_type": "incident-response",
+      "model_urgency": "high",
+      "error": null,
+      "route": "manual_review"
+    },
+    {
+      "id": "SYN-027",
+      "valid": true,
+      "model_service_type": "incident-response",
+      "model_urgency": "high",
+      "error": null,
+      "route": "manual_review"
+    },
+    {
+      "id": "SYN-028",
+      "valid": true,
+      "model_service_type": "incident-response",
+      "model_urgency": "high",
+      "error": null,
+      "route": "manual_review"
+    },
+    {
+      "id": "SYN-029",
+      "valid": true,
+      "model_service_type": "integration",
+      "model_urgency": "medium",
+      "error": null,
+      "route": "manual_review"
+    },
+    {
+      "id": "SYN-030",
+      "valid": true,
+      "model_service_type": "integration",
+      "model_urgency": "high",
+      "error": null,
+      "route": "manual_review"
+    },
+    {
+      "id": "SYN-031",
+      "valid": true,
+      "model_service_type": "incident-response",
+      "model_urgency": "high",
+      "error": null,
+      "route": "manual_review"
+    },
+    {
+      "id": "SYN-032",
+      "valid": true,
+      "model_service_type": "automation",
+      "model_urgency": "high",
+      "error": null,
+      "route": "manual_review"
+    },
+    {
+      "id": "SYN-033",
+      "valid": true,
+      "model_service_type": "integration",
+      "model_urgency": "high",
+      "error": null,
+      "route": "manual_review"
+    },
+    {
+      "id": "SYN-034",
+      "valid": true,
+      "model_service_type": "automation",
+      "model_urgency": "high",
+      "error": null,
+      "route": "manual_review"
+    },
+    {
+      "id": "SYN-035",
+      "valid": true,
+      "model_service_type": "integration",
+      "model_urgency": "high",
+      "error": null,
+      "route": "manual_review"
+    },
+    {
+      "id": "SYN-036",
+      "valid": true,
+      "model_service_type": "incident-response",
+      "model_urgency": "high",
+      "error": null,
+      "route": "manual_review"
+    }
+  ],
+  "original_report_totals": {
+    "model": {
+      "valid": 35,
+      "review": 36,
+      "category_correct": 30,
+      "urgency_correct": 10,
+      "pair_correct": 10,
+      "failures": 0,
+      "ambiguous_review": 4
+    },
+    "deterministic_baseline": {
+      "category_correct": 13,
+      "urgency_correct": 24,
+      "pair_correct": 11
+    }
+  },
+  "provenance_limit": "Post-hoc routing hypothesis was selected after inspecting this run; estimates are exploratory and require independent held-out/customer validation."
+}
