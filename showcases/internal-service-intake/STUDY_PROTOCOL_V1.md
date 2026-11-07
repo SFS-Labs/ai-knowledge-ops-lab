@@ -1,111 +1,68 @@
-# DR-002 — Prospective Evaluation Protocol (v1.0; pre-registration proposal)
+# DR-002 · Research protocol: business task first, two real evidence streams
 
-**Document status:** SPECIFIED / NOT YET EXECUTED  
-**Owner's research claim:** demonstrate scientific decision-making, not assert candidate intelligence or paid customer outcomes.  
-**Pilot:** [CI #24](https://github.com/SFS-Labs/ai-knowledge-ops-lab/actions/runs/42399345922), 36 genuine local model inferences, 32 labeled, post-hoc 22/32 hybrid pairs.  
-**Methods:** [Exact paired statistics](evaluation/study_statistics.py), [paired replay](evaluation/compare_routing.py), [economic sensitivity](evaluation/economics.py), [pre-inference integrity gate](evaluation/holdout_gate.py), [prospective paired analysis](evaluation/holdout_analyze.py).  
-**Protocol lock:** No independent evaluation dataset or external reviewer is currently locked. This document is a *proposal* and must be frozen, with a Git commit/hash, **before collecting any confirmatory outcomes**. The 36-case pilot is permanently DEVELOPMENT/EXPLORATORY and cannot be relabeled as holdout.
+**Status:** Source and method contract **IMPLEMENTED**; full original-data and current-HEAD verification tracked in GitHub Actions. Original 32-case pilot is permanently exploratory. **No client study, prospective intervention, deployed AI operation or measured realized saving is claimed.**
 
-## Research questions
+## Business-first question
 
-**H1 (primary, statistical):** On a genuinely independent, prospectively labeled B2B-intake sample, the prespecified hybrid (validated LLM category + deterministic rule urgency) has a different probability of getting *both category and urgency right* than the rules-only baseline. Null: equal paired probabilities (two-sided exact McNemar; alpha 0.05). Report the sign and absolute effect size; if the test favors the baseline, H1 has failed. Do not claim superiority based solely on rejection of equality without direction.
+For B2B IT requests, can appropriate request-type classification plus better routing reduce avoidable group handoffs **without** increasing harmful under-escalation, reviewer overload or total cost?
 
-**H2 (secondary, gated):** If H1 is supported in the beneficial direction, compare hybrid with LLM-only using a second exact paired test. The ordered testing sequence limits familywise error from reporting two post-hoc winners. Any additional method variants are exploratory and must not be described as pre-registered.
+The actual business question chooses the taxonomy:
+- **Request type (NLBSE GitHub source):** `bug`, `feature`, `question`, `documentation`. Issue types may be source-synonym-harmonized, not independently adjudicated truth.
+- **Operational process (Volvo IT BPIC 2013):** incidents, event sequence, timestamp, observed group transitions and historical impact. No source-native Analytics/Automation/Integration/Incident Response class and no direct mapping to GitHub issues.
+- **Urgency and service domain:** separate axes to be defined with a real client. A broken integration may simultaneously be an incident; the label dimensions should not be artificially mutually exclusive.
+- **Costs:** €58.50/h published German 2025 Information & Communication employer labor cost (Destatis) is an **external reference**, not Volvo staffing pay.
 
-**H3 (commercial, NOT testable without actual business inputs):** Hybrid is preferable only if its client-measured **expected total handling cost per request** is lower than the best feasible alternative without breaching **client-defined missed-high/SLA, privacy, review-capacity and authorization constraints**. There is no client cost matrix or such deployment evidence now.
+See the canonical [source-provenance contract](evaluation/research_contract.json) and [business-design rationale](RESEARCH_DESIGN.md).
 
-**Safety veto:** Success on H1 never overrides an unacceptable high-urgency miss rate, security finding, manual-review burden or failed approval gate. An accuracy p-value cannot establish economic optimality.
+## Seven binding scientific criteria
 
-## Target sample and its limits
+1. **Original provenance and rights:** verify upstream URL, DOI, archive hash, exact commit, license, published source label semantics, source version. No raw issue text in public repo/site.
+2. **Label integrity:** preserve published NLBSE `bug/feature/question/documentation` and record their original GitHub-label/synonym origin. In a future client study, urgency needs independently reviewed, SLA-grounded labels. Historical Volvo impact is not automatically a universal severity truth.
+3. **No leakage or fake sample inflation:** the original NLBSE train/test split is preserved. Official benchmark comparisons require its **complete 142,320-example test set** (no test resampling). Cross-translated or cloned prompts are not independent. Volvo events are nested within cases, so counting 65,533 events as 65,533 independent incidents is invalid.
+4. **Predefined comparisons:** frozen keyword-only baseline against NLBSE source labels; full per-class precision, recall and F1, macro and micro F1. New LLM classifier results can be called measured **only after genuinely executed and versioned model inference** on the identical test cases. Do not import the old 22/32 synthetic pilot into this new label space.
+5. **Appropriate uncertainty:** report class imbalance, source-label noise, between-project dependence, confidence intervals and temporal/domain drift. Paired comparison and power calculations need defined independent units and meaningful detectable differences. **480 was merely a former hypothetical planning scenario, not a mandatory or automatically significant sample.**
+6. **Economic validity:** distinguish original observed Volvo group changes from hypothetical avoidable share, minutes saved and conditional gross employer cost. Explicitly include false priority alarms, missed severe incidents, review, LLM inference, operations and actual capacity/SLA vetoes when such data exist. Do not multiply wall-clock case duration by hourly labor cost.
+7. **Falsification and decision:** if a model fails an independent held-out classification objective or a customer-defined risk/cost constraint, discard/revise the policy. Publish both wins and failures, preserve exact-SHA evidence. No production release until authentic identity, isolation, governance and a monitored customer pilot justify it.
 
-A **planning target of 480 independently sourced/labeled requests**, not 480 templated mutations:
-- Controlled coverage target: 4 categories × 3 urgency labels × 2 languages (DE/EN) × 20 **distinct scenarios per cell** = 480. Collect case families/source IDs and check semantic similarity; paraphrases or cross-translations of the same underlying situation form **one cluster**, not independent observations.
-- A balanced design permits class-specific diagnostics, including a planned 160 high-urgency prompts, but **does not estimate production class prevalence or real-world average profit**. Client operational data must subsequently supply prevalence weights or a separate representative evaluation.
-- Of the 480, targets should be as independent as reasonably possible across industries, task types, origins and writing styles; source/case-family clustering must be documented. If independence cannot be defended, do not report a nominal McNemar p-value based on 480 IID observations. Prefer group-level estimates or a cluster-aware design with an explicit effective sample-size discussion.
-- **The target 480 is conditional, not a magic significance threshold.** Illustrative paired-binary normal planning approximation: alpha=0.05 two-sided, 80% nominal power, detectable absolute paired improvement 0.08, presumed discordance probability 0.30, *hypothetical* dependence inflation 1.30 ⇒ 479 pairs, rounded to **480**. If the minimum meaningful effect were 0.05 with the same assumptions ⇒ approximately **1,225**, not 480. Inputs are *planning scenarios*, not empirically proven properties of future data. This approximation is not an independent power study or a basis to disregard clustering.
-- For 480 truly IID binary outcomes, worst-case unadjusted normal-approximation 95% margin of error is about ±4.5 percentage points for one proportion; multiple comparisons, stratification and clustering can widen this. For 160 independent high-urgency examples and *zero* misses, the one-sided 95% exact upper bound on miss probability would still be ~1.85%. No zero-miss outcome is claimed or assumed.
+## Two parallel analyses, no invented joined outcome
 
-## Case creation and truth-label governance (pre-inference)
+### A. Real issue classification
 
-1. Source genuinely separate scenarios through consented/anonymized client-like requests or independent realistic case-writing. Respect IP/privacy; **never put real client secrets in a public repo**. Do not copy/relabel the 36 pilot examples. Mark synthetic cases as synthetic.
-2. **Two independent labelers** assign category and urgency, blind to model predictions and to one another's first labels. Record the proposed client-specific urgency definition, supporting facts, ambiguities and adjudication. If only AI labelers are available, disclose this and do **not** claim independent human ground truth. Human adjudication is not implied by a successful programmatic test.
-3. Before running models, lock dataset, labels, duplicate/group inventory, code version, 4-category/3-urgency schema, thresholds and business objectives with a committed checksum and no further changes. Invalid/ambiguous/out-of-scope requests are separately tallied, **never silently dropped**.
-4. Predeclare exclusions (e.g. corrupt input), missing-output handling (count as incorrect for pair accuracy, retain fail-closed workflow result), fixed model weights/prompt/settings, inference cap, cost ceiling and stopping rules. No peeking, selective reruns, or updating the test set after inspecting model errors.
-5. A held-out test is *not* necessarily production representative: a new client source/prevalence review is needed for the economic decision and to estimate drift.
+Source: [NLBSE 2023 official challenge](https://github.com/nlbse2023/issue-report-classification). Reported **1,275,881 train / 142,320 test**, original harmonized source issue-type labels. [`evaluation/nlbse_source.py`](evaluation/nlbse_source.py) downloads and profiles the entire published test archive with SHA-256 output and a deterministic, transparent baseline. It publishes **aggregate scores only**, not original issue text.
 
-## Metrics and inference
+The source benchmark publishes FastText and RoBERTa model performance; those are **author-reported external results**, not reruns conducted by SFS. The earlier local Qwen model was tuned for a different domain taxonomy, so a credible comparison against NLBSE requires a new fixed evaluation interface, independent trace of actual model responses, and errors reported by class.
 
-- **Primary endpoint:** paired both-correct rate, hybrid vs rules on the **same requests**, with full 2×2 discordance table and **two-sided exact McNemar p**. Include paired absolute difference and a 95% uncertainty interval using a justified paired method; if clustered, use a prespecified cluster-aware method rather than IID CIs.
-- Secondary: category accuracy, urgency confusion by class, high recall/miss rate, false high per 100 requests, coverage/abstention, human-review share, schema failures, and p50/p95 latency. Clearly separate route classification from explicit human authorization/apply.
-- No optimization on the holdout; no scanning multiple thresholds and only reporting the winner. Once new features/tuning use the holdout, the set becomes **development**, not confirmatory.
-- Numeric metrics and uncertainty do **not** validate the target's construct on their own. Labels for urgency are tied to actual SLA/customer definitions, not to a generic "urgent" keyword.
+### B. Real process operations
 
-## Expected business loss: conditional decision, not proof by p-value
+Source: [Volvo BPIC 2013 via 4TU.ResearchData](https://doi.org/10.4121/uuid:500573e6-accc-4b0c-9576-aa5468b10cee). Original gzip archive was MD5-verified in [CI #27](https://github.com/SFS-Labs/ai-knowledge-ops-lab/actions/runs/42411756411); **7,554 cases, 65,533 events, 9,454 observed changes of `org:group`**. Original derived audit: [`evaluation/evidence/volvo-2013-source-audit-ci27.json`](evaluation/evidence/volvo-2013-source-audit-ci27.json). One case, not one event, is the independent unit for case outcomes. Wall-clock elapsed ≠ personnel minutes; a `group` change ≠ proven waste.
 
-For each strategy `s`, client context `x`, true outcome `y`, authorized action `a` and client loss `L`:
+### C. Economic scenario (no causal claim)
 
-`R(s) = E_{(x,y)~P_client}[ L(s(x), y, a) + C_inference(s,x) + C_review(s,x) + C_ops(s,x) ]`
-
-Operational decision is subject to client veto constraints (critical miss limits, service levels, human approval, security). Compare with manual processing and the existing rules baseline. Count **avoided labor only when actually measured**; do not assume that a route marked standard_review is an automated approval.
-
-The current 32-case retrospective **incomplete loss proxy** has these empirically observed errors:
-
-| Strategy | Wrong category | Missed high | False high | LLM calls on labeled cases |
-|---|---:|---:|---:|---:|
-| LLM-only | 2 | 1 | 21 | 32 |
-| Rules-only | 19 | 5 | 0 | 0 |
-| Hybrid | 2 | 5 | 0 | 32 |
-
-Assuming equal losses for every wrong category and every false/missed high:
-- Hybrid versus LLM, with equal inference and category errors: hybrid incurs **4 more missed high**, avoids **21 false high**. The *proxy* break-even is **C(missed high)/C(false high) = 21/4 = 5.25**. If the ratio exceeds 5.25, model-only would have lower *urgency-only proxy* loss; below it, hybrid. This ignores review, category-specific severity, and routing actions; it is NOT a production policy recommendation.
-- Hybrid versus rules has **17 fewer category errors** and equal urgency errors, but 32 additional model inferences. Ignoring all other differences, it wins the cost proxy iff **17×C(wrong category) > 32×C(inference)**. Human-review differences could reverse the conclusion.
-- The all-36-original-model-output `manual_review` rate was **100%**; the frozen snapshot does not preserve the hybrid's original missing-information fields or an observed human cost. Therefore **no credible end-to-end savings or hybrid review-rate estimate can be computed from that snapshot**.
-
-The executable [economic sensitivity tool](evaluation/economics.py) **requires input assumptions before ranking policies**. All outputs are clearly hypothetical cost proxies, not Euros, ROI, revenue or evidence of deployment. A claim of optimality requires a real client case mix, accepted cost ranges, measured time/review workload, rollout/operations costs, capacity/SLA constraints and uncertainty analysis. If no option is robust across plausible assumptions, report **no dominant strategy** instead of selecting one by aesthetics.
-
-## Falsification and stop conditions
-
-- Reject/reconsider hybrid if its prespecified benefit is absent on the locked dataset; do not edit the benchmark to recover significance.
-- Reject/reconsider urgency rules if missed-high risk exceeds client-defined tolerances, even when aggregate accuracy increases.
-- No claim of ROI if review cost or customer workload distribution cannot be measured.
-- Fail closed on invalid inference, model outage, authorization denial, and conflict. Separate technical feasibility from independent verified human authorization.
-- No more synthetic “n inflation” if samples are near-duplicates. No GPU upgrades, new product architectures or new repos to make a graph look impressive.
-
-## Execution interface — no fabricated holdout
-
-The existing `evaluation/cases.jsonl` remains an **exploratory pilot with 36 cases**, not a confirmatory test. These commands are reproducible with Python 3.12 and no third-party libraries:
-
-```sh
-python showcases/internal-service-intake/evaluation/study_statistics.py
-python showcases/internal-service-intake/evaluation/compare_routing.py
-python showcases/internal-service-intake/evaluation/economics.py
-# The following numbers are hypothetical cost units, NOT measured money or ROI:
-python showcases/internal-service-intake/evaluation/economics.py --category-cost 5 --missed-high-cost 3 --false-high-cost 1 --inference-cost 0.1
-python showcases/internal-service-intake/evaluation/economics.py --category-cost 5 --missed-high-cost 10 --false-high-cost 1 --inference-cost 0.1
+```
+conditional gross labor potential (€)
+  = observed Volvo group transitions
+  × assumed preventable fraction
+  × assumed labor minutes saved per prevented transition / 60
+  × external sector labor cost €/h
 ```
 
-**Only after a prospective independently labeled holdout has been collected, externally reviewed and locked in a pre-inference commit:**
+At 9,454 observed changes, **5% hypothetical preventability and five hypothetical minutes** imply **€2,304.41 gross across the entire historical log**. This value is a sensitivity illustration, **not measured savings**. [`research_methods.py`](evaluation/research_methods.py) enforces numerical validity and attaches explicit noncausality disclosures. [Static interactive demo](../../docs/index.html) makes the assumptions adjustable, with no public LLM/webhook/API.
+
+The datasets have **no per-request correspondence**: a correct NLBSE issue-class prediction cannot be used to claim a specific Volvo group handoff was avoided. Even the historical classification/handoff correlation within one dataset could not alone identify the intervention effect.
+
+## What would be needed for a real customer proof?
+
+Client-owned, consented and legitimately obtained **timestamped tickets**, an operationally grounded taxonomy, reviewed priority/urgency and SLA labels, true labor minutes per handling action, fully loaded labor costs, reassignment and review costs, LLM/ops expenses, and cost/severity of missed critical incidents. Randomized or staggered shadow-mode pilot comparing current process vs assisted triage is a stronger causal design than replaying historic tickets. Predeclare business endpoints and safety vetoes.
+
+Only those matched client data and a controlled intervention could support a claim of **realized savings** or client-specific economic optimality. The public-data research is valuable as reproducible **method demonstration**, not a substitute for actual customer evidence.
+
+## Verification commands
 
 ```sh
-python showcases/internal-service-intake/evaluation/holdout_gate.py PATH_TO_GOLD.jsonl --locked-sha256 LOCKED_PRE_INFERENCE_CHECKSUM
-python showcases/internal-service-intake/evaluation/holdout_analyze.py --gold PATH_TO_GOLD.jsonl --predictions PATH_TO_RECORDED_MODEL_OUTPUTS.jsonl --locked-gold-sha256 LOCKED_PRE_INFERENCE_CHECKSUM
+python -m unittest discover -s tests -v
+python showcases/internal-service-intake/evaluation/research_methods.py
+python showcases/internal-service-intake/evaluation/volvo_process.py
+python showcases/internal-service-intake/evaluation/nlbse_source.py
 ```
 
-The holdout analyzer **does not call a model** and verifies neither annotation independence nor economic data; model outputs must come from a separately evidenced genuine inference run with fixed model/prompt. The checksum proves only agreement with the supplied value, not that the supplied value was timestamped *before* predictions. Only independently checked provenance and chronology can establish that.
-
-The bounded implementation is ready for code review but **has not passed exact-HEAD CI**. No claim that 480 samples have been gathered, labeled, inferred or independently reviewed is supported.
-
-## Why this document matters for an employer/customer
-
-The sellable work is the **decision trail**: identify a false inference from aggregate accuracy, formulate an improved architecture, predefine a falsifiable test, expose an adverse cost scenario, implement auditable controls and **refuse claims the evidence cannot support**. The applicant comparison claim (“I think better than others”) is unquantified, because no competitor cohort was sampled; the research process is a concrete work sample, not a statistical measurement of relative candidate ability.
-
-**Provenance:** The project owner supplied the hybrid idea and the demand for research-level scrutiny; AI assistance calculated the pilot contrast, designed this provisional protocol and wrote supporting code. All authorship, independent review and customer benefit claims remain appropriately bounded.
-
-### Methodological references
-
-- NIST AI RMF MEASURE, especially 2.5/2.6: https://airc.nist.gov/airmf-resources/airmf/5-sec-core/
-- NIST McNemar reference (paired binary outcomes): https://www.itl.nist.gov/div898/software/dataplot/refman1/auxillar/mcnemar.htm
-- University of Vienna calculator (assumption-based McNemar sample planning): https://homepage.univie.ac.at/robin.ristl/samplesize.php?test=mcnemar
-- DataSAIL / Nature Communications on leakage from similar samples: https://www.nature.com/articles/s41467-025-58606-8
-- Canadian AI Safety Institute on evaluation uncertainty/reporting: https://ised-isde.canada.ca/site/ised/en/canadian-artificial-intelligence-safety-institute/what-information-should-ai-evaluators-share
-- Research on cost-sensitive thresholds: https://link.springer.com/article/10.1007/s10618-021-00790-4
+Both source audits require network access. Exact-head CI evidence is required before merge; failed or blocked runs remain visible. The scope is intentionally bounded: no live production AI service, no unsourced claims, no additional portfolio prerequisites for applying to paid B2B-AI delivery roles.
