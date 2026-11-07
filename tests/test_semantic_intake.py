@@ -7,7 +7,8 @@ from pathlib import Path
 MOD = Path(__file__).resolve().parents[1] / "showcases/internal-service-intake/mock-api"
 sys.path.insert(0, str(MOD))
 from semantic import (validate_free_text, text_hash, examine_model_response,  # noqa: E402
-                      validate_proposal, deterministic_baseline, EXTRACTION_SCHEMA)
+                      validate_proposal, deterministic_baseline, EXTRACTION_SCHEMA,
+                      model_transport_diagnostic)
 
 
 class SemanticIntakeTests(unittest.TestCase):
@@ -23,6 +24,18 @@ class SemanticIntakeTests(unittest.TestCase):
                "missing_information": []}
         obj.update(changes)
         return {"choices": [{"message": {"content": json.dumps(obj)}}]}
+
+    def test_model_transport_diagnostic_never_preserves_secret_message(self):
+        bad = {"error": {"statusCode": 400,
+                         "message": "400 Bad Request token=SUPER-SECRET-STRING"}}
+        result = model_transport_diagnostic(bad)
+        self.assertEqual("object", result["response_type"])
+        self.assertEqual(["error"], result["top_level_keys"])
+        self.assertEqual(["message", "statusCode"], result["error_keys"])
+        self.assertEqual(400, result["error_http_status"])
+        self.assertNotIn("SUPER-SECRET-STRING", json.dumps(result))
+        self.assertEqual("connection_refused",
+                         model_transport_diagnostic({"error": "connect ECONNREFUSED"})["error_class"])
 
     def test_valid_input(self):
         self.assertIsNone(validate_free_text(self.free_text()))
