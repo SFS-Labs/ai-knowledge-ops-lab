@@ -1,5 +1,12 @@
 # Internal service intake showcase (synthetic-only)
 
+> **Start with the decision, not the code:** [DR-001: why a validated LLM should supply category, deterministic rules should propose urgency, and disagreements require review](HYBRID_DECISION_RECORD.md).
+> The argument includes the retrospective **22/32** hybrid pair result, its **5/9 missed urgent** counterexample, source-attributed implementation and explicit falsification criteria. This is **post-hoc synthetic evidence**, not a customer deployment or proven ROI.
+>
+> **Exact-SHA verified baseline:** [CI #24](https://github.com/SFS-Labs/ai-knowledge-ops-lab/actions/runs/42399345922) (68 tests and real local LLM/n8n/SQLite E2E, including 36 real CPU inferences) passed on commit `d02a76f856acf62725eb5ec402802e6bb5febeae`.
+> **Current Draft PR HEAD:** includes a subsequent *experimental hybrid routing/decision trace* and frozen observation replay; its full CI/E2E is **not yet verified**. No merge/deployment.
+
+
 This showcase is a bounded, offline demonstration of one internal service-intake path:
 
 **Synthetic request → authenticated webhook → strict input validation → deduplication → deterministic classification → explicit human approval → state-changing mock API → persisted result + audit evidence.**
@@ -18,7 +25,7 @@ It is intentionally isolated from the repository's research pipeline and from RE
 - **Version:** Compose uses `n8nio/n8n:2.46.6`. In the run above the actual n8n audit still flagged **Official risky nodes** (Code/HTTP Request). The earlier outdated-instance warning was absent. An audit command with exit 0 is **not** a clean security clearance.
 - **Evidence boundary:** The above run concerns its exact historical SHA. Any later change to this PR (including documentation or API-key hardening) requires a new exact-head deterministic CI/E2E run before release; older green runs must never be relabeled as current-head verification.
 
-## Staged local-LLM free-text path — NOT YET VERIFIED
+## Local-LLM free-text path — CI #24 VERIFIED; subsequent hybrid policy pending verification
 
 The original structured intake remains supported. A new synthetic free-text webhook,
 internal-service-intake-text, accepts request_id, requester, and genuinely
@@ -36,16 +43,7 @@ manual_review. A model cannot grant approval or provide executable commands
 or outbound URLs. The existing credentials are possession-based demonstration
 tokens, **not independently verified people or separation of duties**.
 
-**Evidence boundary:** [Actions #42392952295](https://github.com/SFS-Labs/ai-knowledge-ops-lab/actions/runs/42392952295)
-on SHA `b402f1b9513149f7885c4126d3ce6ae00fef9e72` executed 64 successful tests,
-the existing n8n E2E, verified model download and a real CPU model response
-(3,922 ms). The model returned a wrong schema type in the smoke response;
-the later adversarial webhook returned HTTP 500, causing the NEW LLM E2E to FAIL.
-The 36-case evaluation was not executed. Output schema constraints and failure
-diagnostics have since been tightened. **The extension has NOT passed a
-successful exact-HEAD real-model E2E and full evaluation.**
-Do not claim real inference, model accuracy, latency, production readiness or
-business outcomes on the basis of an unexecuted test script.
+**Evidence boundary:** The historical [Actions #42392952295](https://github.com/SFS-Labs/ai-knowledge-ops-lab/actions/runs/42392952295) was a failing intermediate debugging run and must not be presented as the final status. The later [CI #24 on SHA d02a76f](https://github.com/SFS-Labs/ai-knowledge-ops-lab/actions/runs/42399345922) passed all three jobs, genuine local LLM/n8n/SQLite E2E and the real 36-case evaluation. These results belong **only to that exact commit**. The hybrid modification made *after* CI #24 is a new unverified HEAD, with its own regression tests and post-hoc frozen-output replay. Neither CI run establishes production readiness, validated reviewer identity, business benefit or model superiority on customer data.
 
 The existing manually dispatched .github/workflows/ci.yml runs the model gate
 only on the PR branch and only after the unit suite. It uses the official
