@@ -1,6 +1,9 @@
 """Static scope and safety invariants for the optional browser-side model demo."""
 from pathlib import Path
 import unittest
+import json
+import re
+import sys
 
 ROOT = Path(__file__).resolve().parents[1]
 HTML = (ROOT / "docs/live.html").read_text(encoding="utf-8")
@@ -26,6 +29,29 @@ class BrowserInferenceContractTests(unittest.TestCase):
             self.assertIn(fragment, HTML)
         self.assertIn('src="./live.js"',HTML)
         self.assertIn('href="./live.html"',(ROOT/"docs/index.html").read_text(encoding="utf-8"))
+
+    def test_browser_uses_exact_development_selected_qwen_prompt(self):
+        sys.path.insert(0,str(ROOT / "showcases/internal-service-intake/evaluation"))
+        from nlbse_llm_retest import V2_SYSTEM_PROMPT, V2_PROMPT_VERSION
+        match = re.search(r'^const SYSTEM_PROMPT = (".*");
+        for item in ("connect-src 'self'", "script-src 'self'", "base-uri 'none'",
+                     "form-action 'none'", "maxlength=\"1200\"", "disabled"):
+            self.assertIn(item,HTML)
+        for item in ("const LIMIT = 12", "isValidInput", "navigator.gpu.requestAdapter",
+                     "classify.disabled = true", "model_id === select.value"):
+            self.assertIn(item,JS)
+        self.assertIn("script-src 'self' 'wasm-unsafe-eval'",HTML)
+        self.assertNotIn(" 'unsafe-eval'",HTML)
+        self.assertNotIn("webhook/internal-service-intake",JS)
+
+if __name__=="__main__":
+    unittest.main()
+,JS,re.MULTILINE)
+        self.assertIsNotNone(match)
+        self.assertEqual(json.loads(match.group(1)),V2_SYSTEM_PROMPT)
+        self.assertIn(V2_PROMPT_VERSION,JS)
+        for term in ("54/96", "46/96", "6/24", "Quantisierung"):
+            self.assertIn(term,HTML)
 
     def test_security_and_resource_limits(self):
         for item in ("connect-src 'self'", "script-src 'self'", "base-uri 'none'",
