@@ -7,6 +7,7 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parents[1] / "showcases" / "internal-service-intake" / "evaluation"
 sys.path.insert(0, str(HERE))
 from holdout_gate import audit_holdout  # noqa: E402
+from holdout_analyze import evaluate_locked_predictions  # noqa: E402
 
 
 def build_sample():
@@ -65,6 +66,29 @@ class HoldoutGateTests(unittest.TestCase):
         cases[0]["labelers"] = ["same-reviewer", "same-reviewer"]
         with self.assertRaisesRegex(ValueError, "labelers"):
             audit_holdout(cases, min_per_cell=1)
+
+
+    def test_prospective_evaluator_rejects_missing_predictions(self):
+        gold = build_sample()
+        predictions = [{"id": row["id"], "valid": True,
+                        "service_type": row["category"], "urgency": row["urgency"]}
+                       for row in gold[:-1]]
+        with self.assertRaisesRegex(ValueError, "prediction"):
+            evaluate_locked_predictions(gold, predictions, min_per_cell=1)
+
+    def test_prospective_evaluator_reports_pairs_with_its_limits(self):
+        gold = build_sample()
+        predictions = [{"id": row["id"], "valid": True,
+                        "service_type": row["category"], "urgency": row["urgency"]}
+                       for row in gold]
+        report = evaluate_locked_predictions(gold, predictions, min_per_cell=1)
+        self.assertEqual(24, report["n"])
+        self.assertEqual(24, report["llm_only"]["both_correct"])
+        self.assertEqual(24, report["hybrid"]["category_correct"])
+        self.assertFalse(report["verified_customer_representativeness"])
+        self.assertFalse(report["proves_business_optimality"])
+        self.assertEqual(1.0, report["hybrid_vs_llm"]["exact_mcnemar_two_sided_p"])
+
 
 
 if __name__ == "__main__":
