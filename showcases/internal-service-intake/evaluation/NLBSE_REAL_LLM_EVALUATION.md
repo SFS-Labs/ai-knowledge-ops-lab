@@ -41,6 +41,12 @@ The v1 failure motivates a narrow change: explicitly distinguish user questions 
 4. Execute **both** original and candidate prompts on the same completely fresh 96 held-out cases; compare them with the frozen baseline on those identical cases.
 5. Record outcomes whether favorable or unfavorable. This is still exploratory, because issue labeling and model/prompt choices have been studied using the same larger official test source. Neither run constitutes an official leaderboard claim.
 
+**Predetermined falsification and release interpretation (written before reading the v2 result):**
+- H1: v2 should increase `question` recall **and** Macro-F1 against v1 on the new same-case holdout.
+- H2: the prompt chosen from development cases should beat the frozen keyword baseline on holdout Macro-F1.
+- If either hypothesis fails, report the failure prominently; do **not** change selected prompt based on holdout performance or call the model a superior autonomous classifier.
+- Even if both point estimates improve, sample uncertainty, noisy owner labels and absence of production outcomes prohibit a production-readiness or ROI claim. A confidence interval overlapping zero also prohibits claiming a statistically established accuracy advantage.
+
 The frozen implementation is [nlbse_llm_retest.py](nlbse_llm_retest.py); exact model image and downloaded GGUF are cryptographically pinned by the one-shot [CI workflow](../../../.github/workflows/ci.yml). The retest begins only when the owner moves PR #14 from Draft to Ready for Review; later pushes do **not** repeat the billable-duration inference step. Outcome must be recorded from executed CI output, not a local or hypothetical number.
 
 ## Decision
