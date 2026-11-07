@@ -101,6 +101,10 @@ jobs:
       group: sfs-service-intake-llm-feasibility
       cancel-in-progress: false
     steps:
+      - name: Checkout exact dispatch SHA without stored credentials
+        uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608
+        with:
+          persist-credentials: false
       - name: Confirm bounded public standard-runner context
         shell: bash
         run: |
