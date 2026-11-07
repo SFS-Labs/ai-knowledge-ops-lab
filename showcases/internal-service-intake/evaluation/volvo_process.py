@@ -90,7 +90,7 @@ def summarize_stream(binary):
         parsed = [(_stamp(e.get("time:timestamp")), e)
                   for e in events]
         missing_timestamps += sum(t is None for t, _ in parsed)
-        parsed = sorted((t, e) for t, e in parsed if t is not None)
+        parsed = sorted(((t, e) for t, e in parsed if t is not None), key=lambda row: row[0])
         if parsed:
             c_first, c_last = parsed[0][0], parsed[-1][0]
             spans.append((c_last - c_first).total_seconds() / 3600)
