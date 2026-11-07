@@ -18,8 +18,28 @@ jobs:
           python-version: '3.12'
       - name: Run unit tests
         run: python -m unittest discover -s tests -v
-      - name: Verify original Volvo 2013 dataset and report historical process aggregates
+
+
+  research-sources:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout research code without stored credentials
+        uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608
+        with:
+          persist-credentials: false
+      - name: Setup Python
+        uses: actions/setup-python@82c7e631bb3cdc910f68e0081d67478d79c6982d
+        with:
+          python-version: '3.12'
+      - name: Validate business-led evidence contract
+        run: python showcases/internal-service-intake/evaluation/research_methods.py
+      - name: Read and checksum-verify original Volvo incident event log
         run: python showcases/internal-service-intake/evaluation/volvo_process.py
+      - name: Audit entire NLBSE 2023 officially held-out issue-type test file
+        run: python showcases/internal-service-intake/evaluation/nlbse_source.py
 
   n8n-audit:
     runs-on: ubuntu-latest
