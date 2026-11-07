@@ -18,6 +18,8 @@ jobs:
           python-version: '3.12'
       - name: Run unit tests
         run: python -m unittest discover -s tests -v
+      - name: Verify original Volvo 2013 dataset and report historical process aggregates
+        run: python showcases/internal-service-intake/evaluation/volvo_process.py
 
   n8n-audit:
     runs-on: ubuntu-latest
