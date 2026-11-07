@@ -1,0 +1,82 @@
+{
+  "source_workflow_run": "https://github.com/SFS-Labs/ai-knowledge-ops-lab/actions/runs/42411756411",
+  "run_number": 27,
+  "run_commit_sha": "540ef6db375fe392c751028c8538bd2465eaac79",
+  "job_id": 128521206573,
+  "workflow_conclusion": "FAILURE (other source/unit steps); Volvo source audit step itself succeeded",
+  "evidence_type": "observed original event log aggregate; no synthetic values",
+  "source": {
+    "name": "BPI Challenge 2013, incidents",
+    "publisher": "4TU.ResearchData",
+    "author": "Ward Steeman / Volvo IT",
+    "year": 2013,
+    "doi": "https://doi.org/10.4121/uuid:500573e6-accc-4b0c-9576-aa5468b10cee",
+    "original_md5": "d4809bd55e3e1c15b017ab4e58228297",
+    "verified_md5_match": true,
+    "downloaded_from": "https://data.4tu.nl/file/0fc5c579-e544-4fab-9143-fab1f5192432/aa51ffbb-25fd-4b5a-b0b8-9aba659b7e8c",
+    "redistribution": "Raw data NOT redistributed by SFS",
+    "license": "4TU General Terms of Use (consult original terms before publishing extracts)",
+    "data_kind": "Historical incident-event logs; not actual text of the intake request"
+  },
+  "observed": {
+    "incident_cases": 7554,
+    "events": 65533,
+    "first_event_utc": "2010-03-31T14:59:42+00:00",
+    "last_event_utc": "2012-05-22T23:22:25+00:00",
+    "unique_event_impact_values": [
+      "High",
+      "Low",
+      "Major",
+      "Medium"
+    ],
+    "first_recorded_impact_counts": {
+      "High": 261,
+      "Low": 3245,
+      "Major": 3,
+      "Medium": 4045
+    },
+    "activity_event_counts": {
+      "Accepted": 40117,
+      "Completed": 13867,
+      "Queued": 11544,
+      "Unmatched": 5
+    },
+    "total_observed_group_transitions": 9454,
+    "mean_group_transitions_per_case": 1.252,
+    "median_group_transitions_per_case": 1,
+    "p90_group_transitions_per_case": 3,
+    "fraction_cases_with_at_least_one_transition": 0.5057,
+    "median_observed_elapsed_hours": 181.18,
+    "p90_observed_elapsed_hours": 541.39,
+    "max_observed_elapsed_hours": 18512.44,
+    "median_events_per_case": 6,
+    "missing_event_timestamps": 0,
+    "cases_missing_group": 0,
+    "cases_missing_first_impact": 0,
+    "event_attribute_names": [
+      "concept:name",
+      "impact",
+      "lifecycle:transition",
+      "org:group",
+      "org:resource",
+      "org:role",
+      "organization country",
+      "organization involved",
+      "product",
+      "resource country",
+      "time:timestamp"
+    ],
+    "trace_attribute_names": [
+      "concept:name"
+    ]
+  },
+  "interpretation_warnings": [
+    "Events capture observed historical operations, not their counterfactuals.",
+    "Change of org:group is a proxy for handoff, not measured additional labor.",
+    "Elapsed time between first and last event is not active work time.",
+    "impact in Volvo is not validated urgency or a four-class service type.",
+    "Dataset does not establish free-text service categories analytics/automation/integration/incident-response.",
+    "This log cannot prove that AI would have prevented any observed handoff.",
+    "This report discloses real anonymous aggregate statistics only; source terms require attribution."
+  ]
+}
