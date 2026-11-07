@@ -6,6 +6,20 @@ Applied AI research operations for turning real public company disclosures into 
 
 **Milestone M1: recorded, source-linked research pipeline.** A working Python CLI and static replay demonstrate ingestion, deterministic validation, auditable model-output import and review routing. A three-source in-session AI extraction is recorded. This is an evolving research project; isolated model experiments, reviewed labels and held-out evaluation remain open. See [milestone evidence and next steps](docs/milestone-m1.md).
 
+## Isolated B2B service-intake demonstration (Draft, synthetic-only)
+
+A separate [n8n + SQLite service-intake showcase](showcases/internal-service-intake/README.md)
+demonstrates deterministic authenticated intake, duplicate handling, simulated approval
+and an auditable persisted operation. The earlier real Docker/n8n verification is
+documented at its original exact SHA.
+
+A new free-text path proposes semantic extraction with a local open-weight LLM,
+independent validation and manual-review fallback. **This LLM extension has not
+yet passed genuine exact-SHA inference/E2E/evaluation and is not claimed as
+verified or deployed.** Refer to [Draft PR #9](https://github.com/SFS-Labs/ai-knowledge-ops-lab/pull/9)
+for implementation and evidence gates. The main research pipeline is separate
+and remains the recorded/replay-based pipeline described below.
+
 ## Start here
 
 1. Read the [architecture](docs/architecture.md) and [evaluation limits](docs/evaluation.md).
