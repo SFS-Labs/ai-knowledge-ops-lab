@@ -204,6 +204,13 @@ class InternalServiceIntakeShowcaseTests(unittest.TestCase):
                 self.assertNotEqual(0, proc.returncode)
                 self.assertIn("--api-key", proc.stderr)
 
+    def test_non_ascii_api_key_header_is_rejected_cleanly(self) -> None:
+        request = Request(f"http://127.0.0.1:{self.port}/v1/intake/request/REQ-MISSING",
+                          method="GET", headers={"X-MOCK-API-KEY": "é"})
+        with self.assertRaises(HTTPError) as failure:
+            urlopen(request, timeout=2.0)
+        self.assertEqual(401, failure.exception.code)
+
     def test_authentication_required(self) -> None:
         status, body = self._post("/v1/intake/register", self._valid_request(), auth=False)
         self.assertEqual(401, status)

@@ -269,7 +269,8 @@ def make_handler(config: ApiConfig, store: IntakeStore):
             return data if isinstance(data, dict) else None
 
         def _require_api_key(self) -> bool:
-            if not compare_digest(self.headers.get("X-MOCK-API-KEY", ""), config.api_key):
+            provided = self.headers.get("X-MOCK-API-KEY", "")
+            if not provided.isascii() or not compare_digest(provided, config.api_key):
                 self._json_response(HTTPStatus.UNAUTHORIZED, {"error": "unauthorized"})
                 return False
             return True
