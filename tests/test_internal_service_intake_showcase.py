@@ -1,4 +1,5 @@
 import json
+from concurrent.futures import ThreadPoolExecutor
 import socket
 import subprocess
 import sys
@@ -176,6 +177,21 @@ class InternalServiceIntakeShowcaseTests(unittest.TestCase):
         payload["junk"] = "x" * 70000
         status, _ = self._post("/v1/intake/register", payload)
         self.assertEqual(413, status)
+
+    def test_concurrent_register_and_apply_have_one_effect_each(self) -> None:
+        request = self._valid_request("REQ-CONCURRENT-001")
+        with ThreadPoolExecutor(max_workers=8) as pool:
+            results = list(pool.map(lambda _: self._post("/v1/intake/register", request), range(16)))
+        self.assertTrue(all(status == 200 for status, _ in results), results)
+        self.assertEqual(1, sum(not body["duplicate"] for _, body in results))
+        decision = {"request_id":"REQ-CONCURRENT-001","approver":"human","decision":"approve","rationale":"approved demo"}
+        self.assertEqual(200, self._post("/v1/intake/approval", decision)[0])
+        with ThreadPoolExecutor(max_workers=8) as pool:
+            applied = list(pool.map(lambda _: self._post("/v1/intake/apply", {"request_id":"REQ-CONCURRENT-001","actor":"workflow"}), range(16)))
+        self.assertTrue(all(status == 200 for status, _ in applied), applied)
+        self.assertEqual(1, sum(not body["already_applied"] for _, body in applied))
+        _, state = self._get("/v1/intake/request/REQ-CONCURRENT-001")
+        self.assertEqual(1, sum(e["event_type"] == "apply_executed" for e in state["audit"]))
 
     def test_authentication_required(self) -> None:
         status, body = self._post("/v1/intake/register", self._valid_request(), auth=False)
