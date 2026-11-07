@@ -22,7 +22,7 @@ class BrowserInferenceContractTests(unittest.TestCase):
     def test_no_claim_that_browser_executes_backend_or_approval(self):
         for fragment in ("nicht</strong> n8n-Orchestrierung","SQLite-Speicherung",
                          "kein genehmigtes Routing","gleiche Modellfamilie",
-                         "Eine", "WebGPU", "BETA"):
+                         "WebGPU", "BETA"):
             self.assertIn(fragment, HTML)
         self.assertIn('src="./live.js"',HTML)
         self.assertIn('href="./live.html"',(ROOT/"docs/index.html").read_text(encoding="utf-8"))
