@@ -64,7 +64,9 @@ def profile_rows(rows, *, require_published_counts=True):
     labels = Counter()
     confusion = Counter()
     n = 0
-    seen_ids = set()
+    seen_ids = {}
+    duplicate_id_rows = 0
+    duplicate_id_label_conflicts = 0
     empty_text = 0
     fields = None
     for row in rows:
@@ -80,8 +82,12 @@ def profile_rows(rows, *, require_published_counts=True):
         if not id_value:
             raise ValueError("missing_source_issue_id")
         if id_value in seen_ids:
-            raise ValueError("duplicated_source_issue_id")
-        seen_ids.add(id_value)
+            # Preserve the full official benchmark; report repeated IDs instead
+            # of quietly dropping observations or falsely claiming IID samples.
+            duplicate_id_rows += 1
+            duplicate_id_label_conflicts += (seen_ids[id_value] != label)
+        else:
+            seen_ids[id_value] = label
         title = row.get("title") or row.get("Title") or ""
         body = row.get("body") or row.get("Body") or ""
         empty_text += not (str(title).strip() or str(body).strip())
@@ -96,12 +102,16 @@ def profile_rows(rows, *, require_published_counts=True):
         "observed_issue_count": n,
         "observed_source_label_counts": dict(sorted(labels.items())),
         "observed_missing_title_and_body": empty_text,
+        "unique_issue_ids": len(seen_ids),
+        "repeated_issue_id_rows": duplicate_id_rows,
+        "repeated_issue_id_label_conflicts": duplicate_id_label_conflicts,
+        "independent_observation_claim": False,
         "header_fields": fields,
         "labels_are_source_harmonized": True,
         "observed_test_model_accuracy": None,
         "observed_urgency_or_volvo_linkage": None,
         "official_full_test_checked": bool(require_published_counts),
-        "known_label_limit": "GitHub owner labels may be noisy and mapped from synonyms; not adjudicated independent truth.",
+        "known_label_limit": "GitHub owner labels may be noisy and mapped from synonyms; repeated IDs mean rows are not necessarily independent, not adjudicated ground truth.",
         "observed_keyword_baseline": classification_scores(confusion, labels, n),
     }
 
