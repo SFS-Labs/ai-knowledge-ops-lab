@@ -1,0 +1,116 @@
+{
+  "schema_version": "1.0",
+  "business_problem": {
+    "id": "software-service-request-triage",
+    "statement": "Classify inbound software-service requests by request type, then evaluate whether a routing policy could reduce unnecessary handoffs without missing high-risk cases.",
+    "business_outcomes": [
+      "correct request-type routing",
+      "reduced handling effort",
+      "acceptable incident escalation and SLA risk"
+    ],
+    "target_customer": "Illustrative B2B IT delivery/service desk; no customer or production deployment exists",
+    "taxonomy_selection": "Use observed source classes when benchmarking. In production, perform discovery and jointly define categories, urgency, SOPs, costs and ownership with the customer before system design.",
+    "dimensions": {
+      "request_type": [
+        "bug",
+        "feature",
+        "question",
+        "documentation"
+      ],
+      "urgency": "Unknown in NLBSE labels; NEVER infer severity from request-type alone",
+      "service_domain": "Optional client-specific multi-label field; Analytics/Automation/Integration/Incident Response NOT source classes"
+    },
+    "decision_priority": [
+      "business objectives",
+      "taxonomy",
+      "legal real source data",
+      "independent held-out assessment",
+      "cost and risk analysis",
+      "deployment decision"
+    ]
+  },
+  "streams": {
+    "classification": {
+      "id": "nlbse2023",
+      "source_url": "https://github.com/nlbse2023/issue-report-classification",
+      "source_type": "Real public software issue reports, English; harmonized source labels from source repositories",
+      "labels": [
+        "bug",
+        "feature",
+        "question",
+        "documentation"
+      ],
+      "label_provenance": "Source GitHub issues; category synonyms harmonized by NLBSE organizers. No claim that every record carries an identical original raw label.",
+      "published_training_count": 1275881,
+      "published_test_count": 142320,
+      "published_test_class_counts": {
+        "bug": 74781,
+        "feature": 52797,
+        "question": 8490,
+        "documentation": 6252
+      },
+      "primary_metric": "macro_F1 plus per-class precision/recall and overall accuracy",
+      "evaluation_rule": "Original NLBSE benchmark requires full 142,320 test cases for official comparable scores; a smaller diagnostic subsample is NOT the official benchmark",
+      "raw_republication": "Not authorized by this project; no raw issue text republished",
+      "model_results": "NOT_MEASURED on NLBSE labels",
+      "strength": "Real labeled text and large independent split",
+      "limitation": "No authoritatively linked urgency, handling time, person-hours, cost, or client outcomes",
+      "observed_test_count": 142320,
+      "source_archive_sha256": "f625dc78af6139b94623004dcbe575b5dfb6dc3293b7e9fa2fa109352d1cdf0e",
+      "observed_repeated_issue_id_rows": 541,
+      "observed_conflicting_duplicate_labels": 5,
+      "observed_keyword_baseline": {
+        "accuracy": 0.49251,
+        "micro_F1": 0.49251,
+        "macro_F1": 0.41494,
+        "evidence_kind": "run on original full test, NOT LLM inference",
+        "source_run": "https://github.com/SFS-Labs/ai-knowledge-ops-lab/actions/runs/42412917843"
+      },
+      "source_audit_json": "showcases/internal-service-intake/evaluation/evidence/nlbse2023-full-test-ci29.json"
+    },
+    "operations": {
+      "id": "volvo_bpi2013",
+      "source_url": "https://doi.org/10.4121/uuid:500573e6-accc-4b0c-9576-aa5468b10cee",
+      "source_type": "Anonymized historical Volvo IT incident event log",
+      "published_case_count": 7554,
+      "published_event_count": 65533,
+      "available_evidence": [
+        "events",
+        "timestamps",
+        "activity",
+        "organization handoffs as derived process statistic"
+      ],
+      "measured_labour_minutes": "NOT_AVAILABLE",
+      "causal_effect_of_ai": "NOT_IDENTIFIABLE_FROM_THIS_LOG_ALONE",
+      "scope": "Incident operations; does not cover the four old service classes",
+      "raw_republication": "Not authorized by this project; summary counts only",
+      "original_md5": "d4809bd55e3e1c15b017ab4e58228297",
+      "md5_original_verified": true,
+      "observed_group_transitions": 9454,
+      "observed_group_transitions_measured_from": "original XES, sourced in CI run 42411756411",
+      "source_audit_json": "showcases/internal-service-intake/evaluation/evidence/volvo-2013-source-audit-ci27.json"
+    }
+  },
+  "economics": {
+    "official_labor_cost_reference": {
+      "country": "Germany",
+      "year": 2025,
+      "sector": "Information and communication",
+      "eur_per_hour": 58.5,
+      "statistic": "Average employer labor cost per hour worked, not Volvo wages and not measured ticket cost",
+      "source": "Destatis Arbeitskosten 2025, Wirtschaftszweig Information und Kommunikation"
+    },
+    "model": "Illustrative potential labor saving = observed event-log handoffs × ASSUMED avoidable share × ASSUMED minutes saved per avoided handoff × reference EUR/h ÷ 60; deduct actual measured model, reviewer and ops costs where available",
+    "forbidden_inference": "Do not multiply observed elapsed wall-clock hours by the wage rate: elapsed ≠ active staff hours",
+    "causal_limit": "No randomized/paired rollout; cannot claim avoided handoffs, realized ROI or SLA improvements",
+    "cross_source_limit": "No row-level join from NLBSE software issues to Volvo incidents; do not imply a common population or derive a single end-to-end observed performance score",
+    "rollout_condition": "Actual customer SLA, cost, review and deployment constraints must be measured prospectively"
+  },
+  "disclosure": {
+    "old_32_cases": "Historical 32 labeled synthetic pilot, exploratory and not NLBSE",
+    "independent_classification_benchmark": "RULES_ONLY_FULL_OFFICIAL_TEST_MEASURED_CI29; NO_LOCAL_LLM_RUN_ON_NLBSE",
+    "original_volvo_process_extraction": "VERIFIED_MD5_ORIGINAL_CI27_SOURCE_AUDIT_STEP",
+    "combined_economic_outcome": "ILLUSTRATIVE_SCENARIO_ONLY",
+    "customer_validation": "NOT_ESTABLISHED"
+  }
+}

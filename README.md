@@ -1,10 +1,14 @@
 # AI Knowledge Operations Lab
 
-Applied AI research operations for turning real public company disclosures into structured, source-linked knowledge with deterministic quality controls.
+> **60-second business-first decision case:** We audited all **142,320 real NLBSE software issues** in the official published test split. A simple, transparent keyword baseline correctly classified **49.25%**; the source contained **541 repeated issue-ID rows** (five conflicting labels). Separately, the MD5-verified **Volvo IT incident log recorded 9,454 group transitions** over 7,554 cases. At an official German sector labor-cost reference of €58.50/h, a hypothetical **5% avoidable share × five labor minutes** is **€2,304.41 gross** over the historical log. **No AI-driven reduction or real customer savings is claimed.**
+>
+> **Nontechnical:** [Interactive 60-second decision illustration](docs/index.html) · **Technical:** [Real-data evidence and falsification](showcases/internal-service-intake/RESEARCH_DESIGN.md) · [Source-backed contract](showcases/internal-service-intake/evaluation/research_contract.json).
+>
+> **30-second decision sample (historic pilot):** The earlier 32 labeled **synthetic** cases yielded hybrid **22/32** versus 10/32 LLM-only and 11/32 rules-only, yet simple urgency rules missed **5/9** high-urgency labels. This original *post-hoc* comparison, its counterexample and what would falsify it are explained in the [decision evidence brief](showcases/internal-service-intake/DECISION_EVIDENCE_BRIEF.md); it is **not** an NLBSE or Volvo outcome.
+>
+> **Evidence and release status:** Genuine local Qwen/n8n/SQLite E2E passed [CI #25](https://github.com/SFS-Labs/ai-knowledge-ops-lab/actions/runs/42405856175) at historical SHA `d4a8391`; the [Volvo source audit](https://github.com/SFS-Labs/ai-knowledge-ops-lab/actions/runs/42411756411) and [complete NLBSE test audit](https://github.com/SFS-Labs/ai-knowledge-ops-lab/actions/runs/42412917843) have independent logged evidence. **For release, verify all jobs against the actual exact commit in [GitHub Actions](https://github.com/SFS-Labs/ai-knowledge-ops-lab/actions/workflows/ci.yml)**; historic runs never certify a new SHA. Public delivery is **static source/documentation only**, no live n8n/LLM API, customer IP or claimed ROI.
 
-> **Recorded pipeline results — no live model processing**
-
-**Milestone M1: recorded, source-linked research pipeline.** A working Python CLI and static replay demonstrate ingestion, deterministic validation, auditable model-output import and review routing. A three-source in-session AI extraction is recorded. This is an evolving research project; isolated model experiments, reviewed labels and held-out evaluation remain open. See [milestone evidence and next steps](docs/milestone-m1.md).
+This repository retains its earlier **SEC disclosure → source-linked knowledge** research pipeline, which is separate from the service-intake experiment and documented below.
 
 ## Start here
 
