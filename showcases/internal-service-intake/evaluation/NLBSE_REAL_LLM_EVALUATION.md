@@ -49,8 +49,31 @@ The v1 failure motivates a narrow change: explicitly distinguish user questions 
 
 The frozen implementation is [nlbse_llm_retest.py](nlbse_llm_retest.py); exact model image and downloaded GGUF are cryptographically pinned by the one-shot [CI workflow](../../../.github/workflows/ci.yml). The retest begins only when the owner moves PR #14 from Draft to Ready for Review; later pushes do **not** repeat the billable-duration inference step. Outcome must be recorded from executed CI output, not a local or hypothetical number.
 
+## Executed v2 retest — real, disjoint original issue text
+
+[Actions run #40, all jobs completed successfully](https://github.com/SFS-Labs/ai-knowledge-ops-lab/actions/runs/42425405686), source commit `e224c3e21128c4292b064a7f0a814a47db6f2afd`. The pinned model was downloaded and passed SHA-256 verification, and **256 genuine CPU model responses** were generated. Total measured runner-script time, excluding model download/startup, was **497.71 s**. There were no invalid or failed model responses on the 96-case test for either prompt.
+
+**Developer selection (32 previously unseen cases):** v1 Macro-F1 **33.44%**; v2 **48.53%**. Per the precommitted selection rule, v2 was selected without looking at the new 96-case test performance.
+
+**New 96-case holdout, identical cases and baseline for every method:**
+
+| Metric | Rules | Original Qwen v1 | Selected Qwen v2 |
+|---|---:|---:|---:|
+| Accuracy | 46/96 = **47.92%** | 52/96 = **54.17%** | 54/96 = **56.25%** |
+| Macro-F1 | **46.80%** | **52.28%** | **54.45%** |
+| Bug recall | 8/24 | 23/24 | 22/24 |
+| Feature recall | 19/24 | 14/24 | 17/24 |
+| Question recall | 13/24 | 5/24 | **6/24** |
+| Documentation recall | 6/24 | 10/24 | 9/24 |
+
+The two predefined point-estimate hypotheses passed: v2 raised both `question` recall and Macro-F1 against v1 and exceeded the frozen keyword rule's Macro-F1 on the same 96 new cases. Crucially, the point estimates do **not** establish statistical dominance. v2 Accuracy − keyword Accuracy = **+8.33 pp**, paired stratified bootstrap 95% interval **[-2.08, +18.75] pp**. v2 vs v1 = **+2.08 pp**, interval **[-3.13, +7.29] pp**. Both intervals contain zero.
+
+**Major operational limitation:** selected v2 still misses **18/24 question-labeled cases**, and thus must not make unattended routing or customer-critical decisions. Compared with the original first 96-case measurement, scores also vary strongly across two different diagnostic samples. Avoid extrapolating a population score, claiming robust cross-project generalization or hiding class failures behind aggregate Accuracy.
+
+Machine-readable [complete v2 evidence with 96 paired labels, hashes, latency measurements and confusion matrices](evidence/nlbse-qwen-prompt-retest-ci40.json), plus the preserved [v1 first-96-case evidence](evidence/nlbse-qwen-real-v1-ci34.json). No third-party raw issue content is committed.
+
 ## Decision
 
-Until independently verified, **do not claim Qwen outperforms the baseline** or that a public model interaction demonstrates validated customer production quality. The real system-integration evidence remains separately valid: Qwen → n8n → Python API → SQLite, with human-separated approval and negative paths proven in historical exact-commit GitHub Actions.
+The selected v2 prompt has higher observed Accuracy and Macro-F1 than this diagnostic baseline, but the sample is limited and the paired 95% accuracy interval crosses zero. **Do not claim statistically established superiority** or production-ready autonomous classification. A public browser model interaction also does not demonstrate validated customer production quality. The real system-integration evidence remains separately valid: Qwen → n8n → Python API → SQLite, with human-separated approval and negative paths proven in historical exact-commit GitHub Actions.
 
 The website's optional browser-local Qwen demo is a **different inference runtime/quantization** and implements model classification only—not live n8n, persistence, approval or production operations. Verify actual device/browser behavior before treating it as a functioning public recruiter demo.
