@@ -60,8 +60,9 @@ class DecisionGateTests(unittest.TestCase):
         head = "a" * 40
         report = audit_decision_case(self.record, self.pilot, self.brief,
                                      current_head=head, successful_ci_sha=head)
-        self.assertTrue(report["current_head_ci_verified"])
-        self.assertEqual("TECHNICAL_DECISION_VERIFIED_NOT_CUSTOMER_VALIDATED",
+        self.assertTrue(report["ci_sha_claim_matches_head"])
+        self.assertFalse(report["current_head_ci_verified"])
+        self.assertEqual("INDEPENDENT_GITHUB_CI_CONCLUSION_CHECK_REQUIRED",
                          report["next_gate"])
         self.assertFalse(report["economically_validated"])
 
