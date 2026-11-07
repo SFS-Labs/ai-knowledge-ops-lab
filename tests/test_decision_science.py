@@ -51,6 +51,16 @@ class EconomicSensitivityTests(unittest.TestCase):
                                      r["rules_only"]["false_high"],
                                      r["hybrid"]["false_high"]))
 
+    def test_pilot_discordance_is_reported_as_post_hoc_not_confirmatory(self):
+        report = compare_recorded()
+        paired = report["hybrid_vs_rules_exploratory"]
+        self.assertEqual(12, paired["hybrid_only_correct"])
+        self.assertEqual(1, paired["rules_only_correct"])
+        self.assertEqual(10, paired["both_correct"])
+        self.assertEqual(9, paired["both_wrong"])
+        self.assertAlmostEqual(0.00341796875, paired["exact_two_sided_p"])
+        self.assertFalse(paired["confirmatory_validity"])
+
     def test_hybrid_vs_llm_critical_false_escalation_threshold(self):
         self.assertAlmostEqual(critical_cost_ratio(extra_misses=4,
                                                     avoided_false_escalations=21),
