@@ -54,7 +54,19 @@
       "raw_republication": "Not authorized by this project; no raw issue text republished",
       "model_results": "NOT_MEASURED on NLBSE labels",
       "strength": "Real labeled text and large independent split",
-      "limitation": "No authoritatively linked urgency, handling time, person-hours, cost, or client outcomes"
+      "limitation": "No authoritatively linked urgency, handling time, person-hours, cost, or client outcomes",
+      "observed_test_count": 142320,
+      "source_archive_sha256": "f625dc78af6139b94623004dcbe575b5dfb6dc3293b7e9fa2fa109352d1cdf0e",
+      "observed_repeated_issue_id_rows": 541,
+      "observed_conflicting_duplicate_labels": 5,
+      "observed_keyword_baseline": {
+        "accuracy": 0.49251,
+        "micro_F1": 0.49251,
+        "macro_F1": 0.41494,
+        "evidence_kind": "run on original full test, NOT LLM inference",
+        "source_run": "https://github.com/SFS-Labs/ai-knowledge-ops-lab/actions/runs/42412917843"
+      },
+      "source_audit_json": "showcases/internal-service-intake/evaluation/evidence/nlbse2023-full-test-ci29.json"
     },
     "operations": {
       "id": "volvo_bpi2013",
@@ -96,7 +108,7 @@
   },
   "disclosure": {
     "old_32_cases": "Historical 32 labeled synthetic pilot, exploratory and not NLBSE",
-    "independent_classification_benchmark": "NOT_YET_EXECUTED_ON_NLBSE_MODEL_LABELS",
+    "independent_classification_benchmark": "RULES_ONLY_FULL_OFFICIAL_TEST_MEASURED_CI29; NO_LOCAL_LLM_RUN_ON_NLBSE",
     "original_volvo_process_extraction": "VERIFIED_MD5_ORIGINAL_CI27_SOURCE_AUDIT_STEP",
     "combined_economic_outcome": "ILLUSTRATIVE_SCENARIO_ONLY",
     "customer_validation": "NOT_ESTABLISHED"
