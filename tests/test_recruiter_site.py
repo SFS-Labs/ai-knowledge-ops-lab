@@ -14,6 +14,7 @@ class StaticRecruiterDemoTests(unittest.TestCase):
         cls.page=PAGE.read_text(encoding="utf-8")
         cls.contract=json.loads(CONTRACT.read_text(encoding="utf-8"))
         cls.volvo=json.loads((CONTRACT.parent/"evidence"/"volvo-2013-source-audit-ci27.json").read_text(encoding="utf-8"))
+        cls.nlbse=json.loads((CONTRACT.parent/"evidence"/"nlbse2023-full-test-ci29.json").read_text(encoding="utf-8"))
 
     def test_public_data_sources_and_legacy_pilot_are_not_confused(self):
         for keyword in ["bug", "feature", "question", "documentation",
@@ -54,6 +55,16 @@ class StaticRecruiterDemoTests(unittest.TestCase):
         self.assertIn("keine gemeinsame Fallbasis",self.page)
         self.assertIn("kein Ergebnis dieser öffentlichen Datensätze",self.page)
         self.assertNotIn("bewiesene Einsparungen",self.page)
+
+    def test_nlbse_accuracy_and_duplicates_are_actually_audited(self):
+        self.assertEqual(142320, self.nlbse["observed_issue_count"])
+        self.assertEqual(541, self.nlbse["repeated_issue_id_rows"])
+        self.assertEqual(5, self.nlbse["repeated_issue_id_label_conflicts"])
+        self.assertAlmostEqual(.49251, self.nlbse["observed_keyword_baseline"]["accuracy"])
+        self.assertFalse(self.nlbse["observed_keyword_baseline"]["prompt_or_model_used"])
+        self.assertIn("49,25", self.page)
+        self.assertIn("541", self.page)
+        self.assertIn("Unser LLM wurde hier noch nicht getestet", self.page)
 
     def test_research_contract_has_two_different_source_populations(self):
         self.assertNotEqual(self.contract["streams"]["classification"]["id"],
