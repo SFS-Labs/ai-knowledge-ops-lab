@@ -39,5 +39,11 @@ jobs:
           export MOCK_API_KEY="$(openssl rand -hex 32)"
           trap 'docker compose down --volumes --remove-orphans' EXIT
           docker compose up --build -d
+          ready=false
+          for attempt in {1..60}; do
+            if curl --fail --silent http://127.0.0.1:5678/healthz >/dev/null; then ready=true; break; fi
+            sleep 2
+          done
+          if [ "$ready" != true ]; then docker compose logs --no-color n8n; exit 1; fi
           docker compose exec -T n8n n8n import:workflow --input=/opt/n8n-import/workflow.internal-service-intake.v1.json
           docker compose exec -T n8n n8n audit
