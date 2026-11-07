@@ -4,3 +4,6 @@
 !.env.example
 __pycache__/
 *.py[cod]
+
+# Downloaded >1 GB LLM weights are CI-local only; never commit or upload.
+showcases/internal-service-intake/model-cache/
