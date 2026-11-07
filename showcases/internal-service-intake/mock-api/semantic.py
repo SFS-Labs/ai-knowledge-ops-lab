@@ -173,14 +173,14 @@ def hybrid_decision(free_text: str, validated_model: Any) -> dict[str, Any]:
     keyword rule. A conflict demands review rather than silently discarding
     a potentially critical signal. Neither source can approve/apply.
     """
+    _, rules_urgency = deterministic_baseline(free_text)
     if validate_proposal(validated_model) is not None:
         return {
-            "category": None, "urgency": None, "model_urgency": None,
-            "category_source": "none", "urgency_source": "none",
+            "category": None, "urgency": rules_urgency, "model_urgency": None,
+            "category_source": "none", "urgency_source": "deterministic_rule",
             "urgency_disagreement": False, "policy_decision": "manual_review",
             "review_reason": "invalid_model_output",
         }
-    _, rules_urgency = deterministic_baseline(free_text)
     category = validated_model["service_type"]
     disagreement = validated_model["urgency"] != rules_urgency
     if validated_model["missing_information"]:
