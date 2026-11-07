@@ -1,8 +1,12 @@
 # AI Knowledge Operations Lab
 
+> **30-second decision sample | B2B AI delivery.** A working local AI pipeline raised a harder question: *Should the LLM or deterministic rules decide each field?* On 32 labeled synthetic cases, hybrid routing got both correct in **22/32** versus **10/32** (LLM-only) and **11/32** (rules-only). But rules missed **5/9** high-urgency cases; the business winner depends on error costs. **The post-hoc pilot is not proof of customer value.** [See the 91-word decision and its counterexample](showcases/internal-service-intake/DECISION_EVIDENCE_BRIEF.md).
+>
+> **Status:** prior real model/n8n E2E [verified on its exact historical SHA](https://github.com/SFS-Labs/ai-knowledge-ops-lab/actions/runs/42399345922); subsequent hybrid/method additions await exact-HEAD CI. No deployment or customer ROI claim.
+
 Applied AI research operations for turning real public company disclosures into structured, source-linked knowledge with deterministic quality controls.
 
-> **Recorded pipeline results — no live model processing**
+> **The core research pipeline below uses recorded/replay results; the separate isolated service-intake experiment has verified historical local-model inference.**
 
 **Milestone M1: recorded, source-linked research pipeline.** A working Python CLI and static replay demonstrate ingestion, deterministic validation, auditable model-output import and review routing. A three-source in-session AI extraction is recorded. This is an evolving research project; isolated model experiments, reviewed labels and held-out evaluation remain open. See [milestone evidence and next steps](docs/milestone-m1.md).
 
