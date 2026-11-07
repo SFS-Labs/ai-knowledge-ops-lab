@@ -101,10 +101,15 @@ class EvidenceStreamTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError,"official_test_set_distribution_mismatch"):
             profile_csv_bytes(rows)
 
-    def test_duplicate_issue_ids_fail_closed(self):
-        rows=b"id,title,body,label\n100,Bug,Example,bug\n100,Bug,Example,bug\n"
-        with self.assertRaisesRegex(ValueError,"duplicated_source_issue_id"):
-            profile_csv_bytes(rows, require_published_counts=False)
+    def test_repeated_public_issue_ids_are_flagged_not_removed(self):
+        rows=(b"id,title,body,label\n100,Bug,Example,bug\n"
+              b"100,Bug,Example,bug\n100,Question,How to?,question\n")
+        result=profile_csv_bytes(rows, require_published_counts=False)
+        self.assertEqual(3, result["observed_issue_count"])
+        self.assertEqual(1, result["unique_issue_ids"])
+        self.assertEqual(2, result["repeated_issue_id_rows"])
+        self.assertEqual(1, result["repeated_issue_id_label_conflicts"])
+        self.assertFalse(result["independent_observation_claim"])
 
 
 if __name__ == "__main__":
