@@ -1,0 +1,68 @@
+{
+  "id": "DR-001",
+  "intended_reader": "B2B AI implementation recruiter / founder / delivery lead",
+  "decision": {
+    "problem": "Unstructured B2B requests require a service category and urgency; a working model alone does not establish useful triage.",
+    "initial_framing": "Pick whichever single approach (LLM or keyword rules) has higher aggregate accuracy.",
+    "hypothesis": "Assign validated category extraction to the LLM, keyword urgency to deterministic rules and use a separate policy to review disagreement.",
+    "alternatives": [
+      "LLM-only classification",
+      "Rules-only classification",
+      "Hybrid category/rule urgency with explicit conflict review"
+    ],
+    "strongest_counterexample": "Rules urgency misses 5 of 9 high-labeled scenarios despite better overall urgency accuracy; missed critical work may cost more than false alarms.",
+    "choice": "Implement hybrid as a bounded experiment; source-attribute decisions, fail closed on conflicts and preserve separate simulated approval.",
+    "falsifier": "Reject or revise the hypothesis if prospective independent cases or client-weighted loss, SLA risk or review capacity make hybrid worse than feasible alternatives.",
+    "stop_rule": "After the decision is explained, counterexample tested, bounded code checked and exact-head CI verified, stop the synthetic demonstration. Resume only on new independent evidence or a paying customer's real requirements."
+  },
+  "pilot": {
+    "total": 36,
+    "labeled": 32,
+    "joint_correct": {
+      "model_only": 10,
+      "rules_only": 11,
+      "hybrid": 22
+    },
+    "missed_high": {
+      "model_only": 1,
+      "rules_only": 5,
+      "hybrid": 5
+    },
+    "false_high": {
+      "model_only": 21,
+      "rules_only": 0,
+      "hybrid": 0
+    },
+    "verified_commit": "d02a76f856acf62725eb5ec402802e6bb5febeae",
+    "verified_run": "https://github.com/SFS-Labs/ai-knowledge-ops-lab/actions/runs/42399345922",
+    "source_file": "showcases/internal-service-intake/evaluation/evidence/ci24-observed-model-output.json",
+    "analysis_type": "post_hoc_exploratory",
+    "independent_holdout": false
+  },
+  "economics": {
+    "illustrative_break_even_cost_ratio": 5.25,
+    "meaning": "Missed-high cost divided by false-high cost for hybrid vs LLM, conditional on equal category costs and LLM calls, ignoring review and operating costs.",
+    "observed_customer_costs": false
+  },
+  "boundaries": {
+    "current_head_ci": "PENDING",
+    "prospective_holdout": "NOT_COLLECTED",
+    "customer_economic_validation": "NOT_ESTABLISHED",
+    "production_deployment": "NONE",
+    "reviewer_identity": "NOT_VERIFIED"
+  },
+  "provenance": {
+    "operator": "Project owner proposed component-level routing and insisted on falsification, independent n and economic value rather than a cosmetic portfolio.",
+    "ai_assistance": "Assistant calculated contrasts, challenged the missed-high failure mode, implemented/tests/documented the bounded experimental policy.",
+    "subject": "Research/engineering work sample; no applicant-cohort comparison or personal IQ inference."
+  },
+  "artifacts": {
+    "entry": "showcases/internal-service-intake/DECISION_EVIDENCE_BRIEF.md",
+    "method": "showcases/internal-service-intake/HYBRID_DECISION_RECORD.md",
+    "prospective_plan": "showcases/internal-service-intake/STUDY_PROTOCOL_V1.md",
+    "implementation": "showcases/internal-service-intake/mock-api/semantic.py",
+    "counterfactual": "showcases/internal-service-intake/evaluation/compare_routing.py",
+    "sensitivity": "showcases/internal-service-intake/evaluation/economics.py",
+    "source": "showcases/internal-service-intake/evaluation/evidence/ci24-observed-model-output.json"
+  }
+}
