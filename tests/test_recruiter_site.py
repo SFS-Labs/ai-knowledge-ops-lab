@@ -33,7 +33,7 @@ class StaticRecruiterDemoTests(unittest.TestCase):
 
     def test_not_claiming_observed_savings_or_llm_benchmark(self):
         for keyword in ["KEIN REALISIERTER ROI", "kein Ergebnis",
-                        "noch nicht gemessen", "kein produktives",
+                        "noch nicht getestet", "kein produktives",
                         "kann null oder negativ sein"]:
             self.assertIn(keyword,self.page)
 
