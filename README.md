@@ -26,6 +26,12 @@ are **not yet exact-HEAD verified or deployed**.
 It documents the operator's hypothesis, the 22/32 post-hoc hybrid result,
 the five missed high-urgency labels under keyword urgency, source-attributed
 AI-assisted implementation, tests and what would invalidate the approach.
+The [prospective 480-case study protocol](showcases/internal-service-intake/STUDY_PROTOCOL_V1.md)
+and [executable cost-sensitivity model](showcases/internal-service-intake/evaluation/economics.py)
+expose both statistical-selection bias and the break-even threshold between
+missed high-priority cases and false escalations. **The 480 independent cases
+have NOT been collected or evaluated.** The study plan is not a confirmed
+finding, and customer economic superiority has not been proven.
 It does not claim customer outcome or production readiness. The main research pipeline is separate
 and remains the recorded/replay-based pipeline described below.
 
