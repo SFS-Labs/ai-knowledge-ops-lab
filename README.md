@@ -21,6 +21,8 @@ verified its real model/n8n/SQLite E2E and 36 inferences on **that exact SHA**
 [Draft PR #9](https://github.com/SFS-Labs/ai-knowledge-ops-lab/pull/9)
 are **not yet exact-HEAD verified or deployed**.
 
+**For a hiring manager: [2-minute decision evidence brief](showcases/internal-service-intake/DECISION_EVIDENCE_BRIEF.md).** It starts with the operator's hypothesis, its strongest counterexample and the testable economic break-even, not a feature list.
+
 **More important than the GitHub link is the decision record:**
 [DR-001 — comparative advantage, falsification and business-risk tradeoffs](showcases/internal-service-intake/HYBRID_DECISION_RECORD.md).
 It documents the operator's hypothesis, the 22/32 post-hoc hybrid result,
