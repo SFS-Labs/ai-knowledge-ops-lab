@@ -216,6 +216,37 @@ jobs:
           docker compose exec -T n8n n8n import:workflow --input=/opt/n8n-import/workflow.internal-service-intake.v1.json
           # Separate DNS/network availability from actual workflow-node failures.
           docker compose exec -T n8n node -e 'fetch("http://model:8080/health").then(r => {if (!r.ok) process.exitCode = 1; console.log("n8n_to_model_health_http=" + r.status)}).catch(e => {console.error("n8n_to_model_unreachable", e.code || e.name); process.exitCode = 1})'
+          # Diagnostic-only control: same exported n8n expression and same synthetic text, executed
+          # with the n8n container's Node.js HTTP client. No external calls or secret logging.
+          # If this succeeds but the n8n HTTP Request node fails, the fault is in n8n node execution.
+          docker compose exec -T n8n node <<'NODE'
+          const fs = require('node:fs');
+          const vm = require('node:vm');
+          const wf = JSON.parse(fs.readFileSync('/opt/n8n-import/workflow.internal-service-intake.v1.json', 'utf8'))[0];
+          const field = wf.nodes.find(n => n.name === 'Local LLM Extract').parameters.jsonBody;
+          if (!field.startsWith('={{') || !field.endsWith('}}')) throw new Error('unexpected_model_expression_format');
+          const text = 'Wir benötigen bis Freitag ein Dashboard für die wöchentlichen Verkaufszahlen aus unserem CRM. Aktuell exportieren wir die Daten manuell.';
+          const payload = vm.runInNewContext('(' + field.slice(3, -2) + ')', {$json: {free_text: text}}, {timeout: 1000});
+          if (!payload || !Array.isArray(payload.messages) || payload.messages[1].content !== text)
+            throw new Error('model_expression_payload_mismatch');
+          const started = Date.now();
+          fetch('http://model:8080/v1/chat/completions', {
+            method: 'POST', headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(payload), signal: AbortSignal.timeout(120000)
+          }).then(async res => {
+            const parsed = await res.json();
+            const raw = parsed?.choices?.[0]?.message?.content;
+            let result = null;
+            try { if (typeof raw === 'string') result = JSON.parse(raw); } catch (_) {}
+            const shapeValid = result && Array.isArray(result.missing_information) &&
+              typeof result.summary === 'string' && typeof result.service_type === 'string' &&
+              typeof result.urgency === 'string';
+            console.log(JSON.stringify({from_n8n_container: true,
+              model_http_status: res.status, model_answer_shape_valid: Boolean(shapeValid),
+              latency_ms: Date.now() - started}));
+            if (res.status !== 200 || !shapeValid) process.exitCode = 1;
+          }).catch(err => { console.error('direct_model_call_failed', err.name); process.exitCode = 1; });
+          NODE
           docker compose exec -T n8n n8n audit > /tmp/sfs-llm-n8n-audit.log
           echo "Actual n8n audit findings:"
           sed -n '1,140p' /tmp/sfs-llm-n8n-audit.log
