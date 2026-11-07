@@ -66,19 +66,16 @@ class DecisionGateTests(unittest.TestCase):
                          report["next_gate"])
         self.assertFalse(report["economically_validated"])
 
-    def test_recruiter_sees_the_candidate_and_counterexample_first(self):
-        opening = (ROOT / "README.md").read_text(encoding="utf-8")[:2300]
-        self.assertIn("Mathias Steinbach", opening)
-        self.assertIn("Die Trefferquote stieg", opening)
-        self.assertIn("fünf von neun dringlichen Testfällen", opening)
-        self.assertIn("technische Umsetzung", opening)
-        self.assertIn("https://sfs-labs.github.io/ai-knowledge-ops-lab/", opening)
-        self.assertIn("HYBRID_DECISION_RECORD.md", opening)
-        self.assertIn("22/32", opening)
-        self.assertIn("10/32", opening)
-        self.assertIn("11/32", opening)
-        self.assertIn("NLBSE", opening)
-        self.assertIn("Volvo", opening)
+    def test_repo_landing_is_delivery_first_and_traceable(self):
+        opening = (ROOT / "README.md").read_text(encoding="utf-8")[:3200]
+        for term in ("Mathias Steinbach", "Qwen", "n8n", "Python-API",
+                     "SQLite", "36 tatsächlich ausgeführte LLM-Inferenzen",
+                     "124 Python-Tests", "5/9", "22/32", "10/32",
+                     "11/32", "HYBRID_DECISION_RECORD.md",
+                     "sfs-labs.github.io/ai-knowledge-ops-lab/"):
+            self.assertIn(term, opening)
+        self.assertNotIn("Die Trefferquote stieg", opening)
+        self.assertNotIn("bewusst schwache Regelbaseline", opening)
 
     def test_scope_does_not_make_480_cases_or_customer_roi_a_job_entry_gate(self):
         document = (SHOWCASE / "HYBRID_DECISION_RECORD.md").read_text(encoding="utf-8")

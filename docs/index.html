@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="Mathias Steinbach. Eine konkrete Arbeitsprobe zu AI Implementation, wissenschaftlichem Denken und technischen Entscheidungen: Hypothese, Gegenbeweis und verifizierte Umsetzung.">
+<meta name="description" content="AI Implementation Engineering-Arbeitsprobe von Mathias Steinbach: lokales Qwen-Modell, n8n, Python-API und SQLite – echte Modellinferenzen, End-to-End-Tests, dokumentierte Qualitätsprüfung.">
 <meta name="color-scheme" content="light">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'none'; img-src data:; connect-src 'none'; form-action 'none'; base-uri 'none'">
-<title>Mathias Steinbach | AI Implementation – eine Entscheidung, die ich geprüft habe</title>
+<title>Mathias Steinbach | AI Implementation – realer Workflow, echte Tests</title>
 <style>
 :root{--paper:#f8f8f5;--white:#ffffff;--ink:#1d2925;--shade:#55615b;--soft:#edf2ed;--line:#dce3dc;--accent:#246650;--accent-dark:#194a39;--warm:#f1eee6}
 *{box-sizing:border-box}
@@ -35,7 +35,7 @@ h1 span{color:var(--accent)}
 .secondary{font-weight:670;font-size:14px;padding:10px 4px;text-decoration-thickness:1px}
 .facts{font-size:12px;color:var(--shade);line-height:1.7}
 .facts b{color:var(--ink)}
-.note{padding:30px 27px;border:1px solid #bfd1c4;background:var(--soft);border-radius:3px}
+.note{padding:26px 24px;border:1px solid #bfd1c4;background:var(--soft);border-radius:3px}.proof{display:grid;gap:14px;margin-top:18px}.proofline{padding:0 0 12px;border-bottom:1px solid #cadbd0}.proofline:last-child{border-bottom:0;padding-bottom:0}.proofline .big{font-weight:790;line-height:1.1;font-size:28px;letter-spacing:-.045em;color:var(--accent-dark)}.proofline .description{font-size:13px;color:#4a594f;line-height:1.35;margin-top:4px}
 .note-kicker{font-size:11px;color:var(--accent-dark);font-weight:750;letter-spacing:.1em;text-transform:uppercase}
 .thought{font-size:clamp(23px,2.45vw,30px);line-height:1.31;margin:19px 0 17px}
 .note p:last-child{font-size:14px;line-height:1.6;color:#48584d;margin-bottom:0}
@@ -96,67 +96,70 @@ footer{padding:25px 0 30px;font-size:12px;color:var(--shade)}
 <main>
  <section class="shell hero" aria-labelledby="headline">
   <div>
-   <div class="eyebrow">Arbeitsprobe · AI Implementation</div>
-   <h1 id="headline">Die Trefferquote stieg. <span>Ich habe trotzdem weitergefragt.</span></h1>
-   <p class="lede">Bei einer AI-gestützten Pipeline für Serviceanfragen war die kombinierte Lösung im Vergleich deutlich besser. <strong>Dann zeigte sich der Haken: Fünf von neun dringlichen Testfällen wurden zu niedrig priorisiert.</strong> Mich interessierte nicht mehr nur, was richtig klassifiziert wurde – sondern welche Fehlentscheidung im Betrieb teuer werden könnte.</p>
-   <div class="actions"><a class="primary" href="#entscheidung">Meine Entscheidung nachvollziehen</a><a class="secondary" href="https://github.com/SFS-Labs/ai-knowledge-ops-lab">Code und Tests ansehen</a></div>
-   <div class="facts">Lokale Modellinferenz tatsächlich ausgeführt · n8n / SQLite · <a href="https://github.com/SFS-Labs/ai-knowledge-ops-lab/actions/runs/42413698800">vollständige CI erfolgreich</a></div>
+   <div class="eyebrow">Mathias Steinbach · AI Implementation · Engineering-Arbeitsprobe</div>
+   <h1 id="headline">AI-Service-Intake. <span>Integriert, ausgeführt, geprüft.</span></h1>
+   <p class="lede">Ich habe einen lokalen Workflow für eingehende Serviceanfragen mit <strong>Qwen, n8n, Python-API und SQLite</strong> umgesetzt. Modellinferenz, Routing, Speicherung und getrennte Freigabeschritte wurden Ende-zu-Ende getestet. Anschließend habe ich die Klassifikation ausgewertet und ein relevantes Priorisierungsrisiko identifiziert.</p>
+   <div class="actions"><a class="primary" href="#entscheidung">Implementierung in 60 Sekunden</a><a class="secondary" href="https://github.com/SFS-Labs/ai-knowledge-ops-lab/actions/runs/42413698800">Verifizierten CI-Lauf ansehen</a></div>
+   <div class="facts">Reale CPU-Modellaufrufe · ausführbare Integration · nachvollziehbarer Test- und Entscheidungsnachweis</div>
   </div>
-  <aside class="note" aria-label="Mein Arbeitsmaßstab">
-   <div class="note-kicker">Worauf es mir ankommt</div>
-   <div class="thought">„Ich will nicht nur zeigen, dass etwas funktioniert. Ich will wissen, unter welchen Bedingungen ich meine Entscheidung revidieren müsste.“</div>
-   <p>Das ist für mich der Unterschied zwischen einer überzeugenden Demonstration und einer verantwortbaren technischen Entscheidung.</p>
+  <aside class="note" aria-label="Verifizierte technische Ergebnisse">
+   <div class="note-kicker">Prüfbare Ergebnisse</div>
+   <div class="proof">
+    <div class="proofline"><div class="big nums">36</div><div class="description">tatsächlich ausgeführte lokale LLM-Inferenzen · <a href="https://github.com/SFS-Labs/ai-knowledge-ops-lab/actions/runs/42399345922">Actions #24</a></div></div>
+    <div class="proofline"><div class="big nums">4 / 4</div><div class="description">erfolgreiche CI-Jobs, inklusive n8n/Docker und realem LLM-End-to-End-Lauf · <a href="https://github.com/SFS-Labs/ai-knowledge-ops-lab/actions/runs/42413698800">Actions #31</a></div></div>
+    <div class="proofline"><div class="big nums">124</div><div class="description">bestandene Python-Tests einschließlich technischer und dokumentarischer Prüfungen · <a href="https://github.com/SFS-Labs/ai-knowledge-ops-lab/actions/runs/42421588733">Actions #32</a></div></div>
+   </div>
   </aside>
  </section>
  <div class="rule"></div>
  <section id="entscheidung" class="shell story">
-  <div class="eyebrow">Der Fall · unter einer Minute</div>
-  <h2>Was ich anders gemacht habe</h2>
-  <p class="intro">Ich wollte keine weitere AI-Demo bauen, die mit einer hübschen Trefferquote endet. Der interessante Teil begann dort, wo die eigene Hypothese angreifbar wurde.</p>
+  <div class="eyebrow">In 60 Sekunden · Problem → System → Qualität</div>
+  <h2>Was ich umgesetzt und überprüft habe</h2>
+  <p class="intro">Die Aufgabe: eingehende Anfragen strukturiert bearbeiten, ihre Zuordnung prüfbar halten und die Entscheidung über die Freigabe vom Modell trennen.</p>
   <div class="steps">
-   <article class="step"><span class="step-index">01 / Umgesetzt</span><h3>Erst eine funktionierende Strecke.</h3><p>Eine lokale Anfragen-Pipeline mit Sprachmodell, Regeln, API, Speicherung und getrenntem Prüfpfad. Kein Foliendiagramm: Die End-to-End-Strecke lief in GitHub Actions.</p></article>
-   <article class="step"><span class="step-index">02 / Widerlegt</span><h3>Dann den eigenen Ansatz angegriffen.</h3><p>Ich habe dem Sprachmodell die Kategorie und Regeln die Priorität zugeordnet. Die Kombination gewann bei der Gesamtquote – übersah aber mehr dringliche Fälle als das Modell allein.</p></article>
-   <article class="step"><span class="step-index">03 / Konsequenz</span><h3>Die Frage neu gestellt.</h3><p>Wenn ein übersehener kritischer Vorgang viel teurer ist als ein Fehlalarm, kann der nominelle Sieger die schlechtere Lösung sein. Deshalb blieb die Freigabe getrennt; die Kostenannahmen sind prüfbar.</p></article>
+   <article class="step"><span class="step-index">01 / Problem &amp; Systemdesign</span><h3>Unstrukturierte Anfrage → definierter Prozess.</h3><p>Kategorie und Dringlichkeit getrennt modellieren; Eingaben, Zustände und Verantwortlichkeiten festlegen. Das Sprachmodell ist eine Komponente im Workflow, nicht die Instanz für jede Entscheidung.</p></article>
+   <article class="step"><span class="step-index">02 / Integration &amp; Betrieb</span><h3>Lokales LLM in einer ausführbaren Strecke.</h3><p>Qwen-Inferenz über n8n, Python-API und SQLite. Getrennter Approval-Pfad; getestete Ablehnung, Fehlerfälle, Idempotenz und Wiederanlauf. Echte Ausführung statt Mock-Modellantworten.</p></article>
+   <article class="step"><span class="step-index">03 / Tests &amp; Entscheidung</span><h3>Qualität messen – auch die Fehlentscheidungen.</h3><p>Modell- und Regelansätze auf denselben Testfällen vergleichen. Die retrospektive Kombination erhöhte die gemeinsame Trefferquote, übersah aber 5 von 9 als dringend markierte Fälle. Das begrenzt ihren geschäftlichen Einsatz.</p></article>
   </div>
  </section>
  <section class="shell effect" aria-labelledby="praxis"><div class="case">
-  <div class="case-head">Illustrativer Servicefall · kein Kundenticket</div>
+  <div class="case-head">Anwendungsbeispiel · illustrativ</div>
   <div class="example" id="praxis">„Seit dem Update lassen sich keine Rechnungen exportieren. Heute ist Monatsabschluss.“</div>
-  <p>Der Text weist auf einen Softwarefehler hin. Aber seine <strong>betriebliche Dringlichkeit</strong> lässt sich nicht aus dem Fehlertyp allein ableiten. Genau hier beginnt die Entscheidung über Rückfragen, Priorisierung und menschliche Freigabe. <strong>Das ist die Art von Problem, die ich im Kundenkontext lösen möchte.</strong></p>
+  <p><strong>Technische Zuordnung:</strong> möglicher Softwarefehler. <strong>Geschäftliche Frage:</strong> Ist dadurch ein zeitkritischer Prozess blockiert? Der Workflow muss diese Fragen getrennt behandeln und Unsicherheit für menschliche Prüfung sichtbar machen. Dieses Beispiel illustriert die Aufgabe; es ist kein historisches Kundenticket.</p>
  </div></section>
  <section class="material" id="nachweise"><div class="shell material-grid">
   <div>
-   <div class="eyebrow">Nachvollziehbar, nicht behauptet</div>
-   <h2>Die Entscheidung steht nicht nur auf dieser Seite.</h2>
-   <p class="text">Im Repository liegen Workflow, Tests, echte lokale Modellaufrufe, die Gegenüberstellung der Verfahren und die wirtschaftlichen Sensitivitäten. Wer tiefer einsteigen möchte, kann meine Schlussfolgerung selbst prüfen – einschließlich der Fälle, in denen sie nicht trägt.</p>
-   <p><a href="https://github.com/SFS-Labs/ai-knowledge-ops-lab/blob/main/showcases/internal-service-intake/HYBRID_DECISION_RECORD.md">Entscheidungsprotokoll lesen</a> · <a href="https://github.com/SFS-Labs/ai-knowledge-ops-lab/actions/runs/42413698800">CI-Nachweis öffnen</a></p>
+   <div class="eyebrow">Code, Tests, nachvollziehbare Entscheidungen</div>
+   <h2>Technik und Ergebnisse sind überprüfbar.</h2>
+   <p class="text">Der vollständige Workflow, die API, der Modellaufruf, das Persistenzverhalten sowie die Auswerteskripte sind im Repository nachvollziehbar. Die CI-Protokolle zeigen die tatsächlich ausgeführten Schritte – einschließlich LLM-Inferenz und negativer Testfälle.</p>
+   <p><a href="https://github.com/SFS-Labs/ai-knowledge-ops-lab/blob/main/showcases/internal-service-intake/README.md">Technische Architektur und Startanleitung</a> · <a href="https://github.com/SFS-Labs/ai-knowledge-ops-lab/actions/runs/42413698800">Vollständige CI</a> · <a href="https://github.com/SFS-Labs/ai-knowledge-ops-lab/blob/main/showcases/internal-service-intake/HYBRID_DECISION_RECORD.md">Routing-Evaluation</a></p>
   </div>
-  <div class="checks" aria-label="Prüfbare Fakten">
-   <div class="check"><strong>Implementiert</strong><span>Lokales LLM → n8n → API/SQLite; Review- und Freigabepfad separat</span></div>
-   <div class="check"><strong>Verglichen</strong><span class="nums">32 gelabelte Testszenarien, drei Routing-Ansätze, offen gelegte Gegenbeispiele</span></div>
-   <div class="check"><strong>Verifiziert</strong><span>100 Python-Tests in CI #25; vier erfolgreiche Prüfjobs in CI #31</span></div>
-   <div class="check"><strong>Übertragbar</strong><span>Hypothesen prüfen, Grenzen erkennen, Anforderungen ändern und technische Entscheidungen begründen</span></div>
+  <div class="checks" aria-label="Liefer- und Qualitätsnachweise">
+   <div class="check"><strong>Integration</strong><span>Qwen CPU · n8n · Python-API · SQLite · getrennte Freigabelogik</span></div>
+   <div class="check"><strong>Ausführung</strong><span>36 echte Modellinferenzen und realer n8n→LLM→SQLite-End-to-End-Test</span></div>
+   <div class="check"><strong>Fehlerpfade</strong><span>Reject, Approval, Restart, Fail-closed und wiederholte Anfragen im Test abgedeckt</span></div>
+   <div class="check"><strong>Evaluation</strong><span>32 gelabelte Testszenarien; erkannte Prioritätsfehler und bedingte Kostenabwägung</span></div>
   </div>
  </div></section>
  <section class="shell details">
-  <div class="eyebrow">Für alle, die genauer hinsehen möchten</div>
-  <h2>Was diese Arbeitsprobe belegt – und was nicht</h2>
-  <p class="intro">Die kurze Geschichte ist die Essenz. Die Zahlen und Grenzen stehen hier, damit sich die Entscheidung überprüfen lässt – nicht, um sie im ersten Bildschirm zu rechtfertigen.</p>
-  <details><summary>Messwerte und Gegenbeweis</summary><div class="inner">
+  <div class="eyebrow">Technische Details · freiwillige Vertiefung</div>
+  <h2>Messung, Grenzen und weitere Forschung</h2>
+  <p class="intro">Die Umsetzung ist ausgeführt und getestet. Die folgenden Angaben präzisieren die Reichweite der jeweiligen Evaluation – getrennt nach technischem E2E, Klassifikation und öffentlich verfügbaren Forschungsdaten.</p>
+  <details><summary>LLM-Vergleich: reale Inferenz, gemessene Fehler und Risikogrenzen</summary><div class="inner">
    <p>In 32 gelabelten <strong>synthetischen</strong> Testfällen waren Kategorie und Priorität gleichzeitig korrekt bei Sprachmodell allein <strong>10/32</strong>, Regeln allein <strong>11/32</strong> und rückblickender Kombination <strong>22/32</strong>. Die kombinierte Prioritätslogik übersah <strong>5 von 9</strong> als dringend gelabelten Fällen; beim Sprachmodell allein war es <strong>1 von 9</strong>, allerdings mit erheblich mehr Fehlalarmen. Die Kombination wurde <strong>nach Sichtung der Fälle</strong> entwickelt. Dieser Vergleich ist daher explorativ, kein unabhängig bestätigter Leistungsvorteil.</p>
    <p>Die Fehlerkostenentscheidung hängt von realen SLAs, Review-Aufwand und Eskalationskosten ab. <a href="https://github.com/SFS-Labs/ai-knowledge-ops-lab/blob/main/showcases/internal-service-intake/evaluation/economics.py">Berechnung und Annahmen</a>.</p>
   </div></details>
-  <details><summary>Wie ich meine Forschungsfrage korrigiert habe</summary><div class="inner">
+  <details><summary>Weiterführende Analyse: öffentliche Issue- und Prozessdaten</summary><div class="inner">
    <p>Zu Beginn standen vier selbst definierte Servicekategorien. Die öffentlichen Daten passten dazu nicht sauber. Statt die Quellen passend zu machen, habe ich die Reihenfolge geändert: <strong>Geschäftsaufgabe → passende Klassifikation → geeignete Daten → Messung → Entscheidung.</strong></p>
-   <p>Die realen NLBSE-Software-Issues dienen einem separaten Klassifikationsvergleich; Volvo-Prozesslogs zeigen Bearbeitungsverläufe. Die Datensätze sind nicht miteinander verknüpft. Auf 142.320 NLBSE-Testzeilen erreichte eine einfache Regelbaseline 49,25 % Accuracy; 9.454 Gruppenwechsel wurden aus dem Volvo-Originalarchiv ermittelt. Diese beiden Messungen sind keine nachgewiesene Wirkung unserer AI auf Kundenkosten. <a href="https://github.com/SFS-Labs/ai-knowledge-ops-lab/blob/main/showcases/internal-service-intake/RESEARCH_DESIGN.md">Forschungsdesign und Quellen</a>.</p>
+   <p>Die realen NLBSE-Software-Issues dienen einem separaten Klassifikationsvergleich; Volvo-Prozesslogs zeigen Bearbeitungsverläufe. Die Datensätze sind nicht miteinander verknüpft. Auf 142.320 NLBSE-Testzeilen erreichte eine einfache, nicht für diesen Benchmark optimierte Keyword-Heuristik 49,25 % Accuracy; 9.454 Gruppenwechsel wurden aus dem Volvo-Originalarchiv ermittelt. Diese Heuristik ist eine Baseline, kein vollwertiger Vergleich zu einem optimierten Klassifikator. Diese beiden Messungen sind keine nachgewiesene Wirkung unserer AI auf Kundenkosten. <a href="https://github.com/SFS-Labs/ai-knowledge-ops-lab/blob/main/showcases/internal-service-intake/RESEARCH_DESIGN.md">Forschungsdesign und Quellen</a>.</p>
   </div></details>
-  <details><summary>Mein Beitrag und die technischen Grenzen</summary><div class="inner">
+  <details><summary>Arbeitsanteile, AI-Unterstützung und Einsatzgrenzen</summary><div class="inner">
    <p>Meine Beiträge liegen in Fragestellung, Hypothese, Gegenprüfung, Qualitätsmaßstab und der Entscheidung über den Arbeitsumfang. Implementierung und Auswertung waren <strong>AI-gestützt</strong>; der Code und die tatsächlichen Testläufe sind einsehbar. Die technische Pipeline wurde lokal ausgeführt und automatisiert geprüft. Es handelt sich um eine eigenständige Arbeitsprobe, nicht um einen bezahlten AI-Kundenauftrag oder ein produktives Service-Desk-System.</p>
    <p><a href="https://github.com/SFS-Labs/ai-knowledge-ops-lab">Repository und Versionshistorie</a> · <a href="https://github.com/SFS-Labs/ai-knowledge-ops-lab/pull/9">Entwicklung und Review</a>.</p>
   </div></details>
  </section>
  <section class="end" id="kontakt"><div class="shell end-inner">
-  <div><div class="eyebrow" style="color:#b8d8c1">Über mich / nächste Aufgabe</div><h2>Ich möchte diese Denkweise in echte B2B-AI-Projekte einbringen.</h2><p>Ich arbeite im Technical Onboarding mit Kunden und studiere Finance &amp; Capital Markets. Mein nächster Schritt ist kundennahes AI Engineering: Anforderungen verstehen, integrieren, testen, ausliefern und im Betrieb Verantwortung übernehmen.</p></div>
+  <div><div class="eyebrow" style="color:#b8d8c1">Über mich / nächste Aufgabe</div><h2>Ich möchte AI-Systeme im Kundenumfeld implementieren und betreuen.</h2><p>Ich arbeite im Technical Onboarding mit Kunden und studiere Finance &amp; Capital Markets. Ich suche eine bezahlte Rolle in der B2B-AI-Implementierung: Discovery, Integration, Tests, Deployment, Betrieb und Kundenkommunikation. Die technische Delivery-Verantwortung möchte ich an echten Anforderungen weiterentwickeln.</p></div>
   <div class="contact"><a class="primary" href="mailto:contact@sfs-labs.dev?subject=Gespr%C3%A4ch%20zu%20AI%20Implementation">Kontakt aufnehmen</a><a href="https://github.com/SFS-Labs/ai-knowledge-ops-lab">Technische Arbeitsprobe auf GitHub</a><small>AI Implementation · Solutions / Customer Engineering · Technical Delivery</small></div>
  </div></section>
 </main>

@@ -1,16 +1,20 @@
-# Mathias Steinbach | AI Implementation – Arbeitsprobe
+# Mathias Steinbach | B2B AI Implementation – geprüfte Arbeitsprobe
 
-> **Die Trefferquote stieg. Ich habe trotzdem weitergefragt.** In einer lokalen AI-Pipeline für Serviceanfragen schnitt die Kombination aus Sprachmodell und Regeln bei der Gesamtklassifikation besser ab. Aber sie priorisierte **fünf von neun dringlichen Testfällen zu niedrig**. Für mich war die entscheidende Frage nicht mehr, welche Methode die schönere Quote hat, sondern welche Fehlentscheidung im Kundenbetrieb teuer werden könnte.
->
-> **[Die Entscheidung in einer Minute ansehen – persönliche Arbeitsprobe auf GitHub Pages](https://sfs-labs.github.io/ai-knowledge-ops-lab/)** · [Technisches Entscheidungsprotokoll](showcases/internal-service-intake/HYBRID_DECISION_RECORD.md) · [Verifizierter CI-Lauf](https://github.com/SFS-Labs/ai-knowledge-ops-lab/actions/runs/42413698800)
->
-> **Mein Beitrag:** Fragestellung, Hypothese, Gegenprüfung und Qualitätsmaßstab; AI-gestützte technische Umsetzung, real ausgeführte Tests und dokumentierte Entscheidungen. Ich arbeite derzeit im Technical Onboarding mit Kunden und suche den bezahlten Einstieg in kundennahes AI Engineering.
->
-> **Was die Messung zeigt:** Im historischen Pilot mit 32 gelabelten synthetischen Fällen: LLM allein 10/32, Regeln 11/32, rückblickende Hybridkombination 22/32 gemeinsam korrekt. Die 5/9 übersehenen dringlichen Fälle sind das entscheidende Gegenbeispiel. Das Experiment ist explorativ; reale Modellinferenz, n8n/SQLite E2E und 100 Python-Tests sind [in GitHub Actions verifiziert](https://github.com/SFS-Labs/ai-knowledge-ops-lab/actions/runs/42405856175).
->
-> **Vertiefung:** [NLBSE- und Volvo-Quellenprüfung](showcases/internal-service-intake/RESEARCH_DESIGN.md) und [verbindliche Methodengrenzen](showcases/internal-service-intake/STUDY_PROTOCOL_V1.md) erklären die separate Untersuchung realer offener Daten. Deren Ergebnisse werden nicht als Kundeneinsparungen oder als Leistung des vorherigen LLM-Pilots ausgegeben.
+**Projekt:** Lokaler AI-Service-Intake für strukturierte Bearbeitung eingehender Anfragen.
 
-Das Repository enthält außerdem ein älteres Forschungsprojekt zu SEC-Disclosure- und Knowledge-Workflows. Es ist von der hier gezeigten Service-Intake-Arbeitsprobe getrennt.
+**Implementiert:** Qwen (lokale CPU-Inferenz) → n8n-Orchestrierung → Python-API → SQLite. Kategorie/Routing, Review- und Freigabeschritte sowie definierte Fehlerpfade sind als ausführbarer Workflow verbunden.
+
+**Verifiziert:** **36 tatsächlich ausgeführte LLM-Inferenzen** ([CI #24](https://github.com/SFS-Labs/ai-knowledge-ops-lab/actions/runs/42399345922)); **realer n8n→LLM→SQLite-End-to-End-Lauf mit Restart, Reject und Fail-closed** ([CI #31](https://github.com/SFS-Labs/ai-knowledge-ops-lab/actions/runs/42413698800), vier erfolgreiche Jobs); **124 Python-Tests** einschließlich Nachweisprüfungen ([CI #32](https://github.com/SFS-Labs/ai-knowledge-ops-lab/actions/runs/42421588733)).
+
+**Technische Entscheidung:** Drei Routing-Varianten wurden auf 32 gelabelten synthetischen Fällen ausgewertet: LLM-only **10/32**, Regeln **11/32**, retrospektiver Hybrid **22/32** gemeinsam korrekt. Gegenbefund: Der Hybrid übersah **5/9** als dringend gelabelte Fälle. Eine höhere Gesamtquote rechtfertigt daher noch keine wirtschaftliche oder operative Freigabe. [Entscheidungsprotokoll](showcases/internal-service-intake/HYBRID_DECISION_RECORD.md).
+
+**[Arbeitsprobe in 60 Sekunden: Architektur, Umsetzung, Tests und Entscheidung](https://sfs-labs.github.io/ai-knowledge-ops-lab/)** · [Technische Beschreibung](showcases/internal-service-intake/README.md) · [CI #31](https://github.com/SFS-Labs/ai-knowledge-ops-lab/actions/runs/42413698800).
+
+**Rolle / Beitrag:** Technische Problemstrukturierung, Hypothese und Evaluation, Auswahl der Prüfkriterien, mit AI-Unterstützung implementierter und verifizierter Code. Erfahrung im Technical Onboarding mit Kunden; Zielrolle: kundennahes, bezahltes B2B AI Implementation Engineering. Der Prototyp ist lokal ausgeführt und getestet, kein behaupteter Kunden-Deployment-Nachweis.
+
+**Weitere Datenevidenz:** Separater [NLBSE-/Volvo-Quellen-Audit](showcases/internal-service-intake/RESEARCH_DESIGN.md) mit tatsächlich gemessenen offenen Datensätzen. Er wurde **nicht** als LLM-vs.-Baseline-Beweis oder realisierter Kunden-ROI interpretiert.
+
+Das Repository enthält daneben die frühere SEC-Disclosure-/Knowledge-Ops-Arbeit. Diese ist technisch und methodisch vom AI-Service-Intake getrennt.
 
 ## Start here
 
