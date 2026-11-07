@@ -1,5 +1,7 @@
 # Internal service intake showcase (synthetic-only)
 
+> **2-minute entry point for customer/recruiting review:** [Decision Evidence Brief](DECISION_EVIDENCE_BRIEF.md). It summarizes hypothesis → counterexample → verification → economic decision limits.
+>
 > **Start with the decision, not the code:** [DR-001: why a validated LLM should supply category, deterministic rules should propose urgency, and disagreements require review](HYBRID_DECISION_RECORD.md).
 > The argument includes the retrospective **22/32** hybrid pair result, its **5/9 missed urgent** counterexample, source-attributed implementation and explicit falsification criteria. This is **post-hoc synthetic evidence**, not a customer deployment or proven ROI.
 >
