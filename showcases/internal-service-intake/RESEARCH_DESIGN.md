@@ -1,6 +1,6 @@
 # SFS Decision Engineering — business-led evidence, not demo-led storytelling
 
-**Status: IMPLEMENTED, awaiting final exact-HEAD full CI and public static hosting.** This document is the canonical research and recruiting explanation. Original project: Sigma Finance Systems (SFS), synthetic-local implementation + independently sourced public evidence.
+**Status: Real source audits and fixed rule benchmark VERIFIED as individual CI #29 steps; exact final release HEAD and public static hosting pending.** This document is the canonical research and recruiting explanation. Original project: Sigma Finance Systems (SFS), synthetic-local implementation + independently sourced public evidence.
 
 ## The 30-second question
 
@@ -10,7 +10,7 @@ Rather than reverse-engineering a business story around a preferred AI stack, we
 
 | Question | Actual evidence | Observed result | What it cannot prove |
 |---|---|---|---|
-| **WHAT is the request?** | NLBSE 2023: public GitHub software issues, source-harmonized classes **bug / feature / question / documentation** | 1,418,201 reported source issues; 142,320 published test records; full-source integrity audit/keyword benchmark implemented | No urgency, personnel costs, or current LLM model quality for these classes |
+| **WHAT is the request?** | NLBSE 2023: public GitHub software issues, source-harmonized classes **bug / feature / question / documentation** | **142,320 actual original test records scanned** in [CI #29](https://github.com/SFS-Labs/ai-knowledge-ops-lab/actions/runs/42412917843); 49.25% keyword Accuracy/Micro-F1 and 41.49% Macro-F1; 541 repeated issue-ID rows, five conflicting labels | No urgency, personnel costs, or current LLM model quality for these classes |
 | **HOW does it move through work?** | Volvo IT BPIC 2013: original 4TU incident event log, independent MD5 verified | **7,554 cases / 65,533 events / 9,454 observed `org:group` transitions**; original source verified by [CI #27](https://github.com/SFS-Labs/ai-knowledge-ops-lab/actions/runs/42411756411) | Groups changing do not prove wasted work, that AI could avoid a group change or how many minutes that would save |
 
 **The streams are not joined**. There is no person-/case-level relationship between a public GitHub issue and a Volvo incident, and we must never label them as a single observed case population.
@@ -63,6 +63,8 @@ python showcases/internal-service-intake/evaluation/nlbse_source.py
 ```
 
 The last two commands access external public source archives; a network error is a **BLOCKED** source run, not a verified metric. The benchmark script audits the full test file and reports a rules-only comparator; it does **not** execute a new LLM on 142,320 issues. Aggregates are source-backed, model comparisons need real inference runs. The static HTML needs no API and performs only local arithmetic.
+
+**Observed cross-source conclusion:** Both original sources have now been directly read. The NLBSE baseline is **only 49.25% on its actual full test set**; Volvo group transitions are **9,454 historical observations**. They do NOT share a test population or show any effect of our AI on Volvo operations. Missing client economics remain explicitly unmeasured.
 
 **Audit artifacts:** [Machine-readable business/data contract](evaluation/research_contract.json) · [Cost math with disclosure controls](evaluation/research_methods.py) · [Original Volvo measured aggregates](evaluation/evidence/volvo-2013-source-audit-ci27.json) · [NLBSE source-integrity audit](evaluation/nlbse_source.py) · [Historical decision evolution](HYBRID_DECISION_RECORD.md).
 
