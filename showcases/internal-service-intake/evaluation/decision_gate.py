@@ -100,20 +100,24 @@ def audit_decision_case(record: dict, observed: dict, brief: str,
     # via the GitHub API. This function never fabricates successful workflow runs.
     valid_head = (isinstance(current_head, str)
                   and re.fullmatch("[a-fA-F0-9]{40}", current_head) is not None)
-    current_ci_verified = bool(valid_head and successful_ci_sha == current_head)
+    sha_claim_matches = bool(valid_head and successful_ci_sha == current_head)
+    # An unsigned user-provided SHA cannot attest a GitHub job's conclusion.
+    # The caller must independently inspect the GitHub Actions API/UI.
     return {
         "case_id": record["id"],
         "30_second_word_count": n_words,
         "documented": True,
         "pilot_counts_reconciled": True,
         "limits_disclosed": True,
-        "current_head_ci_verified": current_ci_verified,
+        "ci_sha_claim_matches_head": sha_claim_matches,
+        "current_head_ci_verified": False,
         "economically_validated": False,
         "prospective_independent_validation": False,
-        "next_gate": ("TECHNICAL_DECISION_VERIFIED_NOT_CUSTOMER_VALIDATED"
-                      if current_ci_verified else "WAIT_FOR_EXACT_HEAD_CI"),
-        "verification_note": ("CI status must be independently confirmed against exact GitHub SHA; "
-                              "this script alone cannot prove a remote run succeeded."),
+        "next_gate": ("INDEPENDENT_GITHUB_CI_CONCLUSION_CHECK_REQUIRED"
+                      if sha_claim_matches else "WAIT_FOR_EXACT_HEAD_CI"),
+        "verification_note": ("A matching SHA is not proof of a completed successful run. "
+                              "The GitHub Actions conclusion must be checked independently "
+                              "on the exact current HEAD."),
     }
 
 
