@@ -87,7 +87,9 @@ class HoldoutGateTests(unittest.TestCase):
         self.assertEqual(24, report["hybrid"]["category_correct"])
         self.assertFalse(report["verified_customer_representativeness"])
         self.assertFalse(report["proves_business_optimality"])
-        self.assertEqual(1.0, report["hybrid_vs_llm"]["exact_mcnemar_two_sided_p"])
+        self.assertEqual(0, report["hybrid_vs_llm"]["a_only_correct"])
+        self.assertEqual(16, report["hybrid_vs_llm"]["b_only_correct"])
+        self.assertAlmostEqual(2 / (2 ** 16), report["hybrid_vs_llm"]["exact_mcnemar_two_sided_p"])
 
 
 
