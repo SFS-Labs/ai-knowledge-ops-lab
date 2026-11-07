@@ -65,5 +65,25 @@ jobs:
           done
           if [ "$status" != 200 ]; then echo "Intake webhook HTTP $status"; cat /tmp/sfs-intake-result.json; exit 1; fi
           jq -e '.request_id=="REQ-E2E-001" and .status=="pending"' /tmp/sfs-intake-result.json
+          denied=$(curl --silent --show-error -o /tmp/sfs-denied.json -w '%{http_code}' -X POST http://127.0.0.1:5678/webhook/internal-service-intake-approval -H "Content-Type: application/json" -H "X-APPROVAL-TOKEN: wrong" -d "$approval")
+          if [ "$denied" = 200 ]; then echo "Wrong approval token accepted"; exit 1; fi
+          curl --fail-with-body --silent --show-error http://127.0.0.1:8080/v1/intake/request/REQ-E2E-001 -H "X-MOCK-API-KEY: $MOCK_API_KEY" | jq -e '.request.status=="pending" and ([.audit[].event_type] | index("apply_executed") == null)'
+          curl --fail-with-body --silent --show-error -X POST http://127.0.0.1:5678/webhook/internal-service-intake -H "Content-Type: application/json" -H "X-INTAKE-TOKEN: $INTERNAL_INTAKE_TOKEN" -d "$intake" | jq -e '.duplicate==true'
           curl --fail-with-body --silent --show-error -X POST http://127.0.0.1:5678/webhook/internal-service-intake-approval -H "Content-Type: application/json" -H "X-APPROVAL-TOKEN: $APPROVAL_TOKEN" -d "$approval" | jq -e '.status=="applied"'
           curl --fail-with-body --silent --show-error http://127.0.0.1:8080/v1/intake/request/REQ-E2E-001 -H "X-MOCK-API-KEY: $MOCK_API_KEY" | jq -e '.request.status=="applied" and ([.audit[].event_type] | index("apply_executed") != null)'
+          docker compose restart n8n mock-api
+          ready=false
+          for attempt in {1..60}; do
+            if curl --fail --silent http://127.0.0.1:5678/healthz >/dev/null && curl --fail --silent http://127.0.0.1:8080/health >/dev/null; then ready=true; break; fi
+            sleep 2
+          done
+          if [ "$ready" != true ]; then echo "Restart health failed"; exit 1; fi
+          curl --fail-with-body --silent --show-error http://127.0.0.1:8080/v1/intake/request/REQ-E2E-001 -H "X-MOCK-API-KEY: $MOCK_API_KEY" | jq -e '.request.status=="applied"'
+          status=404
+          for attempt in {1..20}; do
+            status=$(curl --silent --show-error -o /tmp/sfs-restart.json -w '%{http_code}' -X POST http://127.0.0.1:5678/webhook/internal-service-intake -H "Content-Type: application/json" -H "X-INTAKE-TOKEN: $INTERNAL_INTAKE_TOKEN" -d "$intake")
+            [ "$status" = 404 ] || break
+            sleep 1
+          done
+          if [ "$status" != 200 ]; then echo "Restarted webhook HTTP $status"; exit 1; fi
+          jq -e '.duplicate==true and .status=="applied"' /tmp/sfs-restart.json
