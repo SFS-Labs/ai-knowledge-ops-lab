@@ -91,9 +91,10 @@ jobs:
 # Feasibility gate: only an explicit manual dispatch on the existing draft PR branch.
   # This job uses no paid API, GPU, new account, background scheduler or uploaded model artifact.
   llm-feasibility:
+    needs: [test]
     if: github.ref == 'refs/heads/copilot/build-isolated-ai-service-showcase'
     runs-on: ubuntu-latest
-    timeout-minutes: 18
+    timeout-minutes: 40
     permissions:
       contents: read
     concurrency:
@@ -177,4 +178,115 @@ jobs:
               "input_source": "synthetic unstructured German B2B request"
           }, ensure_ascii=False))
           PY
+
+      - name: Real n8n-to-model-to-SQLite E2E, negative approval, restart and audit
+        shell: bash
+        working-directory: showcases/internal-service-intake
+        run: |
+          set -euo pipefail
+          export INTERNAL_INTAKE_TOKEN="$(openssl rand -hex 32)"
+          export APPROVAL_TOKEN="$(openssl rand -hex 32)"
+          export MOCK_API_KEY="$(openssl rand -hex 32)"
+          mkdir -p model-cache
+          cp /tmp/sfs-llm-model/qwen.gguf model-cache/qwen.gguf
+          echo '6a1a2eb6d15622bf3c96857206351ba97e1af16c30d7a74ee38970e434e9407e  model-cache/qwen.gguf' | sha256sum --check --status
+          trap 'docker compose --profile llm down --volumes --remove-orphans >/dev/null 2>&1 || true; rm -rf model-cache' EXIT
+          docker compose --profile llm up --build -d
+          ready=false
+          for attempt in {1..100}; do
+            if curl --silent --fail --max-time 2 http://127.0.0.1:5678/healthz >/dev/null &&
+               curl --silent --fail --max-time 2 http://127.0.0.1:8081/health >/dev/null &&
+               curl --silent --fail --max-time 2 http://127.0.0.1:8080/health >/dev/null; then
+              ready=true; break
+            fi
+            sleep 2
+          done
+          if [ "$ready" != true ]; then echo "llm_stack_not_ready"; exit 1; fi
+          docker compose exec -T n8n n8n import:workflow --input=/opt/n8n-import/workflow.internal-service-intake.v1.json
+          docker compose exec -T n8n n8n audit > /tmp/sfs-llm-n8n-audit.log
+          echo "Actual n8n audit findings:"
+          grep -E -i 'risk|warning|node|error|vulnerab|instance' /tmp/sfs-llm-n8n-audit.log | head -n 35 || true
+          docker compose exec -T n8n n8n publish:workflow --id=sfsIntakeDemo01
+          docker compose restart n8n
+          ready=false
+          for attempt in {1..70}; do
+            if curl --silent --fail http://127.0.0.1:5678/healthz >/dev/null; then ready=true; break; fi
+            sleep 2
+          done
+          [ "$ready" = true ] || { echo "n8n_not_ready_after_publish"; exit 1; }
+          request='{"request_id":"REQ-SEM-LIVE-001","requester":"synthetic-demo","free_text":"We need a sales dashboard showing last quarter revenue by customer segment. Please calculate trends from CRM exports for our team."}'
+          approval='{"request_id":"REQ-SEM-LIVE-001","approver":"synthetic-reviewer","decision":"approve","rationale":"Reviewed synthetic request"}'
+          status=404
+          for attempt in {1..20}; do
+            status=$(curl --silent --show-error --max-time 145 -o /tmp/sfs-live.json -w '%{http_code}' \
+              -X POST http://127.0.0.1:5678/webhook/internal-service-intake-text \
+              -H "Content-Type: application/json" -H "X-INTAKE-TOKEN: $INTERNAL_INTAKE_TOKEN" \
+              -d "$request")
+            [ "$status" = 404 ] || break
+            sleep 1
+          done
+          if [ "$status" != 200 ]; then echo "semantic_webhook_http=$status"; cat /tmp/sfs-live.json; exit 1; fi
+          jq -e '.request_id=="REQ-SEM-LIVE-001" and .status=="pending" and .duplicate==false' /tmp/sfs-live.json
+          curl --fail-with-body --silent --show-error \
+            http://127.0.0.1:8080/v1/intake/request/REQ-SEM-LIVE-001 \
+            -H "X-MOCK-API-KEY: $MOCK_API_KEY" > /tmp/sfs-state.json
+          jq -e '.request.status=="pending" and ((.request.payload_json | fromjson).validated_model_output != null) and
+                 ((.request.payload_json | fromjson).raw_model_output | length > 0) and
+                 ([.audit[].event_type] | index("model_evaluated") != null) and
+                 ([.audit[].event_type] | index("apply_executed") == null)' /tmp/sfs-state.json
+          denied=$(curl --silent --show-error -o /tmp/sfs-denied.json -w '%{http_code}' \
+            -X POST http://127.0.0.1:5678/webhook/internal-service-intake-approval \
+            -H "Content-Type: application/json" -H "X-APPROVAL-TOKEN: wrong" -d "$approval")
+          [ "$denied" != 200 ] || { echo "BAD: wrong approval token accepted"; exit 1; }
+          curl --fail-with-body --silent --show-error \
+            http://127.0.0.1:8080/v1/intake/request/REQ-SEM-LIVE-001 \
+            -H "X-MOCK-API-KEY: $MOCK_API_KEY" |
+            jq -e '.request.status=="pending" and ([.audit[].event_type] | index("apply_executed") == null)'
+          curl --fail-with-body --silent --show-error -X POST \
+            http://127.0.0.1:5678/webhook/internal-service-intake-text \
+            -H "Content-Type: application/json" -H "X-INTAKE-TOKEN: $INTERNAL_INTAKE_TOKEN" \
+            -d "$request" | jq -e '.duplicate==true'
+          curl --fail-with-body --silent --show-error -X POST \
+            http://127.0.0.1:5678/webhook/internal-service-intake-approval \
+            -H "Content-Type: application/json" -H "X-APPROVAL-TOKEN: $APPROVAL_TOKEN" \
+            -d "$approval" | jq -e '.status=="applied"'
+          curl --fail-with-body --silent --show-error \
+            http://127.0.0.1:8080/v1/intake/request/REQ-SEM-LIVE-001 \
+            -H "X-MOCK-API-KEY: $MOCK_API_KEY" |
+            jq -e '.request.status=="applied" and ([.audit[].event_type] | index("apply_executed") != null)'
+          docker compose --profile llm restart n8n mock-api model
+          ready=false
+          for attempt in {1..90}; do
+            if curl --silent --fail http://127.0.0.1:5678/healthz >/dev/null &&
+               curl --silent --fail http://127.0.0.1:8081/health >/dev/null &&
+               curl --silent --fail http://127.0.0.1:8080/health >/dev/null; then ready=true; break; fi
+            sleep 2
+          done
+          [ "$ready" = true ] || { echo "restart_failed"; exit 1; }
+          curl --fail-with-body --silent --show-error \
+            http://127.0.0.1:8080/v1/intake/request/REQ-SEM-LIVE-001 \
+            -H "X-MOCK-API-KEY: $MOCK_API_KEY" |
+            jq -e '.request.status=="applied" and ([.audit[].event_type] | index("apply_executed") != null)'
+          echo "REAL_N8N_LLM_SQLITE_E2E_AND_RESTART=PASS"
+      - name: Evaluate 36 real multilingual/adversarial model responses against baseline
+        shell: bash
+        working-directory: showcases/internal-service-intake
+        run: |
+          set -euo pipefail
+          # Start ONLY the CPU model: previous step cleaned all services and volumes.
+          mkdir -p model-cache
+          cp /tmp/sfs-llm-model/qwen.gguf model-cache/qwen.gguf
+          IMAGE='ghcr.io/ggml-org/llama.cpp:server-b12019@sha256:d9e9e74ba3f7ef119b1939162b1631f99b75ec703c310d140cfa2fdac8907389'
+          trap 'docker rm -f sfs-llm-evaluation >/dev/null 2>&1 || true; rm -rf model-cache /tmp/sfs-llm-model' EXIT
+          docker run --detach --rm --name sfs-llm-evaluation --cpus=3 --memory=6g \
+            -p 127.0.0.1:8081:8080 -v "$(pwd)/model-cache:/models:ro" \
+            "$IMAGE" -m /models/qwen.gguf --host 0.0.0.0 --port 8080 \
+            --ctx-size 1024 --threads 3 --parallel 1 --n-gpu-layers 0
+          ready=false
+          for attempt in {1..90}; do
+            if curl --silent --fail --max-time 2 http://127.0.0.1:8081/health >/dev/null; then ready=true; break; fi
+            sleep 2
+          done
+          [ "$ready" = true ] || { echo "evaluation_model_unavailable"; exit 1; }
+          python evaluation/evaluate.py
 
