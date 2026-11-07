@@ -22,26 +22,26 @@
 <p class="muted">Ein Service-Team bekommt unterschiedliche Software-Anfragen. Manche sind Fehler, andere neue Funktionen, Fragen oder Dokumentation. Falsches Routing kann zusätzliche Übergaben verursachen. Aber nicht jede beobachtete Übergabe ist vermeidbar.</p>
 <div class="grid">
 <div class="card"><div class="tag">STRANG 01 · KLASSIFIKATION</div><h3>Was ist die Anfrage?</h3><div class="metric">4 Quellenklassen</div><p>Bug · Feature · Question · Documentation. Die Klassen stammen aus einem echten, veröffentlichten Issue-Benchmark – nicht aus unserer Vertriebsstory.</p><p class="muted">NLBSE 2023: 1.418.201 publizierte Fälle, davon 142.320 im Original-Testbestand. <strong>Unser Modell wurde darauf noch nicht gemessen.</strong></p></div>
-<div class="card"><div class="tag">STRANG 02 · PROZESS</div><h3>Was kostet die Bearbeitung?</h3><div class="metric">7.554 Fälle</div><p>Reale IT-Incident-Prozesse mit 65.533 Ereignissen. Diese zeigen Bearbeitungsverläufe und ermöglichen eine Analyse beobachteter Übergaben.</p><p class="muted">Volvo BPI 2013; keine gemeinsame Fallbasis mit NLBSE. Keine gemessene Wirkung unserer AI.</p></div>
+<div class="card"><div class="tag">STRANG 02 · PROZESS</div><h3>Was kostet die Bearbeitung?</h3><div class="metric">9.454 Gruppenwechsel</div><p>In 7.554 echten IT-Incident-Fällen wurden 65.533 Ereignisse und 9.454 Wechsel der Bearbeitungsgruppe aus dem MD5-geprüften Originalarchiv gemessen. Gruppenwechsel sind ein Prozessindikator, keine belegten vermeidbaren Arbeiten.</p><p class="muted">Volvo BPI 2013; keine gemeinsame Fallbasis mit NLBSE. Keine gemessene Wirkung unserer AI.</p></div>
 </div></section>
 <section class="section"><div class="eyebrow">Interaktive Wirtschaftlichkeit · ausschließlich Szenario</div><h2>Was <em>wäre</em> eine vermiedene Übergabe wert?</h2>
 <p class="muted">Die Eingaben unten sind illustrative Annahmen, <strong>keine aus Volvo gemessenen AI-Einsparungen</strong>. Die 58,50 €/Arbeitsstunde sind ein offizieller deutscher Sektordurchschnitt 2025 und kein Volvo-Personalkostensatz.</p>
 <div class="split">
 <div class="card controls">
-<div><label for="transitions">Beobachtete Übergaben im betrachteten Szenario: <output id="n">100</output></label><input id="transitions" type="range" min="0" max="1000" step="25" value="100"></div>
-<div><label for="avoid">Davon hypothetisch vermeidbar: <output id="a">20 %</output></label><input id="avoid" type="range" min="0" max="60" step="5" value="20"></div>
-<div><label for="minutes">Hypothetisch eingesparte Arbeitsminuten je Übergabe: <output id="m">10</output></label><input id="minutes" type="range" min="0" max="30" step="1" value="10"></div>
+<div><label for="transitions">Beobachtete Gruppenwechsel (Originaldatensatz: 9.454): <output id="n">9454</output></label><input id="transitions" type="range" min="0" max="10000" step="1" value="9454"></div>
+<div><label for="avoid">Davon hypothetisch vermeidbar: <output id="a">5 %</output></label><input id="avoid" type="range" min="0" max="60" step="5" value="5"></div>
+<div><label for="minutes">Hypothetisch eingesparte Arbeitsminuten je Übergabe: <output id="m">5</output></label><input id="minutes" type="range" min="0" max="30" step="1" value="5"></div>
 <small>Referenz: 58,50 €/Arbeitsstunde · Destatis, Information &amp; Kommunikation 2025.</small>
 </div>
 <div class="card"><div class="tag">BEDINGTER POTENZIALWERT · KEIN REALISIERTER ROI</div>
-<div class="result" id="eur" aria-live="polite">195,00 €</div><p>Hypothetisch vermeidbare Bruttoarbeitskosten im gewählten Szenario.</p>
-<p id="math" class="muted">100 × 20 % × 10 Min. ÷ 60 × 58,50 €</p><div class="warning">Betrieb, Review, Qualität und Eskalationsrisiko sind nicht eingepreist. Der tatsächliche Nutzen kann null oder negativ sein. Der Datensatz beweist nicht, dass unsere AI Übergaben verhindert.</div></div>
+<div class="result" id="eur" aria-live="polite">2.304,41 €</div><p>Hypothetisch vermeidbare Bruttoarbeitskosten im gewählten Szenario.</p>
+<p id="math" class="muted">9454 × 5 % × 5 Min. ÷ 60 × 58,50 €</p><div class="warning">Betrieb, Review, Qualität und Eskalationsrisiko sind nicht eingepreist. Der tatsächliche Nutzen kann null oder negativ sein. Der Datensatz beweist nicht, dass unsere AI Übergaben verhindert.</div></div>
 </div></section>
 <section class="section" id="evidence"><div class="eyebrow">Für technische Entscheider</div><h2>Die Beweiskette ist bewusst zweigeteilt.</h2>
 <p>Die Datensätze werden <strong>nicht auf Fallniveau verbunden</strong>. Klassifikationsleistung und Prozesskosten sind deshalb zwei getrennte Aussagen. Ein gemeinsamer Customer-ROI wäre derzeit erfunden.</p>
-<div class="statline"><div><div class="metric">1.418.201</div><div class="muted">veröffentlichte Software-Issues</div></div><div><div class="metric">7.554</div><div class="muted">reale Incident-Fälle</div></div><div><div class="metric">58,50 €</div><div class="muted">deutsche Sektorreferenz / h</div></div></div>
+<div class="statline"><div><div class="metric">1.418.201</div><div class="muted">veröffentlichte Software-Issues</div></div><div><div class="metric">9.454</div><div class="muted">gemessene Gruppenwechsel</div></div><div><div class="metric">58,50 €</div><div class="muted">deutsche Sektorreferenz / h</div></div></div>
 <ul><li><strong>Validiert:</strong> Die bisherige lokale n8n-/LLM-/SQLite-Integration bestand CI #25 mit 100 Python-Tests. Die 32 Fälle der früheren Hybrid-Pilotstudie waren synthetisch und sind <strong>kein Ergebnis dieser öffentlichen Datensätze</strong>.</li>
-<li><strong>Gesondert zu prüfen:</strong> Native NLBSE-Labels, Originalarchiv, Quelllizenz und reproduzierbare Prozesskennzahlen; diese Ergebnisse dürfen erst nach dem jeweiligen Datenlauf als gemessen bezeichnet werden.</li>
+<li><strong>Quellenprüfung:</strong> Das Volvo-Originalarchiv und die 9.454 Gruppenwechsel wurden im <a href="https://github.com/SFS-Labs/ai-knowledge-ops-lab/actions/runs/42411756411">GitHub-Actions-Quellenlauf #27</a> mit MD5-Check geprüft. Für NLBSE steht der vollständige Original-Testdaten-Audit noch aus.</li>
 <li><strong>Unbewiesen:</strong> Eine zusätzliche Übergabe ist tatsächlich vermeidbar; real eingesparte Personalkosten; generalisierbarer Modellvorteil; Produktionsreife.</li></ul>
 <p><a href="https://github.com/SFS-Labs/ai-knowledge-ops-lab/blob/main/showcases/internal-service-intake/evaluation/research_contract.json">Forschungsvertrag</a> · <a href="https://github.com/SFS-Labs/ai-knowledge-ops-lab/blob/main/showcases/internal-service-intake/evaluation/research_methods.py">Ausführbare Annahmenkontrollen</a> · <a href="https://github.com/SFS-Labs/ai-knowledge-ops-lab/pull/9">Decision Record / ursprünglicher Hypothesentest</a></p></section>
 <section class="section"><h2>Quellen und Verantwortungsgrenzen</h2>
