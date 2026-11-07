@@ -109,6 +109,19 @@ class SemanticIntakeTests(unittest.TestCase):
     def test_baseline_has_no_approval_capability(self):
         self.assertEqual(("analytics", "medium"), deterministic_baseline("Create a dashboard"))
 
+    def test_model_expression_does_not_close_before_end(self):
+        # n8n v2.46.6 expression-parser.ts closes at the FIRST "}}".
+        # A nested literal object without spaced closing braces is truncated.
+        path = (Path(__file__).resolve().parents[1] /
+                "showcases/internal-service-intake/n8n/workflow.internal-service-intake.v1.json")
+        workflow = json.loads(path.read_text(encoding="utf-8"))[0]
+        model = next(n for n in workflow["nodes"] if n["name"] == "Local LLM Extract")
+        expression = model["parameters"]["jsonBody"]
+        self.assertTrue(expression.startswith("={{"))
+        self.assertTrue(expression.endswith("}}"))
+        self.assertNotIn("}}", expression[3:-2],
+                         "Premature n8n template closing braces truncate nested JSON expression")
+
     def test_n8n_text_path_does_not_connect_directly_to_approval_or_apply(self):
         path = (Path(__file__).resolve().parents[1] /
                 "showcases/internal-service-intake/n8n/workflow.internal-service-intake.v1.json")
