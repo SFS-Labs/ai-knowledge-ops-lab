@@ -121,6 +121,43 @@ def semantic_preflight(store: Any, body: Any) -> tuple[int, dict[str, Any]]:
     return 200, dict(fields, duplicate=False, needs_inference=True)
 
 
+
+def model_transport_diagnostic(response: Any) -> dict[str, Any]:
+    """Record only response shape and a fixed error class; never persist error text."""
+    if not isinstance(response, dict):
+        return {"response_type": type(response).__name__}
+    details: dict[str, Any] = {
+        "response_type": "object",
+        "top_level_keys": sorted(str(k) for k in response.keys())[:20],
+    }
+    error = response.get("error")
+    if isinstance(error, dict):
+        details["error_keys"] = sorted(str(k) for k in error.keys())[:20]
+        for key in ("statusCode", "httpCode", "status"):
+            value = error.get(key)
+            if isinstance(value, int) and not isinstance(value, bool):
+                details["error_http_status"] = value
+                break
+        diagnostic_text = " ".join(str(error.get(k, "")) for k in ("message", "description", "cause")).lower()
+    elif isinstance(error, str):
+        diagnostic_text = error.lower()
+    else:
+        diagnostic_text = ""
+    indicators = {
+        "connection_refused": ("econnrefused", "connection refused"),
+        "dns_failure": ("enotfound", "getaddrinfo", "dns"),
+        "timeout": ("etimedout", "timeout", "timed out"),
+        "schema_rejected": ("json_schema", "schema invalid", "invalid schema"),
+        "http_400": ("400 bad request", "status code 400"),
+        "http_500": ("500 internal server error", "status code 500"),
+    }
+    details["error_class"] = next(
+        (name for name, needles in indicators.items() if any(w in diagnostic_text for w in needles)),
+        "unspecified" if error is not None else "none",
+    )
+    return details
+
+
 def semantic_register(store: Any, body: Any) -> tuple[int, dict[str, Any]]:
     error = validate_free_text(body)
     if error:
@@ -137,6 +174,7 @@ def semantic_register(store: Any, body: Any) -> tuple[int, dict[str, Any]]:
             "validated_model_output": evaluated["validated_model_output"],
             "policy_decision": evaluated["policy_decision"],
             "review_reason": evaluated["review_reason"],
+            "model_transport_diagnostic": model_transport_diagnostic(body.get("model_response")) if evaluated["validated_model_output"] is None else None,
         },
         "model_evaluation": {
             "valid": evaluated["validated_model_output"] is not None,
