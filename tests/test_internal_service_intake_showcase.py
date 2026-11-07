@@ -274,6 +274,12 @@ class InternalServiceIntakeShowcaseTests(unittest.TestCase):
         self.assertNotIn("MOCK_API_KEY:-", dockerfile)
         self.assertIn('CMD ["python", "/app/app.py"]', dockerfile)
 
+    def test_n8n_unused_public_api_and_community_packages_disabled(self) -> None:
+        compose = (ROOT / "showcases/internal-service-intake/docker-compose.yml").read_text()
+        self.assertIn('N8N_PUBLIC_API_DISABLED: "true"', compose)
+        self.assertIn('N8N_PUBLIC_API_SWAGGERUI_DISABLED: "true"', compose)
+        self.assertIn('N8N_COMMUNITY_PACKAGES_ENABLED: "false"', compose)
+
     def test_compose_is_loopback_only_and_has_no_fixed_token_defaults(self) -> None:
         compose = (ROOT / "showcases/internal-service-intake/docker-compose.yml").read_text()
         self.assertIn('127.0.0.1:5678:5678', compose)

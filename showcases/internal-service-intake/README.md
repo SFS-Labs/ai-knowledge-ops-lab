@@ -27,6 +27,7 @@ It is intentionally isolated from the repository's research pipeline and from RE
 - Both ports bind to host loopback. n8n Code nodes can read environment variables in this isolated demo (`N8N_BLOCK_ENV_ACCESS_IN_NODE=false`); this is a **material security limitation**, not a production configuration.
 - Separate intake and approval bearer tokens protect demo endpoints, but possession of the approval token **does not establish a verified human identity or independent authorization**. The approver identifier is caller-supplied. Do not reuse this gate for external customer operations.
 - Official risky Code and HTTP nodes are retained only for the bounded local workflow. Do not expose n8n to the public network or import untrusted workflows.
+- The isolated n8n container explicitly disables the unused public REST API, Swagger UI and community-package installation. The local workflow webhooks remain necessary for the bounded demo. These config changes are **pending fresh exact-head Docker verification**, not independently validated in the historical CI run.
 
 ## Quick start
 
