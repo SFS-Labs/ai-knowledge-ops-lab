@@ -13,11 +13,20 @@ demonstrates deterministic authenticated intake, duplicate handling, simulated a
 and an auditable persisted operation. The earlier real Docker/n8n verification is
 documented at its original exact SHA.
 
-A new free-text path proposes semantic extraction with a local open-weight LLM,
-independent validation and manual-review fallback. **This LLM extension has not
-yet passed genuine exact-SHA inference/E2E/evaluation and is not claimed as
-verified or deployed.** Refer to [Draft PR #9](https://github.com/SFS-Labs/ai-knowledge-ops-lab/pull/9)
-for implementation and evidence gates. The main research pipeline is separate
+The synthetic free-text path uses a real local open-weight LLM, independent
+validation, a separate approval gate and manual-review fallback.
+[CI #24](https://github.com/SFS-Labs/ai-knowledge-ops-lab/actions/runs/42399345922)
+verified its real model/n8n/SQLite E2E and 36 inferences on **that exact SHA**
+(d02a76f). Subsequent experimental hybrid-decision changes in
+[Draft PR #9](https://github.com/SFS-Labs/ai-knowledge-ops-lab/pull/9)
+are **not yet exact-HEAD verified or deployed**.
+
+**More important than the GitHub link is the decision record:**
+[DR-001 — comparative advantage, falsification and business-risk tradeoffs](showcases/internal-service-intake/HYBRID_DECISION_RECORD.md).
+It documents the operator's hypothesis, the 22/32 post-hoc hybrid result,
+the five missed critical cases under keyword urgency, source-attributed
+AI-assisted implementation, tests and what would invalidate the approach.
+It does not claim customer outcome or production readiness. The main research pipeline is separate
 and remains the recorded/replay-based pipeline described below.
 
 ## Start here
