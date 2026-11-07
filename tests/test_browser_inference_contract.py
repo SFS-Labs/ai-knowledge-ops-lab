@@ -34,6 +34,8 @@ class BrowserInferenceContractTests(unittest.TestCase):
         for item in ("const LIMIT = 12", "isValidInput", "navigator.gpu.requestAdapter",
                      "classify.disabled = true", "model_id === select.value"):
             self.assertIn(item,JS)
+        self.assertIn("script-src 'self' 'wasm-unsafe-eval'",HTML)
+        self.assertNotIn(" 'unsafe-eval'",HTML)
         self.assertNotIn("webhook/internal-service-intake",JS)
 
 if __name__=="__main__":
