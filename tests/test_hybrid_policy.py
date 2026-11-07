@@ -60,7 +60,8 @@ class HybridDecisionTests(unittest.TestCase):
     def test_invalid_model_never_falls_back_to_unreviewed_automatic_action(self):
         result = hybrid_decision("Urgent customer support request.", None)
         self.assertIsNone(result["category"])
-        self.assertIsNone(result["urgency"])
+        self.assertEqual("high", result["urgency"])
+        self.assertEqual("deterministic_rule", result["urgency_source"])
         self.assertEqual("manual_review", result["policy_decision"])
         self.assertEqual("invalid_model_output", result["review_reason"])
 
