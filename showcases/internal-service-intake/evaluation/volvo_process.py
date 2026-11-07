@@ -47,7 +47,10 @@ def _attrs(element):
 def _percentile(sorted_values, fraction):
     if not sorted_values:
         return None
-    index = round((len(sorted_values) - 1) * fraction)
+    if fraction == 0.5:
+        return round(statistics.median(sorted_values), 2)
+    # Nearest rank for tails; median uses an interpolated sample median.
+    index = max(0, min(len(sorted_values) - 1, (int((len(sorted_values) * fraction) + 0.999999999) - 1)))
     return round(sorted_values[index], 2)
 
 
