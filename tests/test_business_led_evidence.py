@@ -10,7 +10,7 @@ import unittest
 ROOT = Path(__file__).resolve().parents[1] / "showcases/internal-service-intake/evaluation"
 sys.path.insert(0, str(ROOT))
 from research_methods import load_contract, validate_contract, scenario_labour_savings  # noqa: E402
-from nlbse_source import profile_csv_bytes, EXPECTED  # noqa: E402
+from nlbse_source import profile_csv_bytes, keyword_baseline, EXPECTED  # noqa: E402
 
 
 class EvidenceStreamTests(unittest.TestCase):
@@ -78,6 +78,23 @@ class EvidenceStreamTests(unittest.TestCase):
         rows=b"id,title,body,label\n100,Bug,Example,incident-response\n"
         with self.assertRaisesRegex(ValueError, "unexpected_source_label"):
             profile_csv_bytes(rows, require_published_counts=False)
+
+    def test_keyword_baseline_is_predeclared_and_only_classifies_source_labels(self):
+        self.assertEqual("bug", keyword_baseline("Login broken", "Error after update"))
+        self.assertEqual("documentation", keyword_baseline("README typo", "Fix docs"))
+        self.assertEqual("question", keyword_baseline("How to configure?", "Unknown"))
+        self.assertEqual("feature", keyword_baseline("Add export", "New function"))
+        self.assertTrue({keyword_baseline("a","b")} <= set(EXPECTED))
+
+    def test_actual_labelled_csv_fixture_reports_measured_rule_metrics(self):
+        source=(b"id,title,body,labels\n100,Broken login,Error after update,bug\n"
+                b"101,New function,Add billing option,feature\n"
+                b"102,How to setup?,What command?,question\n"
+                b"103,Docs typo,Fix README,documentation\n")
+        report=profile_csv_bytes(source, require_published_counts=False)
+        self.assertEqual(1.,report["observed_keyword_baseline"]["accuracy"])
+        self.assertEqual(1.,report["observed_keyword_baseline"]["macro_F1"])
+        self.assertFalse(report["observed_keyword_baseline"]["prompt_or_model_used"])
 
     def test_short_sample_never_claims_official_full_benchmark(self):
         rows=b"id,title,body,label\n100,Bug,Example,bug\n"
