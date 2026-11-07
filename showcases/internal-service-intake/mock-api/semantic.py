@@ -165,28 +165,69 @@ def model_transport_diagnostic(response: Any) -> dict[str, Any]:
     return details
 
 
+
+def hybrid_decision(free_text: str, validated_model: Any) -> dict[str, Any]:
+    """Experimental explicit source routing; never grants authorization.
+
+    Category: independently validated model. Urgency: existing deterministic
+    keyword rule. A conflict demands review rather than silently discarding
+    a potentially critical signal. Neither source can approve/apply.
+    """
+    if validate_proposal(validated_model) is not None:
+        return {
+            "category": None, "urgency": None, "model_urgency": None,
+            "category_source": "none", "urgency_source": "none",
+            "urgency_disagreement": False, "policy_decision": "manual_review",
+            "review_reason": "invalid_model_output",
+        }
+    _, rules_urgency = deterministic_baseline(free_text)
+    category = validated_model["service_type"]
+    disagreement = validated_model["urgency"] != rules_urgency
+    if validated_model["missing_information"]:
+        route, reason = "manual_review", "missing_information"
+    elif disagreement:
+        route, reason = "manual_review", "urgency_signal_disagreement"
+    elif rules_urgency == "high" or category in {"integration", "incident-response"}:
+        route, reason = "expedite_review", None
+    else:
+        route, reason = "standard_review", None
+    return {
+        "category": category, "urgency": rules_urgency,
+        "model_urgency": validated_model["urgency"],
+        "category_source": "validated_llm", "urgency_source": "deterministic_rule",
+        "urgency_disagreement": disagreement, "policy_decision": route,
+        "review_reason": reason,
+    }
+
+
 def semantic_register(store: Any, body: Any) -> tuple[int, dict[str, Any]]:
     error = validate_free_text(body)
     if error:
         return 400, {"error": error}
     fields = normalized_text_input(body)
     evaluated = examine_model_response(body.get("model_response"))
+    decision = hybrid_decision(fields["free_text"], evaluated["validated_model_output"])
+    if evaluated["validated_model_output"] is None:
+        decision["review_reason"] = evaluated["review_reason"]
     registration = {
         "request_id": fields["request_id"],
         "request_hash": text_hash(fields),
-        "classification": evaluated["policy_decision"],
+        "classification": decision["policy_decision"],
         "payload": {
             "source": "unstructured_free_text", "input": fields,
             "raw_model_output": evaluated["raw_model_output"],
             "validated_model_output": evaluated["validated_model_output"],
-            "policy_decision": evaluated["policy_decision"],
-            "review_reason": evaluated["review_reason"],
+            "policy_decision": decision["policy_decision"],
+            "review_reason": decision["review_reason"],
+            "decision_trace": decision,
+            "model_only_policy_decision": evaluated["policy_decision"],
             "model_transport_diagnostic": model_transport_diagnostic(body.get("model_response")) if evaluated["validated_model_output"] is None else None,
         },
         "model_evaluation": {
             "valid": evaluated["validated_model_output"] is not None,
-            "policy_decision": evaluated["policy_decision"],
-            "review_reason": evaluated["review_reason"],
+            "policy_decision": decision["policy_decision"],
+            "review_reason": decision["review_reason"],
+            "model_only_policy_decision": evaluated["policy_decision"],
         },
     }
     result = store.register(registration)
