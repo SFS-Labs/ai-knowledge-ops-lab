@@ -38,6 +38,34 @@ services:
     volumes:
       - mock_api_data:/data
 
+  # Activated only with --profile llm, so the original deterministic showcase remains unchanged.
+  # The model is downloaded and SHA256-verified separately before starting Compose.
+  model:
+    profiles: ["llm"]
+    image: ghcr.io/ggml-org/llama.cpp:server-b12019@sha256:d9e9e74ba3f7ef119b1939162b1631f99b75ec703c310d140cfa2fdac8907389
+    restart: "no"
+    cpus: 3
+    mem_limit: 6g
+    ports:
+      - "127.0.0.1:8081:8080"
+    command:
+      - "-m"
+      - "/models/qwen.gguf"
+      - "--host"
+      - "0.0.0.0"
+      - "--port"
+      - "8080"
+      - "--ctx-size"
+      - "1024"
+      - "--threads"
+      - "3"
+      - "--parallel"
+      - "1"
+      - "--n-gpu-layers"
+      - "0"
+    volumes:
+      - ./model-cache:/models:ro
+
 volumes:
   n8n_data:
   mock_api_data:
