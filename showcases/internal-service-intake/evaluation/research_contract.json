@@ -71,7 +71,12 @@
       "measured_labour_minutes": "NOT_AVAILABLE",
       "causal_effect_of_ai": "NOT_IDENTIFIABLE_FROM_THIS_LOG_ALONE",
       "scope": "Incident operations; does not cover the four old service classes",
-      "raw_republication": "Not authorized by this project; summary counts only"
+      "raw_republication": "Not authorized by this project; summary counts only",
+      "original_md5": "d4809bd55e3e1c15b017ab4e58228297",
+      "md5_original_verified": true,
+      "observed_group_transitions": 9454,
+      "observed_group_transitions_measured_from": "original XES, sourced in CI run 42411756411",
+      "source_audit_json": "showcases/internal-service-intake/evaluation/evidence/volvo-2013-source-audit-ci27.json"
     }
   },
   "economics": {
@@ -91,8 +96,8 @@
   },
   "disclosure": {
     "old_32_cases": "Historical 32 labeled synthetic pilot, exploratory and not NLBSE",
-    "independent_classification_benchmark": "NOT_YET_EXECUTED",
-    "original_volvo_process_extraction": "PENDING_VERIFICATION",
+    "independent_classification_benchmark": "NOT_YET_EXECUTED_ON_NLBSE_MODEL_LABELS",
+    "original_volvo_process_extraction": "VERIFIED_MD5_ORIGINAL_CI27_SOURCE_AUDIT_STEP",
     "combined_economic_outcome": "ILLUSTRATIVE_SCENARIO_ONLY",
     "customer_validation": "NOT_ESTABLISHED"
   }
