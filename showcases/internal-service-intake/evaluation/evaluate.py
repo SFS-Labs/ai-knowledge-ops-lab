@@ -94,7 +94,7 @@ def main() -> None:
                 raise SystemExit("STOP: first four model outputs failed schema validation")
     sorted_lat = sorted(latencies)
     report = {
-        "model": "Qwen2.5-1.5B-Instruct-GGUF Q4_K_M; llama.cpp CPU",
+        "model_identity": "Qwen2.5-1.5B-Instruct-GGUF Q4_K_M; llama.cpp CPU",
         "dataset": str(DATASET.relative_to(ROOT)),
         "total_cases": len(cases), "labeled_cases": categorized,
         "ambiguous_cases": len(cases) - categorized,
