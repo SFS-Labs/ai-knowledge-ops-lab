@@ -1,0 +1,1036 @@
+{
+  "report_type": "real_paired_nlbse_2023_diagnostic_v1",
+  "provenance": {
+    "source": "github_actions_job_log",
+    "workflow_run_id": 42424660728,
+    "job_id": 128560248977,
+    "head_sha": "fc86e4c1871bd968f40e064f7daa3662712e0fc7",
+    "url": "https://github.com/SFS-Labs/ai-knowledge-ops-lab/actions/runs/42424660728",
+    "python_tests": 131,
+    "job_conclusion": "success"
+  },
+  "experiment": {
+    "baseline": "frozen nlbse_source.keyword_baseline; same input truncation",
+    "baseline_scores": {
+      "accuracy": 0.44792,
+      "by_class": {
+        "bug": {
+          "f1": 0.30769,
+          "precision": 0.4,
+          "recall": 0.25,
+          "support": 24
+        },
+        "documentation": {
+          "f1": 0.38889,
+          "precision": 0.58333,
+          "recall": 0.29167,
+          "support": 24
+        },
+        "feature": {
+          "f1": 0.53521,
+          "precision": 0.40426,
+          "recall": 0.79167,
+          "support": 24
+        },
+        "question": {
+          "f1": 0.47826,
+          "precision": 0.5,
+          "recall": 0.45833,
+          "support": 24
+        }
+      },
+      "confusion": {
+        "bug": {
+          "__invalid__": 0,
+          "bug": 6,
+          "documentation": 1,
+          "feature": 13,
+          "question": 4
+        },
+        "documentation": {
+          "__invalid__": 0,
+          "bug": 2,
+          "documentation": 7,
+          "feature": 11,
+          "question": 4
+        },
+        "feature": {
+          "__invalid__": 0,
+          "bug": 1,
+          "documentation": 1,
+          "feature": 19,
+          "question": 3
+        },
+        "question": {
+          "__invalid__": 0,
+          "bug": 6,
+          "documentation": 3,
+          "feature": 4,
+          "question": 11
+        }
+      },
+      "macro_f1": 0.42751
+    },
+    "duplicate_policy": "exclude every ID appearing more than once in the original test",
+    "invalid_or_failed_model_calls": 0,
+    "limitations": [
+      "Sample is balanced by class; reported accuracy is not population prevalence-weighted.",
+      "Not the official 142320-case NLBSE competition evaluation.",
+      "Source labels may be noisy; no project group identifiers; no cross-project validity claim.",
+      "No raw issue text stored or printed; response SHA256 retained instead of raw model text.",
+      "Model and baseline share a fixed input budget; no tuning on held-out sample."
+    ],
+    "llm": {
+      "accuracy": 0.42708,
+      "by_class": {
+        "bug": {
+          "f1": 0.53333,
+          "precision": 0.36364,
+          "recall": 1,
+          "support": 24
+        },
+        "documentation": {
+          "f1": 0.4375,
+          "precision": 0.875,
+          "recall": 0.29167,
+          "support": 24
+        },
+        "feature": {
+          "f1": 0.45455,
+          "precision": 0.5,
+          "recall": 0.41667,
+          "support": 24
+        },
+        "question": {
+          "f1": 0,
+          "precision": 0,
+          "recall": 0,
+          "support": 24
+        }
+      },
+      "confusion": {
+        "bug": {
+          "__invalid__": 0,
+          "bug": 24,
+          "documentation": 0,
+          "feature": 0,
+          "question": 0
+        },
+        "documentation": {
+          "__invalid__": 0,
+          "bug": 8,
+          "documentation": 7,
+          "feature": 7,
+          "question": 2
+        },
+        "feature": {
+          "__invalid__": 0,
+          "bug": 14,
+          "documentation": 0,
+          "feature": 10,
+          "question": 0
+        },
+        "question": {
+          "__invalid__": 0,
+          "bug": 20,
+          "documentation": 1,
+          "feature": 3,
+          "question": 0
+        }
+      },
+      "macro_f1": 0.35635
+    },
+    "model": "Qwen2.5-1.5B-Instruct-GGUF-Q4_K_M",
+    "model_sha256": "6a1a2eb6d15622bf3c96857206351ba97e1af16c30d7a74ee38970e434e9407e",
+    "original_archive_sha256": "f625dc78af6139b94623004dcbe575b5dfb6dc3293b7e9fa2fa109352d1cdf0e",
+    "original_test_rows": 142320,
+    "paired_accuracy_delta": {
+      "difference": -0.02083,
+      "interpretation": "diagnostic uncertainty under within-class resampling; not full-population or cross-project inference",
+      "paired_stratified_bootstrap_95pct": [
+        -0.10417,
+        0.0625
+      ]
+    },
+    "per_class": 24,
+    "prompt_sha256": "5cf409dcf201d8fd93c11d3c5e4a4992f6fc16fab7b8f17eeb4d61f61026370e",
+    "prompt_version": "nlbse-issue-type-v1",
+    "sample": [
+      {
+        "baseline_label": "question",
+        "case_hash": "1b3b0e87ea3a46ecc343",
+        "error_kind": null,
+        "latency_ms": 6444,
+        "model_label": "bug",
+        "model_output_sha256": "63f494eccea17988b8763bf02638b0c07c9d46589502fa2b1752b466d9519f23",
+        "source_label": "bug"
+      },
+      {
+        "baseline_label": "question",
+        "case_hash": "2474f461bf2a8523989e",
+        "error_kind": null,
+        "latency_ms": 3111,
+        "model_label": "bug",
+        "model_output_sha256": "63f494eccea17988b8763bf02638b0c07c9d46589502fa2b1752b466d9519f23",
+        "source_label": "bug"
+      },
+      {
+        "baseline_label": "feature",
+        "case_hash": "884a181c639468d31bc5",
+        "error_kind": null,
+        "latency_ms": 5006,
+        "model_label": "bug",
+        "model_output_sha256": "63f494eccea17988b8763bf02638b0c07c9d46589502fa2b1752b466d9519f23",
+        "source_label": "bug"
+      },
+      {
+        "baseline_label": "feature",
+        "case_hash": "74e76311dd82d0149c83",
+        "error_kind": null,
+        "latency_ms": 1825,
+        "model_label": "bug",
+        "model_output_sha256": "63f494eccea17988b8763bf02638b0c07c9d46589502fa2b1752b466d9519f23",
+        "source_label": "bug"
+      },
+      {
+        "baseline_label": "feature",
+        "case_hash": "17f62db5eaf316f489f0",
+        "error_kind": null,
+        "latency_ms": 1226,
+        "model_label": "bug",
+        "model_output_sha256": "63f494eccea17988b8763bf02638b0c07c9d46589502fa2b1752b466d9519f23",
+        "source_label": "bug"
+      },
+      {
+        "baseline_label": "bug",
+        "case_hash": "4dce94471af984135ff8",
+        "error_kind": null,
+        "latency_ms": 4694,
+        "model_label": "bug",
+        "model_output_sha256": "63f494eccea17988b8763bf02638b0c07c9d46589502fa2b1752b466d9519f23",
+        "source_label": "bug"
+      },
+      {
+        "baseline_label": "feature",
+        "case_hash": "eca633c344d59609f2dd",
+        "error_kind": null,
+        "latency_ms": 1194,
+        "model_label": "bug",
+        "model_output_sha256": "63f494eccea17988b8763bf02638b0c07c9d46589502fa2b1752b466d9519f23",
+        "source_label": "bug"
+      },
+      {
+        "baseline_label": "feature",
+        "case_hash": "532b1bbf03deda9f7e55",
+        "error_kind": null,
+        "latency_ms": 7985,
+        "model_label": "bug",
+        "model_output_sha256": "63f494eccea17988b8763bf02638b0c07c9d46589502fa2b1752b466d9519f23",
+        "source_label": "bug"
+      },
+      {
+        "baseline_label": "question",
+        "case_hash": "5aa8920620f74b8f4ed8",
+        "error_kind": null,
+        "latency_ms": 5710,
+        "model_label": "bug",
+        "model_output_sha256": "63f494eccea17988b8763bf02638b0c07c9d46589502fa2b1752b466d9519f23",
+        "source_label": "bug"
+      },
+      {
+        "baseline_label": "feature",
+        "case_hash": "7f30d70cb82988162f3d",
+        "error_kind": null,
+        "latency_ms": 872,
+        "model_label": "bug",
+        "model_output_sha256": "63f494eccea17988b8763bf02638b0c07c9d46589502fa2b1752b466d9519f23",
+        "source_label": "bug"
+      },
+      {
+        "baseline_label": "bug",
+        "case_hash": "a5c4497845f0497449a6",
+        "error_kind": null,
+        "latency_ms": 4748,
+        "model_label": "bug",
+        "model_output_sha256": "63f494eccea17988b8763bf02638b0c07c9d46589502fa2b1752b466d9519f23",
+        "source_label": "bug"
+      },
+      {
+        "baseline_label": "feature",
+        "case_hash": "8834ffdc44f2c8b60310",
+        "error_kind": null,
+        "latency_ms": 2993,
+        "model_label": "bug",
+        "model_output_sha256": "63f494eccea17988b8763bf02638b0c07c9d46589502fa2b1752b466d9519f23",
+        "source_label": "bug"
+      },
+      {
+        "baseline_label": "feature",
+        "case_hash": "ee52b4e6268fad27835d",
+        "error_kind": null,
+        "latency_ms": 3086,
+        "model_label": "bug",
+        "model_output_sha256": "63f494eccea17988b8763bf02638b0c07c9d46589502fa2b1752b466d9519f23",
+        "source_label": "bug"
+      },
+      {
+        "baseline_label": "bug",
+        "case_hash": "b865ee02520752b06e39",
+        "error_kind": null,
+        "latency_ms": 5301,
+        "model_label": "bug",
+        "model_output_sha256": "63f494eccea17988b8763bf02638b0c07c9d46589502fa2b1752b466d9519f23",
+        "source_label": "bug"
+      },
+      {
+        "baseline_label": "feature",
+        "case_hash": "09d5c64c3b244361ac85",
+        "error_kind": null,
+        "latency_ms": 780,
+        "model_label": "bug",
+        "model_output_sha256": "63f494eccea17988b8763bf02638b0c07c9d46589502fa2b1752b466d9519f23",
+        "source_label": "bug"
+      },
+      {
+        "baseline_label": "feature",
+        "case_hash": "402ecf14ff3a426dad06",
+        "error_kind": null,
+        "latency_ms": 5037,
+        "model_label": "bug",
+        "model_output_sha256": "63f494eccea17988b8763bf02638b0c07c9d46589502fa2b1752b466d9519f23",
+        "source_label": "bug"
+      },
+      {
+        "baseline_label": "bug",
+        "case_hash": "63ab952a6882c1dbf56c",
+        "error_kind": null,
+        "latency_ms": 5353,
+        "model_label": "bug",
+        "model_output_sha256": "63f494eccea17988b8763bf02638b0c07c9d46589502fa2b1752b466d9519f23",
+        "source_label": "bug"
+      },
+      {
+        "baseline_label": "documentation",
+        "case_hash": "fc753c3933e38ffe318d",
+        "error_kind": null,
+        "latency_ms": 4675,
+        "model_label": "bug",
+        "model_output_sha256": "63f494eccea17988b8763bf02638b0c07c9d46589502fa2b1752b466d9519f23",
+        "source_label": "bug"
+      },
+      {
+        "baseline_label": "bug",
+        "case_hash": "f9ca547e29ad191f7be1",
+        "error_kind": null,
+        "latency_ms": 4550,
+        "model_label": "bug",
+        "model_output_sha256": "63f494eccea17988b8763bf02638b0c07c9d46589502fa2b1752b466d9519f23",
+        "source_label": "bug"
+      },
+      {
+        "baseline_label": "feature",
+        "case_hash": "6646831e950680bd9144",
+        "error_kind": null,
+        "latency_ms": 4573,
+        "model_label": "bug",
+        "model_output_sha256": "63f494eccea17988b8763bf02638b0c07c9d46589502fa2b1752b466d9519f23",
+        "source_label": "bug"
+      },
+      {
+        "baseline_label": "feature",
+        "case_hash": "77348629e18d6536c78b",
+        "error_kind": null,
+        "latency_ms": 7214,
+        "model_label": "bug",
+        "model_output_sha256": "63f494eccea17988b8763bf02638b0c07c9d46589502fa2b1752b466d9519f23",
+        "source_label": "bug"
+      },
+      {
+        "baseline_label": "bug",
+        "case_hash": "cd83ca0debb022f84e41",
+        "error_kind": null,
+        "latency_ms": 5110,
+        "model_label": "bug",
+        "model_output_sha256": "63f494eccea17988b8763bf02638b0c07c9d46589502fa2b1752b466d9519f23",
+        "source_label": "bug"
+      },
+      {
+        "baseline_label": "feature",
+        "case_hash": "1eea7eeb7d662c481883",
+        "error_kind": null,
+        "latency_ms": 6400,
+        "model_label": "bug",
+        "model_output_sha256": "63f494eccea17988b8763bf02638b0c07c9d46589502fa2b1752b466d9519f23",
+        "source_label": "bug"
+      },
+      {
+        "baseline_label": "question",
+        "case_hash": "d31ca1555fbc3757fdbf",
+        "error_kind": null,
+        "latency_ms": 4137,
+        "model_label": "bug",
+        "model_output_sha256": "63f494eccea17988b8763bf02638b0c07c9d46589502fa2b1752b466d9519f23",
+        "source_label": "bug"
+      },
+      {
+        "baseline_label": "feature",
+        "case_hash": "9f75808ad1816da45972",
+        "error_kind": null,
+        "latency_ms": 858,
+        "model_label": "feature",
+        "model_output_sha256": "949975eddadbb729d1515b76bde181a12d22a9df368a819f27ea8570fbdff135",
+        "source_label": "feature"
+      },
+      {
+        "baseline_label": "documentation",
+        "case_hash": "949c156a8325394eebc3",
+        "error_kind": null,
+        "latency_ms": 3125,
+        "model_label": "bug",
+        "model_output_sha256": "63f494eccea17988b8763bf02638b0c07c9d46589502fa2b1752b466d9519f23",
+        "source_label": "feature"
+      },
+      {
+        "baseline_label": "feature",
+        "case_hash": "557f206640dfb75c9c1e",
+        "error_kind": null,
+        "latency_ms": 1839,
+        "model_label": "bug",
+        "model_output_sha256": "63f494eccea17988b8763bf02638b0c07c9d46589502fa2b1752b466d9519f23",
+        "source_label": "feature"
+      },
+      {
+        "baseline_label": "feature",
+        "case_hash": "84d4349dfc13d82d0e2f",
+        "error_kind": null,
+        "latency_ms": 899,
+        "model_label": "feature",
+        "model_output_sha256": "949975eddadbb729d1515b76bde181a12d22a9df368a819f27ea8570fbdff135",
+        "source_label": "feature"
+      },
+      {
+        "baseline_label": "bug",
+        "case_hash": "e3f869f25d5c856e895c",
+        "error_kind": null,
+        "latency_ms": 5658,
+        "model_label": "bug",
+        "model_output_sha256": "63f494eccea17988b8763bf02638b0c07c9d46589502fa2b1752b466d9519f23",
+        "source_label": "feature"
+      },
+      {
+        "baseline_label": "feature",
+        "case_hash": "0193d206027809c00d51",
+        "error_kind": null,
+        "latency_ms": 1590,
+        "model_label": "bug",
+        "model_output_sha256": "63f494eccea17988b8763bf02638b0c07c9d46589502fa2b1752b466d9519f23",
+        "source_label": "feature"
+      },
+      {
+        "baseline_label": "feature",
+        "case_hash": "24b8f5a37d5e224220bc",
+        "error_kind": null,
+        "latency_ms": 831,
+        "model_label": "feature",
+        "model_output_sha256": "949975eddadbb729d1515b76bde181a12d22a9df368a819f27ea8570fbdff135",
+        "source_label": "feature"
+      },
+      {
+        "baseline_label": "feature",
+        "case_hash": "3028567b92a02ece1abf",
+        "error_kind": null,
+        "latency_ms": 1076,
+        "model_label": "bug",
+        "model_output_sha256": "63f494eccea17988b8763bf02638b0c07c9d46589502fa2b1752b466d9519f23",
+        "source_label": "feature"
+      },
+      {
+        "baseline_label": "feature",
+        "case_hash": "a0f060eb6637cbdbc6ec",
+        "error_kind": null,
+        "latency_ms": 1734,
+        "model_label": "feature",
+        "model_output_sha256": "949975eddadbb729d1515b76bde181a12d22a9df368a819f27ea8570fbdff135",
+        "source_label": "feature"
+      },
+      {
+        "baseline_label": "feature",
+        "case_hash": "d03b9e069192439f23aa",
+        "error_kind": null,
+        "latency_ms": 6104,
+        "model_label": "feature",
+        "model_output_sha256": "949975eddadbb729d1515b76bde181a12d22a9df368a819f27ea8570fbdff135",
+        "source_label": "feature"
+      },
+      {
+        "baseline_label": "feature",
+        "case_hash": "afe04df6203d81844fca",
+        "error_kind": null,
+        "latency_ms": 1699,
+        "model_label": "bug",
+        "model_output_sha256": "63f494eccea17988b8763bf02638b0c07c9d46589502fa2b1752b466d9519f23",
+        "source_label": "feature"
+      },
+      {
+        "baseline_label": "question",
+        "case_hash": "03c33b156a4c63fe8e1f",
+        "error_kind": null,
+        "latency_ms": 1074,
+        "model_label": "bug",
+        "model_output_sha256": "63f494eccea17988b8763bf02638b0c07c9d46589502fa2b1752b466d9519f23",
+        "source_label": "feature"
+      },
+      {
+        "baseline_label": "feature",
+        "case_hash": "e379c04a7523e2215c10",
+        "error_kind": null,
+        "latency_ms": 1207,
+        "model_label": "feature",
+        "model_output_sha256": "949975eddadbb729d1515b76bde181a12d22a9df368a819f27ea8570fbdff135",
+        "source_label": "feature"
+      },
+      {
+        "baseline_label": "feature",
+        "case_hash": "b4fe013f882805b69d64",
+        "error_kind": null,
+        "latency_ms": 897,
+        "model_label": "bug",
+        "model_output_sha256": "63f494eccea17988b8763bf02638b0c07c9d46589502fa2b1752b466d9519f23",
+        "source_label": "feature"
+      },
+      {
+        "baseline_label": "feature",
+        "case_hash": "11ac310eb8db669e1d15",
+        "error_kind": null,
+        "latency_ms": 2722,
+        "model_label": "feature",
+        "model_output_sha256": "949975eddadbb729d1515b76bde181a12d22a9df368a819f27ea8570fbdff135",
+        "source_label": "feature"
+      },
+      {
+        "baseline_label": "feature",
+        "case_hash": "f0638c1beb2c7c4ca6e1",
+        "error_kind": null,
+        "latency_ms": 1201,
+        "model_label": "bug",
+        "model_output_sha256": "63f494eccea17988b8763bf02638b0c07c9d46589502fa2b1752b466d9519f23",
+        "source_label": "feature"
+      },
+      {
+        "baseline_label": "feature",
+        "case_hash": "57a723991ec2dbb6ccfd",
+        "error_kind": null,
+        "latency_ms": 1205,
+        "model_label": "feature",
+        "model_output_sha256": "949975eddadbb729d1515b76bde181a12d22a9df368a819f27ea8570fbdff135",
+        "source_label": "feature"
+      },
+      {
+        "baseline_label": "question",
+        "case_hash": "7f8cead04375ab5c9659",
+        "error_kind": null,
+        "latency_ms": 1944,
+        "model_label": "bug",
+        "model_output_sha256": "63f494eccea17988b8763bf02638b0c07c9d46589502fa2b1752b466d9519f23",
+        "source_label": "feature"
+      },
+      {
+        "baseline_label": "feature",
+        "case_hash": "ab801b11032fa0214624",
+        "error_kind": null,
+        "latency_ms": 1183,
+        "model_label": "feature",
+        "model_output_sha256": "949975eddadbb729d1515b76bde181a12d22a9df368a819f27ea8570fbdff135",
+        "source_label": "feature"
+      },
+      {
+        "baseline_label": "feature",
+        "case_hash": "66dacaa2b0e9b228ceee",
+        "error_kind": null,
+        "latency_ms": 1064,
+        "model_label": "bug",
+        "model_output_sha256": "63f494eccea17988b8763bf02638b0c07c9d46589502fa2b1752b466d9519f23",
+        "source_label": "feature"
+      },
+      {
+        "baseline_label": "feature",
+        "case_hash": "f2a5467f2338076736dd",
+        "error_kind": null,
+        "latency_ms": 896,
+        "model_label": "feature",
+        "model_output_sha256": "949975eddadbb729d1515b76bde181a12d22a9df368a819f27ea8570fbdff135",
+        "source_label": "feature"
+      },
+      {
+        "baseline_label": "question",
+        "case_hash": "8c10e33072a1b0021a17",
+        "error_kind": null,
+        "latency_ms": 1760,
+        "model_label": "bug",
+        "model_output_sha256": "63f494eccea17988b8763bf02638b0c07c9d46589502fa2b1752b466d9519f23",
+        "source_label": "feature"
+      },
+      {
+        "baseline_label": "feature",
+        "case_hash": "dfdea3ffa33c21f76f9f",
+        "error_kind": null,
+        "latency_ms": 8223,
+        "model_label": "bug",
+        "model_output_sha256": "63f494eccea17988b8763bf02638b0c07c9d46589502fa2b1752b466d9519f23",
+        "source_label": "feature"
+      },
+      {
+        "baseline_label": "feature",
+        "case_hash": "bf301d354986d4a865e0",
+        "error_kind": null,
+        "latency_ms": 1673,
+        "model_label": "bug",
+        "model_output_sha256": "63f494eccea17988b8763bf02638b0c07c9d46589502fa2b1752b466d9519f23",
+        "source_label": "feature"
+      },
+      {
+        "baseline_label": "feature",
+        "case_hash": "acf4fd8d15496d683357",
+        "error_kind": null,
+        "latency_ms": 5853,
+        "model_label": "bug",
+        "model_output_sha256": "63f494eccea17988b8763bf02638b0c07c9d46589502fa2b1752b466d9519f23",
+        "source_label": "question"
+      },
+      {
+        "baseline_label": "question",
+        "case_hash": "a5dd3475dfcb79ef8938",
+        "error_kind": null,
+        "latency_ms": 1866,
+        "model_label": "feature",
+        "model_output_sha256": "949975eddadbb729d1515b76bde181a12d22a9df368a819f27ea8570fbdff135",
+        "source_label": "question"
+      },
+      {
+        "baseline_label": "documentation",
+        "case_hash": "2f49abd03afb4f7fc318",
+        "error_kind": null,
+        "latency_ms": 1412,
+        "model_label": "documentation",
+        "model_output_sha256": "766d0d154beb971e8a0aab473e24015ff7a6ca89bad67e62e36967360635e909",
+        "source_label": "question"
+      },
+      {
+        "baseline_label": "question",
+        "case_hash": "2d2b1e43e7939a9bc1f5",
+        "error_kind": null,
+        "latency_ms": 2835,
+        "model_label": "feature",
+        "model_output_sha256": "949975eddadbb729d1515b76bde181a12d22a9df368a819f27ea8570fbdff135",
+        "source_label": "question"
+      },
+      {
+        "baseline_label": "bug",
+        "case_hash": "9b4b32da8c4b308b80b4",
+        "error_kind": null,
+        "latency_ms": 5286,
+        "model_label": "bug",
+        "model_output_sha256": "63f494eccea17988b8763bf02638b0c07c9d46589502fa2b1752b466d9519f23",
+        "source_label": "question"
+      },
+      {
+        "baseline_label": "bug",
+        "case_hash": "55bcc4b71cac21bab465",
+        "error_kind": null,
+        "latency_ms": 2233,
+        "model_label": "bug",
+        "model_output_sha256": "63f494eccea17988b8763bf02638b0c07c9d46589502fa2b1752b466d9519f23",
+        "source_label": "question"
+      },
+      {
+        "baseline_label": "question",
+        "case_hash": "8452f0ea9f4cac930052",
+        "error_kind": null,
+        "latency_ms": 2493,
+        "model_label": "bug",
+        "model_output_sha256": "63f494eccea17988b8763bf02638b0c07c9d46589502fa2b1752b466d9519f23",
+        "source_label": "question"
+      },
+      {
+        "baseline_label": "question",
+        "case_hash": "77d5e6571376692149d0",
+        "error_kind": null,
+        "latency_ms": 2085,
+        "model_label": "bug",
+        "model_output_sha256": "63f494eccea17988b8763bf02638b0c07c9d46589502fa2b1752b466d9519f23",
+        "source_label": "question"
+      },
+      {
+        "baseline_label": "documentation",
+        "case_hash": "f32a351908b0d03100fc",
+        "error_kind": null,
+        "latency_ms": 4972,
+        "model_label": "bug",
+        "model_output_sha256": "63f494eccea17988b8763bf02638b0c07c9d46589502fa2b1752b466d9519f23",
+        "source_label": "question"
+      },
+      {
+        "baseline_label": "question",
+        "case_hash": "7deec11214fc72ca071c",
+        "error_kind": null,
+        "latency_ms": 2995,
+        "model_label": "bug",
+        "model_output_sha256": "63f494eccea17988b8763bf02638b0c07c9d46589502fa2b1752b466d9519f23",
+        "source_label": "question"
+      },
+      {
+        "baseline_label": "bug",
+        "case_hash": "13ef8f54db4ca2f3071a",
+        "error_kind": null,
+        "latency_ms": 2086,
+        "model_label": "bug",
+        "model_output_sha256": "63f494eccea17988b8763bf02638b0c07c9d46589502fa2b1752b466d9519f23",
+        "source_label": "question"
+      },
+      {
+        "baseline_label": "question",
+        "case_hash": "e95683523411453895ea",
+        "error_kind": null,
+        "latency_ms": 6070,
+        "model_label": "bug",
+        "model_output_sha256": "63f494eccea17988b8763bf02638b0c07c9d46589502fa2b1752b466d9519f23",
+        "source_label": "question"
+      },
+      {
+        "baseline_label": "question",
+        "case_hash": "0abf3c7dfe9d4995bdf6",
+        "error_kind": null,
+        "latency_ms": 4538,
+        "model_label": "bug",
+        "model_output_sha256": "63f494eccea17988b8763bf02638b0c07c9d46589502fa2b1752b466d9519f23",
+        "source_label": "question"
+      },
+      {
+        "baseline_label": "question",
+        "case_hash": "32afb011e235671ad0f8",
+        "error_kind": null,
+        "latency_ms": 4947,
+        "model_label": "feature",
+        "model_output_sha256": "949975eddadbb729d1515b76bde181a12d22a9df368a819f27ea8570fbdff135",
+        "source_label": "question"
+      },
+      {
+        "baseline_label": "documentation",
+        "case_hash": "47660678b69a3ba25563",
+        "error_kind": null,
+        "latency_ms": 2001,
+        "model_label": "bug",
+        "model_output_sha256": "63f494eccea17988b8763bf02638b0c07c9d46589502fa2b1752b466d9519f23",
+        "source_label": "question"
+      },
+      {
+        "baseline_label": "bug",
+        "case_hash": "0cc156d5b3c2cda7789e",
+        "error_kind": null,
+        "latency_ms": 5457,
+        "model_label": "bug",
+        "model_output_sha256": "63f494eccea17988b8763bf02638b0c07c9d46589502fa2b1752b466d9519f23",
+        "source_label": "question"
+      },
+      {
+        "baseline_label": "question",
+        "case_hash": "366a3d6739cd284d3d40",
+        "error_kind": null,
+        "latency_ms": 4831,
+        "model_label": "bug",
+        "model_output_sha256": "63f494eccea17988b8763bf02638b0c07c9d46589502fa2b1752b466d9519f23",
+        "source_label": "question"
+      },
+      {
+        "baseline_label": "question",
+        "case_hash": "91aa28bc27fc83ec81b9",
+        "error_kind": null,
+        "latency_ms": 2809,
+        "model_label": "bug",
+        "model_output_sha256": "63f494eccea17988b8763bf02638b0c07c9d46589502fa2b1752b466d9519f23",
+        "source_label": "question"
+      },
+      {
+        "baseline_label": "question",
+        "case_hash": "97797dc8690c622d27d4",
+        "error_kind": null,
+        "latency_ms": 1049,
+        "model_label": "bug",
+        "model_output_sha256": "63f494eccea17988b8763bf02638b0c07c9d46589502fa2b1752b466d9519f23",
+        "source_label": "question"
+      },
+      {
+        "baseline_label": "bug",
+        "case_hash": "90fcf8abcf948c28ed16",
+        "error_kind": null,
+        "latency_ms": 7096,
+        "model_label": "bug",
+        "model_output_sha256": "63f494eccea17988b8763bf02638b0c07c9d46589502fa2b1752b466d9519f23",
+        "source_label": "question"
+      },
+      {
+        "baseline_label": "bug",
+        "case_hash": "daa4c361185168b8ef02",
+        "error_kind": null,
+        "latency_ms": 6486,
+        "model_label": "bug",
+        "model_output_sha256": "63f494eccea17988b8763bf02638b0c07c9d46589502fa2b1752b466d9519f23",
+        "source_label": "question"
+      },
+      {
+        "baseline_label": "feature",
+        "case_hash": "ea5c903398590eeb1783",
+        "error_kind": null,
+        "latency_ms": 6198,
+        "model_label": "bug",
+        "model_output_sha256": "63f494eccea17988b8763bf02638b0c07c9d46589502fa2b1752b466d9519f23",
+        "source_label": "question"
+      },
+      {
+        "baseline_label": "feature",
+        "case_hash": "eac88884df0a822934bf",
+        "error_kind": null,
+        "latency_ms": 2839,
+        "model_label": "bug",
+        "model_output_sha256": "63f494eccea17988b8763bf02638b0c07c9d46589502fa2b1752b466d9519f23",
+        "source_label": "question"
+      },
+      {
+        "baseline_label": "feature",
+        "case_hash": "376cf872858c3d5c98bf",
+        "error_kind": null,
+        "latency_ms": 3164,
+        "model_label": "bug",
+        "model_output_sha256": "63f494eccea17988b8763bf02638b0c07c9d46589502fa2b1752b466d9519f23",
+        "source_label": "question"
+      },
+      {
+        "baseline_label": "question",
+        "case_hash": "412f7cfd890f3645a7a9",
+        "error_kind": null,
+        "latency_ms": 4357,
+        "model_label": "documentation",
+        "model_output_sha256": "766d0d154beb971e8a0aab473e24015ff7a6ca89bad67e62e36967360635e909",
+        "source_label": "documentation"
+      },
+      {
+        "baseline_label": "documentation",
+        "case_hash": "be0b53e3c0bb04584233",
+        "error_kind": null,
+        "latency_ms": 2691,
+        "model_label": "documentation",
+        "model_output_sha256": "766d0d154beb971e8a0aab473e24015ff7a6ca89bad67e62e36967360635e909",
+        "source_label": "documentation"
+      },
+      {
+        "baseline_label": "feature",
+        "case_hash": "b5d903861746f5c4f5fd",
+        "error_kind": null,
+        "latency_ms": 961,
+        "model_label": "feature",
+        "model_output_sha256": "949975eddadbb729d1515b76bde181a12d22a9df368a819f27ea8570fbdff135",
+        "source_label": "documentation"
+      },
+      {
+        "baseline_label": "documentation",
+        "case_hash": "597ef622899b4b2470db",
+        "error_kind": null,
+        "latency_ms": 875,
+        "model_label": "documentation",
+        "model_output_sha256": "766d0d154beb971e8a0aab473e24015ff7a6ca89bad67e62e36967360635e909",
+        "source_label": "documentation"
+      },
+      {
+        "baseline_label": "feature",
+        "case_hash": "1b837a3833a11595f882",
+        "error_kind": null,
+        "latency_ms": 4545,
+        "model_label": "bug",
+        "model_output_sha256": "63f494eccea17988b8763bf02638b0c07c9d46589502fa2b1752b466d9519f23",
+        "source_label": "documentation"
+      },
+      {
+        "baseline_label": "feature",
+        "case_hash": "f025881c3b2713619d57",
+        "error_kind": null,
+        "latency_ms": 1404,
+        "model_label": "bug",
+        "model_output_sha256": "63f494eccea17988b8763bf02638b0c07c9d46589502fa2b1752b466d9519f23",
+        "source_label": "documentation"
+      },
+      {
+        "baseline_label": "documentation",
+        "case_hash": "bb58b7c23946b8655d68",
+        "error_kind": null,
+        "latency_ms": 1682,
+        "model_label": "documentation",
+        "model_output_sha256": "766d0d154beb971e8a0aab473e24015ff7a6ca89bad67e62e36967360635e909",
+        "source_label": "documentation"
+      },
+      {
+        "baseline_label": "question",
+        "case_hash": "9eaf608baff05246d161",
+        "error_kind": null,
+        "latency_ms": 1037,
+        "model_label": "feature",
+        "model_output_sha256": "949975eddadbb729d1515b76bde181a12d22a9df368a819f27ea8570fbdff135",
+        "source_label": "documentation"
+      },
+      {
+        "baseline_label": "question",
+        "case_hash": "28ebd8ed27416cc2064e",
+        "error_kind": null,
+        "latency_ms": 1070,
+        "model_label": "question",
+        "model_output_sha256": "2415b6d038db2e631cd5c7be504e97067650c0c44de9afa4938b6786262d6b1e",
+        "source_label": "documentation"
+      },
+      {
+        "baseline_label": "feature",
+        "case_hash": "3c30388cc32711332411",
+        "error_kind": null,
+        "latency_ms": 3806,
+        "model_label": "feature",
+        "model_output_sha256": "949975eddadbb729d1515b76bde181a12d22a9df368a819f27ea8570fbdff135",
+        "source_label": "documentation"
+      },
+      {
+        "baseline_label": "feature",
+        "case_hash": "0b6874dcbd3fbafd018c",
+        "error_kind": null,
+        "latency_ms": 1938,
+        "model_label": "documentation",
+        "model_output_sha256": "766d0d154beb971e8a0aab473e24015ff7a6ca89bad67e62e36967360635e909",
+        "source_label": "documentation"
+      },
+      {
+        "baseline_label": "documentation",
+        "case_hash": "450c60e9287c2bd2161d",
+        "error_kind": null,
+        "latency_ms": 2336,
+        "model_label": "documentation",
+        "model_output_sha256": "766d0d154beb971e8a0aab473e24015ff7a6ca89bad67e62e36967360635e909",
+        "source_label": "documentation"
+      },
+      {
+        "baseline_label": "bug",
+        "case_hash": "e1aa3583ba4df993bebe",
+        "error_kind": null,
+        "latency_ms": 4972,
+        "model_label": "bug",
+        "model_output_sha256": "63f494eccea17988b8763bf02638b0c07c9d46589502fa2b1752b466d9519f23",
+        "source_label": "documentation"
+      },
+      {
+        "baseline_label": "feature",
+        "case_hash": "187bb5aa45feeb8bc0cc",
+        "error_kind": null,
+        "latency_ms": 3507,
+        "model_label": "bug",
+        "model_output_sha256": "63f494eccea17988b8763bf02638b0c07c9d46589502fa2b1752b466d9519f23",
+        "source_label": "documentation"
+      },
+      {
+        "baseline_label": "documentation",
+        "case_hash": "2c395ab606d32377531b",
+        "error_kind": null,
+        "latency_ms": 4545,
+        "model_label": "bug",
+        "model_output_sha256": "63f494eccea17988b8763bf02638b0c07c9d46589502fa2b1752b466d9519f23",
+        "source_label": "documentation"
+      },
+      {
+        "baseline_label": "feature",
+        "case_hash": "77d0745772f368e59a63",
+        "error_kind": null,
+        "latency_ms": 985,
+        "model_label": "feature",
+        "model_output_sha256": "949975eddadbb729d1515b76bde181a12d22a9df368a819f27ea8570fbdff135",
+        "source_label": "documentation"
+      },
+      {
+        "baseline_label": "feature",
+        "case_hash": "d164575d5bd50c82afae",
+        "error_kind": null,
+        "latency_ms": 1220,
+        "model_label": "feature",
+        "model_output_sha256": "949975eddadbb729d1515b76bde181a12d22a9df368a819f27ea8570fbdff135",
+        "source_label": "documentation"
+      },
+      {
+        "baseline_label": "feature",
+        "case_hash": "0fc011d435cb56043867",
+        "error_kind": null,
+        "latency_ms": 1219,
+        "model_label": "bug",
+        "model_output_sha256": "63f494eccea17988b8763bf02638b0c07c9d46589502fa2b1752b466d9519f23",
+        "source_label": "documentation"
+      },
+      {
+        "baseline_label": "documentation",
+        "case_hash": "28c749f7941fdf4fb731",
+        "error_kind": null,
+        "latency_ms": 601,
+        "model_label": "documentation",
+        "model_output_sha256": "766d0d154beb971e8a0aab473e24015ff7a6ca89bad67e62e36967360635e909",
+        "source_label": "documentation"
+      },
+      {
+        "baseline_label": "question",
+        "case_hash": "4f13695498dde86db5e8",
+        "error_kind": null,
+        "latency_ms": 777,
+        "model_label": "question",
+        "model_output_sha256": "2415b6d038db2e631cd5c7be504e97067650c0c44de9afa4938b6786262d6b1e",
+        "source_label": "documentation"
+      },
+      {
+        "baseline_label": "feature",
+        "case_hash": "188fb4c60c4a8766a4ad",
+        "error_kind": null,
+        "latency_ms": 935,
+        "model_label": "feature",
+        "model_output_sha256": "949975eddadbb729d1515b76bde181a12d22a9df368a819f27ea8570fbdff135",
+        "source_label": "documentation"
+      },
+      {
+        "baseline_label": "documentation",
+        "case_hash": "f48f29ff7ec165fde96e",
+        "error_kind": null,
+        "latency_ms": 859,
+        "model_label": "feature",
+        "model_output_sha256": "949975eddadbb729d1515b76bde181a12d22a9df368a819f27ea8570fbdff135",
+        "source_label": "documentation"
+      },
+      {
+        "baseline_label": "feature",
+        "case_hash": "c2bf7b865b8b0eefbb4b",
+        "error_kind": null,
+        "latency_ms": 2396,
+        "model_label": "bug",
+        "model_output_sha256": "63f494eccea17988b8763bf02638b0c07c9d46589502fa2b1752b466d9519f23",
+        "source_label": "documentation"
+      },
+      {
+        "baseline_label": "bug",
+        "case_hash": "c11b59fc9f01e06651ca",
+        "error_kind": null,
+        "latency_ms": 3901,
+        "model_label": "bug",
+        "model_output_sha256": "63f494eccea17988b8763bf02638b0c07c9d46589502fa2b1752b466d9519f23",
+        "source_label": "documentation"
+      }
+    ],
+    "sample_seed": "SFS-NLBSE-2023-QWEN-ZEROSHOT-DIAGNOSTIC-V1-2026-11-08",
+    "sample_size": 96,
+    "scope": "STRATIFIED_DIAGNOSTIC_ONLY_NOT_OFFICIAL_NLBSE_LEADERBOARD",
+    "status": "REAL_LLM_INFERENCE_EXECUTED",
+    "total_wall_seconds": 296.74
+  },
+  "independent_interpretation": {
+    "headline": "v1 Qwen accuracy 42.708% vs keyword 44.792%, macro-F1 35.635% vs 42.751%; no observed advantage.",
+    "critical_failure": "question recall=0/24; Qwen overpredicted bug, including 20/24 question cases",
+    "uncertainty": "Paired bootstrap 95% CI on balanced class-stratified sample includes zero. Not inferable to production or leaderboard population.",
+    "next_step": "Preserve v1; investigate one bounded prompt revision on disjoint development cases; freeze before evaluating on fresh untouched cases."
+  }
+}
