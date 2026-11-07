@@ -314,5 +314,87 @@ class InternalServiceIntakeShowcaseTests(unittest.TestCase):
         self.assertIn("Respond Approval", false_branch_nodes)
 
 
+    @staticmethod
+    def _synthetic_model_answer(**updates):
+        proposal = {"service_type": "analytics", "urgency": "medium",
+                    "summary": "Create a dashboard for monthly sales reporting",
+                    "missing_information": []}
+        proposal.update(updates)
+        return {"choices": [{"message": {"content": json.dumps(proposal)}}]}
+
+    def test_semantic_text_register_and_apply(self) -> None:
+        body = {"request_id": "REQ-SEMANTIC-001", "requester": "synthetic",
+                "free_text": "Please build monthly sales metrics from our CRM."}
+        code, lookup = self._post("/v1/intake/preflight-text", body)
+        self.assertEqual(200, code, lookup)
+        self.assertTrue(lookup["needs_inference"])
+        code, created = self._post("/v1/intake/register-text", dict(
+            body, model_response=self._synthetic_model_answer()))
+        self.assertEqual(200, code)
+        self.assertEqual("standard_review", created["classification"])
+        self.assertEqual("pending", created["status"])
+        _, stored = self._get("/v1/intake/request/REQ-SEMANTIC-001")
+        payload = json.loads(stored["request"]["payload_json"])
+        self.assertEqual("unstructured_free_text", payload["source"])
+        self.assertIn("raw_model_output", payload)
+        self.assertIsNotNone(payload["validated_model_output"])
+        self.assertEqual(1, sum(e["event_type"] == "model_evaluated" for e in stored["audit"]))
+        code, denied = self._post("/v1/intake/apply", {"request_id": "REQ-SEMANTIC-001",
+                                                      "actor": "test"})
+        self.assertEqual(409, code, denied)
+        code, _ = self._post("/v1/intake/approval", {
+            "request_id": "REQ-SEMANTIC-001", "approver": "synthetic-reviewer",
+            "decision": "approve", "rationale": "Approved synthetic test"})
+        self.assertEqual(200, code)
+        code, applied = self._post("/v1/intake/apply", {"request_id": "REQ-SEMANTIC-001",
+                                                       "actor": "workflow"})
+        self.assertEqual(200, code, applied)
+        self.assertEqual("applied", applied["status"])
+
+    def test_semantic_preflight_skips_existing_request_and_detects_conflict(self) -> None:
+        body = {"request_id": "REQ-SEMANTIC-002", "requester": "synthetic",
+                "free_text": "We need an integrated dashboard for orders."}
+        self._post("/v1/intake/register-text", dict(
+            body, model_response=self._synthetic_model_answer()))
+        code, duplicate = self._post("/v1/intake/preflight-text", body)
+        self.assertEqual(200, code)
+        self.assertTrue(duplicate["duplicate"])
+        self.assertFalse(duplicate["needs_inference"])
+        code, conflict = self._post("/v1/intake/preflight-text", dict(
+            body, free_text="This is another request with different source text."))
+        self.assertEqual(409, code)
+        self.assertEqual("request_id_conflict", conflict["error"])
+
+    def test_unavailable_or_malformed_llm_requires_manual_review(self) -> None:
+        for index, response in enumerate((None, {"choices": []},
+                                          {"choices": [{"message": {"content": "not json"}}]},
+                                          self._synthetic_model_answer(approved=True))):
+            with self.subTest(index=index):
+                request_id = f"REQ-SEMANTIC-FAIL-{index:03d}"
+                code, result = self._post("/v1/intake/register-text", {
+                    "request_id": request_id, "requester": "synthetic",
+                    "free_text": "Please explain what you can help us with in our business.",
+                    "model_response": response})
+                self.assertEqual(200, code, result)
+                self.assertEqual("manual_review", result["classification"])
+                _, stored = self._get(f"/v1/intake/request/{request_id}")
+                self.assertEqual("pending", stored["request"]["status"])
+                payload = json.loads(stored["request"]["payload_json"])
+                self.assertIsNone(payload["validated_model_output"])
+                self.assertEqual("manual_review", payload["policy_decision"])
+                self.assertFalse(any(e["event_type"] == "apply_executed"
+                                     for e in stored["audit"]))
+
+    def test_semantic_input_validation_precedes_registration(self) -> None:
+        request = {"request_id": "REQ-SEMANTIC-INVALID", "requester": "synthetic",
+                   "free_text": "short"}
+        code, response = self._post("/v1/intake/preflight-text", request)
+        self.assertEqual(400, code, response)
+        self.assertEqual("invalid_free_text", response["error"])
+        code, response = self._post("/v1/intake/preflight-text", dict(
+            request, free_text="We need assistance with a dashboard"), auth=False)
+        self.assertEqual(401, code, response)
+
+
 if __name__ == "__main__":
     unittest.main()
