@@ -95,3 +95,18 @@ Until such evidence exists, the appropriate outcome is: **working technical prot
 The **project owner** articulated the comparative-advantage hypothesis and challenged the premature conclusion that no further implementation was warranted. The assistant contributed calculations, adversarial counterexamples, alternative designs, AI-assisted implementation and verification. This record distinguishes the operator's conceptual direction from assistant-generated code and analysis; it does **not** claim that one person authored every line unaided.
 
 **Market-entry use:** In a job interview or paid discovery call, walk through (a) the initial data, (b) the conflicting evidence, (c) the hypothesis, (d) the bounded implementation, (e) what could falsify it, and (f) which customer metrics would decide rollout. Show the exact commits and tests. Do not make publication or “finishing” this demonstration a prerequisite for applying for paid B2B-AI delivery roles.
+
+
+## 8. Methodological challenge — why n=36 is insufficient
+
+The project owner explicitly rejected turning the existing code into a finished portfolio item when the *research-and-decision process* is what should be demonstrable. The stronger version of the claim is **not** “I am statistically smarter than competing applicants” (there are no comparative applicant data), but “I can produce a falsifiable, auditable sequence of engineering decisions.”
+
+**New result from the fixed pilot:** Among the 32 labeled cases, the exact paired table for *hybrid vs rules on both-correct outcome* is: **both correct 10, hybrid only 12, rules only 1, both incorrect 9**. Exact two-sided McNemar p=0.00341796875, **exploratory only**, NOT confirmatory, because the routing policy was proposed after inspecting the same 36-case dataset. A smaller p-value does not erase selection bias.
+
+**Bounded follow-through within PR #9:**
+- [DR-002 Prospective Study Protocol](STUDY_PROTOCOL_V1.md) specifies the next research question, sample planning, independent labeling, paired inference, the safety veto and the business decision criterion. **It has not yet been executed or locked with new observations.**
+- [Paired-statistics tool](evaluation/study_statistics.py) explicitly flags the exploratory p-value; an illustrative 8-percentage-point minimum paired effect, assumed discordance 30%, alpha 5%, target power 80% and *hypothetical* design inflation 1.3 lead to approximately **479 independent cases**. The design target is **480**, not a guarantee of significance. A 5-point effect instead would imply ~1,225 under those assumptions.
+- [Structural holdout gate](evaluation/holdout_gate.py) rejects duplicated prompts/source families and missing label/adjudication fields; passing it cannot *prove* true independence, blindness or label validity. **No 480-case dataset has been generated or falsely represented as measured.**
+- [Executable economic sensitivity](evaluation/economics.py) makes the missing customer costs explicit; the two observed proxy break-even conditions are **C(missed high)/C(false high) = 21/4 = 5.25** (hybrid vs LLM) and **17×C(category misroute) > 32×C(LLM inference)** (hybrid vs rules), ignoring review differences. Neither is a realized ROI.
+
+**Decision principle:** Independent evidence before p-values; customer loss and veto constraints before “best model”; integrity of negative outcomes before resume polish. This is the operator skill being demonstrated. The latest additions are IMPLEMENTED only and must pass fresh exact-head CI before being called verified.
