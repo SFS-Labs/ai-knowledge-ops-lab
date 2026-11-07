@@ -3,7 +3,7 @@
 **Document status:** SPECIFIED / NOT YET EXECUTED  
 **Owner's research claim:** demonstrate scientific decision-making, not assert candidate intelligence or paid customer outcomes.  
 **Pilot:** [CI #24](https://github.com/SFS-Labs/ai-knowledge-ops-lab/actions/runs/42399345922), 36 genuine local model inferences, 32 labeled, post-hoc 22/32 hybrid pairs.  
-**Methods:** [Exact paired statistics](evaluation/study_statistics.py), [paired replay](evaluation/compare_routing.py), [economic sensitivity](evaluation/economics.py).  
+**Methods:** [Exact paired statistics](evaluation/study_statistics.py), [paired replay](evaluation/compare_routing.py), [economic sensitivity](evaluation/economics.py), [pre-inference integrity gate](evaluation/holdout_gate.py), [prospective paired analysis](evaluation/holdout_analyze.py).  
 **Protocol lock:** No independent evaluation dataset or external reviewer is currently locked. This document is a *proposal* and must be frozen, with a Git commit/hash, **before collecting any confirmatory outcomes**. The 36-case pilot is permanently DEVELOPMENT/EXPLORATORY and cannot be relabeled as holdout.
 
 ## Research questions
@@ -70,6 +70,30 @@ The executable [economic sensitivity tool](evaluation/economics.py) **requires i
 - No claim of ROI if review cost or customer workload distribution cannot be measured.
 - Fail closed on invalid inference, model outage, authorization denial, and conflict. Separate technical feasibility from independent verified human authorization.
 - No more synthetic “n inflation” if samples are near-duplicates. No GPU upgrades, new product architectures or new repos to make a graph look impressive.
+
+## Execution interface — no fabricated holdout
+
+The existing `evaluation/cases.jsonl` remains an **exploratory pilot with 36 cases**, not a confirmatory test. These commands are reproducible with Python 3.12 and no third-party libraries:
+
+```sh
+python showcases/internal-service-intake/evaluation/study_statistics.py
+python showcases/internal-service-intake/evaluation/compare_routing.py
+python showcases/internal-service-intake/evaluation/economics.py
+# The following numbers are hypothetical cost units, NOT measured money or ROI:
+python showcases/internal-service-intake/evaluation/economics.py --category-cost 5 --missed-high-cost 3 --false-high-cost 1 --inference-cost 0.1
+python showcases/internal-service-intake/evaluation/economics.py --category-cost 5 --missed-high-cost 10 --false-high-cost 1 --inference-cost 0.1
+```
+
+**Only after a prospective independently labeled holdout has been collected, externally reviewed and locked in a pre-inference commit:**
+
+```sh
+python showcases/internal-service-intake/evaluation/holdout_gate.py PATH_TO_GOLD.jsonl --locked-sha256 LOCKED_PRE_INFERENCE_CHECKSUM
+python showcases/internal-service-intake/evaluation/holdout_analyze.py --gold PATH_TO_GOLD.jsonl --predictions PATH_TO_RECORDED_MODEL_OUTPUTS.jsonl --locked-gold-sha256 LOCKED_PRE_INFERENCE_CHECKSUM
+```
+
+The holdout analyzer **does not call a model** and verifies neither annotation independence nor economic data; model outputs must come from a separately evidenced genuine inference run with fixed model/prompt. The checksum proves only agreement with the supplied value, not that the supplied value was timestamped *before* predictions. Only independently checked provenance and chronology can establish that.
+
+The bounded implementation is ready for code review but **has not passed exact-HEAD CI**. No claim that 480 samples have been gathered, labeled, inferred or independently reviewed is supported.
 
 ## Why this document matters for an employer/customer
 
