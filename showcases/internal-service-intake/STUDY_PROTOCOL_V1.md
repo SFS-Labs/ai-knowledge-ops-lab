@@ -30,6 +30,8 @@ See the canonical [source-provenance contract](evaluation/research_contract.json
 
 Source: [NLBSE 2023 official challenge](https://github.com/nlbse2023/issue-report-classification). Reported **1,275,881 train / 142,320 test**, original harmonized source issue-type labels. [`evaluation/nlbse_source.py`](evaluation/nlbse_source.py) downloads and profiles the entire published test archive with SHA-256 output and a deterministic, transparent baseline. It publishes **aggregate scores only**, not original issue text.
 
+**Observed SFS full-test result:** In [CI #29](https://github.com/SFS-Labs/ai-knowledge-ops-lab/actions/runs/42412917843) a fixed keyword baseline scored **49.25% Accuracy/Micro-F1 and 41.49% Macro-F1** on all **142,320 original held-out records**. There were **541 repeat-ID rows**, including **5 label conflicts**; these are retained in official-size aggregate scores but reduce independent-unit credibility. The full-source SHA-256 and class-level measures are frozen in [CI #29 observation evidence](evaluation/evidence/nlbse2023-full-test-ci29.json). **No LLM was run on the NLBSE issue labels.**
+
 The source benchmark publishes FastText and RoBERTa model performance; those are **author-reported external results**, not reruns conducted by SFS. The earlier local Qwen model was tuned for a different domain taxonomy, so a credible comparison against NLBSE requires a new fixed evaluation interface, independent trace of actual model responses, and errors reported by class.
 
 ### B. Real process operations
