@@ -1,0 +1,320 @@
+[
+  {
+    "name": "internal-service-intake-v1",
+    "active": false,
+    "nodes": [
+      {
+        "parameters": {
+          "httpMethod": "POST",
+          "path": "internal-service-intake",
+          "responseMode": "responseNode"
+        },
+        "id": "WebhookIntake",
+        "name": "Intake Webhook",
+        "type": "n8n-nodes-base.webhook",
+        "typeVersion": 2.1,
+        "position": [
+          220,
+          220
+        ],
+        "webhookId": "internal-service-intake-v1"
+      },
+      {
+        "parameters": {
+          "mode": "runOnceForEachItem",
+          "jsCode": "const headers = $json.headers ?? {};\nconst token = headers['x-intake-token'];\nif (!token || token !== $env.INTERNAL_INTAKE_TOKEN) { throw new Error('unauthorized_webhook'); }\nconst body = $json.body ?? {};\nconst required = ['request_id','requester','service_type','urgency','justification'];\nfor (const key of required) { if (!(key in body)) { throw new Error(`missing_${key}`); } }\nif (!/^REQ-[A-Z0-9-]{3,40}$/.test(body.request_id)) { throw new Error('invalid_request_id'); }\nif (!['analytics','automation','integration','incident-response'].includes(body.service_type)) { throw new Error('invalid_service_type'); }\nif (!['low','medium','high'].includes(body.urgency)) { throw new Error('invalid_urgency'); }\nif (typeof body.justification !== 'string' || body.justification.trim().length < 10 || body.justification.length > 500) { throw new Error('invalid_justification'); }\nconst classification = (body.urgency === 'high' || ['integration','incident-response'].includes(body.service_type)) ? 'expedite_review' : 'standard_review';\nreturn [{ json: { request_id: body.request_id, requester: body.requester, service_type: body.service_type, urgency: body.urgency, justification: body.justification, classification } }];"
+        },
+        "id": "ValidateIntake",
+        "name": "Validate Intake Webhook",
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          460,
+          220
+        ]
+      },
+      {
+        "parameters": {
+          "method": "POST",
+          "url": "http://mock-api:8080/v1/intake/register",
+          "sendHeaders": true,
+          "headerParameters": {
+            "parameters": [
+              {
+                "name": "X-MOCK-API-KEY",
+                "value": "={{$env.MOCK_API_KEY}}"
+              }
+            ]
+          },
+          "sendBody": true,
+          "specifyBody": "json",
+          "jsonBody": "={{$json}}",
+          "options": {
+            "timeout": 3000
+          }
+        },
+        "id": "RegisterPending",
+        "name": "Register Pending Request",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.2,
+        "position": [
+          700,
+          220
+        ],
+        "retryOnFail": true,
+        "maxTries": 2,
+        "waitBetweenTries": 1000
+      },
+      {
+        "parameters": {
+          "respondWith": "json",
+          "responseBody": "={{$json}}",
+          "options": {
+            "responseCode": 200
+          }
+        },
+        "id": "RespondIntake",
+        "name": "Respond Intake",
+        "type": "n8n-nodes-base.respondToWebhook",
+        "typeVersion": 1.1,
+        "position": [
+          940,
+          220
+        ]
+      },
+      {
+        "parameters": {
+          "httpMethod": "POST",
+          "path": "internal-service-intake-approval",
+          "responseMode": "responseNode"
+        },
+        "id": "WebhookApproval",
+        "name": "Approval Webhook",
+        "type": "n8n-nodes-base.webhook",
+        "typeVersion": 2.1,
+        "position": [
+          220,
+          520
+        ],
+        "webhookId": "internal-service-intake-approval-v1"
+      },
+      {
+        "parameters": {
+          "mode": "runOnceForEachItem",
+          "jsCode": "const headers = $json.headers ?? {};\nconst token = headers['x-intake-token'];\nif (!token || token !== $env.INTERNAL_INTAKE_TOKEN) { throw new Error('unauthorized_approval_webhook'); }\nconst body = $json.body ?? {};\nfor (const key of ['request_id','approver','decision','rationale']) { if (!(key in body)) { throw new Error(`missing_${key}`); } }\nif (!/^REQ-[A-Z0-9-]{3,40}$/.test(body.request_id)) { throw new Error('invalid_request_id'); }\nif (!['approve','reject'].includes(body.decision)) { throw new Error('invalid_decision'); }\nreturn [{ json: body }];"
+        },
+        "id": "ValidateApproval",
+        "name": "Validate Approval Webhook",
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          460,
+          520
+        ]
+      },
+      {
+        "parameters": {
+          "method": "POST",
+          "url": "http://mock-api:8080/v1/intake/approval",
+          "sendHeaders": true,
+          "headerParameters": {
+            "parameters": [
+              {
+                "name": "X-MOCK-API-KEY",
+                "value": "={{$env.MOCK_API_KEY}}"
+              }
+            ]
+          },
+          "sendBody": true,
+          "specifyBody": "json",
+          "jsonBody": "={{$json}}",
+          "options": {
+            "timeout": 3000
+          }
+        },
+        "id": "RecordApproval",
+        "name": "Record Approval",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.2,
+        "position": [
+          700,
+          520
+        ],
+        "retryOnFail": true,
+        "maxTries": 2,
+        "waitBetweenTries": 1000
+      },
+      {
+        "parameters": {
+          "conditions": {
+            "string": [
+              {
+                "value1": "={{$json.decision}}",
+                "operation": "equal",
+                "value2": "approve"
+              }
+            ]
+          }
+        },
+        "id": "ApprovalDecisionCheck",
+        "name": "Approval Decision Is Approve",
+        "type": "n8n-nodes-base.if",
+        "typeVersion": 2,
+        "position": [
+          940,
+          520
+        ]
+      },
+      {
+        "parameters": {
+          "method": "POST",
+          "url": "http://mock-api:8080/v1/intake/apply",
+          "sendHeaders": true,
+          "headerParameters": {
+            "parameters": [
+              {
+                "name": "X-MOCK-API-KEY",
+                "value": "={{$env.MOCK_API_KEY}}"
+              }
+            ]
+          },
+          "sendBody": true,
+          "specifyBody": "json",
+          "jsonBody": "={{ { request_id: $json.request_id, actor: $json.approver } }}",
+          "options": {
+            "timeout": 3000
+          }
+        },
+        "id": "ApplyApproved",
+        "name": "Apply Approved Request",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.2,
+        "position": [
+          1160,
+          460
+        ],
+        "retryOnFail": true,
+        "maxTries": 2,
+        "waitBetweenTries": 1000
+      },
+      {
+        "parameters": {
+          "respondWith": "json",
+          "responseBody": "={{$json}}",
+          "options": {
+            "responseCode": 200
+          }
+        },
+        "id": "RespondApproval",
+        "name": "Respond Approval",
+        "type": "n8n-nodes-base.respondToWebhook",
+        "typeVersion": 1.1,
+        "position": [
+          1380,
+          520
+        ]
+      }
+    ],
+    "connections": {
+      "Intake Webhook": {
+        "main": [
+          [
+            {
+              "node": "Validate Intake Webhook",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Validate Intake Webhook": {
+        "main": [
+          [
+            {
+              "node": "Register Pending Request",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Register Pending Request": {
+        "main": [
+          [
+            {
+              "node": "Respond Intake",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Approval Webhook": {
+        "main": [
+          [
+            {
+              "node": "Validate Approval Webhook",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Validate Approval Webhook": {
+        "main": [
+          [
+            {
+              "node": "Record Approval",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Record Approval": {
+        "main": [
+          [
+            {
+              "node": "Approval Decision Is Approve",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Approval Decision Is Approve": {
+        "main": [
+          [
+            {
+              "node": "Apply Approved Request",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "Respond Approval",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Apply Approved Request": {
+        "main": [
+          [
+            {
+              "node": "Respond Approval",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "settings": {
+      "executionOrder": "v1"
+    },
+    "versionId": "internal-service-intake-v1"
+  }
+]
