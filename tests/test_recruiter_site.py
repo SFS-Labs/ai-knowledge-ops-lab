@@ -19,7 +19,7 @@ class StaticRecruiterDemoTests(unittest.TestCase):
                         "Volvo", "NLBSE", "synthetisch", "nicht auf Fallniveau",
                         "kein Ergebnis dieser öffentlichen Datensätze"]:
             self.assertIn(keyword.casefold(),self.page.casefold())
-        self.assertIn("Originalarchiv",self.page)
+        self.assertIn("Originalarchiv",self.page)\n        self.assertIn("9.454",self.page)
 
     def test_no_public_llm_or_client_secrets(self):
         for forbidden in ["api.openai.com", "webhook/internal-service-intake",
@@ -35,9 +35,9 @@ class StaticRecruiterDemoTests(unittest.TestCase):
             self.assertIn(keyword,self.page)
 
     def test_worked_cost_scenario_and_official_reference(self):
-        self.assertIn("195,00 €",self.page)
+        self.assertIn("2.304,41 €",self.page)
         self.assertIn("58,50",self.page)
-        self.assertEqual(100*.20*10/60*58.5,195)
+        self.assertAlmostEqual(9454*.05*5/60*58.5,2304.4125)
 
     def test_research_contract_has_two_different_source_populations(self):
         self.assertNotEqual(self.contract["streams"]["classification"]["id"],
