@@ -286,10 +286,22 @@
         ],
         "parameters": {
           "conditions": {
-            "boolean": [
+            "options": {
+              "caseSensitive": true,
+              "leftValue": "",
+              "typeValidation": "strict",
+              "version": 1
+            },
+            "combinator": "and",
+            "conditions": [
               {
-                "value1": "={{$json.needs_inference}}",
-                "value2": true
+                "leftValue": "={{ $json.needs_inference }}",
+                "rightValue": "",
+                "operator": {
+                  "type": "boolean",
+                  "operation": "true",
+                  "singleValue": true
+                }
               }
             ]
           }
