@@ -88,8 +88,14 @@ def audit_decision_case(record: dict, observed: dict, brief: str,
              "holdout_not_collected")
     _require(boundaries.get("production_deployment") == "NONE",
              "deployment_not_evidenced")
-    _require(boundaries.get("current_head_ci") == "PENDING",
-             "current_head_status_requires_actual_ci_run")
+    _require("current_head_ci" not in boundaries,
+             "stale_release_state_must_not_be_committed")
+    historic = boundaries.get("historical_hybrid_ci") or {}
+    _require(historic.get("sha") == "d4a8391734b12bbb9c47b99cac31343b38766488"
+             and historic.get("status") == "VERIFIED",
+             "historical_hybrid_ci_evidence_mismatch")
+    _require(boundaries.get("release_ci") == "EXTERNAL_ACTIONS_CHECK_REQUIRED_AT_EXACT_FINAL_HEAD",
+             "release_status_cannot_be_self_certified")
     artifacts = record.get("artifacts") or {}
     _require(all(isinstance(artifacts.get(k), str) and artifacts[k].strip()
                  for k in ("entry", "method", "prospective_plan", "implementation",
