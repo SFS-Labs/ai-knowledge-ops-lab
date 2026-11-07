@@ -94,6 +94,7 @@ class SemanticIntakeTests(unittest.TestCase):
                          nodes["Local LLM Extract"]["parameters"]["url"])
         self.assertEqual("continueRegularOutput", nodes["Local LLM Extract"]["onError"])
         self.assertIn("type: 'json_schema'", nodes["Local LLM Extract"]["parameters"]["jsonBody"])
+        self.assertIn("json_schema: {name: 'service_intake'", nodes["Local LLM Extract"]["parameters"]["jsonBody"])
         self.assertIn("missing_information", nodes["Local LLM Extract"]["parameters"]["jsonBody"])
         typed_if = nodes["Needs Model Inference"]["parameters"]["conditions"]
         self.assertEqual("and", typed_if["combinator"])
