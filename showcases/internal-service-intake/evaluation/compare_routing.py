@@ -12,6 +12,7 @@ EVALUATION = Path(__file__).resolve().parent
 SHOWCASE = EVALUATION.parent
 sys.path.insert(0, str(SHOWCASE / "mock-api"))
 from semantic import deterministic_baseline, hybrid_decision  # noqa: E402
+from study_statistics import exact_mcnemar_p  # noqa: E402
 
 
 def compare_recorded() -> dict:
@@ -32,6 +33,8 @@ def compare_recorded() -> dict:
                      "false_high": 0} for name in names}
     n_labeled = 0
     high_total = 0
+    paired = {"both_correct": 0, "hybrid_only_correct": 0,
+              "rules_only_correct": 0, "both_wrong": 0}
     for case in cases:
         obs = by_id[case["id"]]
         if case["service_type"] is None:
@@ -53,6 +56,11 @@ def compare_recorded() -> dict:
             "rules_only": (cat_rules, urgency_rules),
             "hybrid": (hybrid["category"], hybrid["urgency"]),
         }
+        hybrid_correct = predictions["hybrid"] == (case["service_type"], case["urgency"])
+        rules_correct = predictions["rules_only"] == (case["service_type"], case["urgency"])
+        paired[("both_correct" if hybrid_correct and rules_correct
+                else "hybrid_only_correct" if hybrid_correct
+                else "rules_only_correct" if rules_correct else "both_wrong")] += 1
         for name, (category, urgency) in predictions.items():
             score = scores[name]
             score["category_correct"] += category == case["service_type"]
@@ -71,12 +79,19 @@ def compare_recorded() -> dict:
         "labeled_cases": n_labeled,
         "ambiguous_cases": len(cases) - n_labeled,
         "high_priority_cases": high_total,
+        "hybrid_vs_rules_exploratory": {
+            **paired,
+            "exact_two_sided_p": exact_mcnemar_p(paired["hybrid_only_correct"],
+                                                paired["rules_only_correct"]),
+            "confirmatory_validity": False,
+            "invalid_for_confirmatory_claim": "Hybrid selected after inspecting these cases",
+        },
         **scores,
         "limitations": [
             "Same observations used to propose and evaluate hybrid routing",
             "Synthetic authored labels, not a customer distribution",
             "Keyword rules miss high-urgency cases; pair accuracy hides asymmetric loss",
-            "No cost model, SLA evidence, prospective holdout or production approval",
+            "No measured customer costs, SLA evidence, prospective holdout or production approval",
         ],
     }
 
