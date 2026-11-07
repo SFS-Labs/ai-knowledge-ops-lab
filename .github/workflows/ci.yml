@@ -3,6 +3,7 @@ name: ci
 'on':
   workflow_dispatch:
   pull_request:
+    types: [opened, synchronize, ready_for_review]
     branches: [main]
     paths:
       - 'docs/index.html'
@@ -27,6 +28,8 @@ jobs:
           python-version: '3.12'
       - name: Run unit tests
         run: python -m unittest discover -s tests -v
+      - name: Verify browser demo JavaScript parses
+        run: node --check docs/live.js
 
 
   research-sources:
@@ -427,3 +430,127 @@ jobs:
           [ "$ready" = true ] || { echo "evaluation_model_unavailable"; exit 1; }
           python evaluation/evaluate.py
 
+
+  # Bounded, one-shot public-repository diagnostic. Runs only when this specific
+  # owner-created PR is FIRST opened; never on subsequent pushes, forks or main.
+  # No secrets, write credentials, external paid inference or raw issue artifacts.
+  nlbse-real-qwen-diagnostic:
+    if: >-
+      github.event_name == 'pull_request' &&
+      github.event.action == 'opened' &&
+      github.event.pull_request.head.ref == 'sfs/llm-nlbse-recruiter-proof-20261108' &&
+      github.event.pull_request.head.repo.full_name == 'SFS-Labs/ai-knowledge-ops-lab' &&
+      github.event.pull_request.user.login == 'SFS-Labs'
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    permissions:
+      contents: read
+    concurrency:
+      group: sfs-nlbse-2023-qwen-real-diagnostic
+      cancel-in-progress: false
+    steps:
+      - name: Check out test runner without persisted credentials
+        uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608
+        with:
+          persist-credentials: false
+      - name: Set up Python
+        uses: actions/setup-python@82c7e631bb3cdc910f68e0081d67478d79c6982d
+        with:
+          python-version: '3.12'
+      - name: Verify model-source and test-run contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$GITHUB_EVENT_NAME" = "pull_request"
+          test "$GITHUB_REPOSITORY" = "SFS-Labs/ai-knowledge-ops-lab"
+          python -m unittest tests.test_nlbse_llm_eval -v
+      - name: Retrieve pinned Apache-2.0 Qwen GGUF model
+        shell: bash
+        run: |
+          set -euo pipefail
+          install -d -m 700 /tmp/sfs-nlbse-model
+          curl --fail --silent --show-error --location --retry 1 --connect-timeout 20 --max-time 600 \
+            'https://huggingface.co/Qwen/Qwen2.5-1.5B-Instruct-GGUF/resolve/dd26da440ef0330c47919d1ecae0966d24022222/qwen2.5-1.5b-instruct-q4_k_m.gguf?download=true' \
+            --output /tmp/sfs-nlbse-model/qwen.gguf
+          echo '6a1a2eb6d15622bf3c96857206351ba97e1af16c30d7a74ee38970e434e9407e  /tmp/sfs-nlbse-model/qwen.gguf' | sha256sum --check --status
+      - name: Run real model server and execute frozen NLBSE held-out diagnostic
+        shell: bash
+        run: |
+          set -euo pipefail
+          IMAGE='ghcr.io/ggml-org/llama.cpp:server-b12019@sha256:d9e9e74ba3f7ef119b1939162b1631f99b75ec703c310d140cfa2fdac8907389'
+          trap 'docker rm -f sfs-nlbse-qwen >/dev/null 2>&1 || true; rm -rf /tmp/sfs-nlbse-model' EXIT
+          docker pull "$IMAGE"
+          docker run --detach --rm --name sfs-nlbse-qwen --cpus=3 --memory=6g \
+            -p 127.0.0.1:8081:8080 -v /tmp/sfs-nlbse-model:/models:ro \
+            "$IMAGE" -m /models/qwen.gguf --host 0.0.0.0 --port 8080 \
+            --ctx-size 1024 --threads 3 --parallel 1 --n-gpu-layers 0
+          ready=false
+          for attempt in {1..90}; do
+            if curl --silent --fail --max-time 3 http://127.0.0.1:8081/health >/dev/null; then ready=true; break; fi
+            sleep 2
+          done
+          [ "$ready" = true ] || { echo "local_qwen_server_unavailable"; exit 1; }
+          # The report contains only hashed issue IDs, model-response hashes,
+          # predictions and aggregate measurements, NEVER raw source text.
+          python showcases/internal-service-intake/evaluation/nlbse_llm_eval.py
+
+  # Single, owner-intentional retrial: marking this exact draft PR ready activates
+  # ONE bounded retest. Later source commits trigger unit tests only, NOT inference.
+  # The 96 original cases and v1 prompt remain frozen as immutable evidence.
+  nlbse-real-qwen-retest:
+    if: >-
+      github.event_name == 'pull_request' &&
+      github.event.action == 'ready_for_review' &&
+      github.event.pull_request.head.ref == 'sfs/llm-nlbse-recruiter-proof-20261108' &&
+      github.event.pull_request.head.repo.full_name == 'SFS-Labs/ai-knowledge-ops-lab' &&
+      github.event.pull_request.user.login == 'SFS-Labs'
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    permissions:
+      contents: read
+    concurrency:
+      group: sfs-nlbse-2023-qwen-real-retest
+      cancel-in-progress: false
+    steps:
+      - name: Checkout source without stored credentials
+        uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608
+        with:
+          persist-credentials: false
+      - name: Python 3.12
+        uses: actions/setup-python@82c7e631bb3cdc910f68e0081d67478d79c6982d
+        with:
+          python-version: '3.12'
+      - name: Verify immutable source and disjoint split contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m unittest tests.test_nlbse_llm_eval tests.test_nlbse_llm_retest -v
+          test "$GITHUB_REPOSITORY" = "SFS-Labs/ai-knowledge-ops-lab"
+          test "$GITHUB_EVENT_NAME" = "pull_request"
+      - name: Download exact known Qwen2.5 1.5B GGUF
+        shell: bash
+        run: |
+          set -euo pipefail
+          install -d -m 700 /tmp/sfs-nlbse-retest-model
+          curl --fail --silent --show-error --location --retry 1 --connect-timeout 20 --max-time 600 \
+            'https://huggingface.co/Qwen/Qwen2.5-1.5B-Instruct-GGUF/resolve/dd26da440ef0330c47919d1ecae0966d24022222/qwen2.5-1.5b-instruct-q4_k_m.gguf?download=true' \
+            --output /tmp/sfs-nlbse-retest-model/qwen.gguf
+          echo '6a1a2eb6d15622bf3c96857206351ba97e1af16c30d7a74ee38970e434e9407e  /tmp/sfs-nlbse-retest-model/qwen.gguf' | sha256sum --check --status
+      - name: Execute paired v1/v2 inference on disjoint real NLBSE dev and holdout cases
+        shell: bash
+        run: |
+          set -euo pipefail
+          IMAGE='ghcr.io/ggml-org/llama.cpp:server-b12019@sha256:d9e9e74ba3f7ef119b1939162b1631f99b75ec703c310d140cfa2fdac8907389'
+          trap 'docker rm -f sfs-qwen-retest >/dev/null 2>&1 || true; rm -rf /tmp/sfs-nlbse-retest-model' EXIT
+          docker pull "$IMAGE"
+          docker run --detach --rm --name sfs-qwen-retest --cpus=3 --memory=6g \
+            -p 127.0.0.1:8081:8080 -v /tmp/sfs-nlbse-retest-model:/models:ro \
+            "$IMAGE" -m /models/qwen.gguf --host 0.0.0.0 --port 8080 \
+            --ctx-size 1024 --threads 3 --parallel 1 --n-gpu-layers 0
+          ready=false
+          for attempt in {1..90}; do
+            if curl --silent --fail --max-time 3 http://127.0.0.1:8081/health >/dev/null; then ready=true; break; fi
+            sleep 2
+          done
+          [ "$ready" = true ] || { echo "bounded_retest_model_unavailable"; exit 1; }
+          python showcases/internal-service-intake/evaluation/nlbse_llm_retest.py
