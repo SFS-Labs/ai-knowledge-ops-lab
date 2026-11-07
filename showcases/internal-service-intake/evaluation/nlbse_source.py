@@ -69,6 +69,8 @@ def profile_rows(rows, *, require_published_counts=True):
 def profile_csv_bytes(payload, *, require_published_counts=True):
     stream = TextIOWrapper(BytesIO(payload), encoding="utf-8-sig", newline="", errors="replace")
     try:
+        # Public issue bodies can legitimately exceed Python CSV default (128 KiB).
+        csv.field_size_limit(32 * 1024 * 1024)
         reader = csv.DictReader(stream)
         if not reader.fieldnames:
             raise ValueError("missing_csv_header")
