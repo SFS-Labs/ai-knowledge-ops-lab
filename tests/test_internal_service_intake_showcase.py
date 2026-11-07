@@ -69,6 +69,10 @@ class InternalServiceIntakeShowcaseTests(unittest.TestCase):
         except subprocess.TimeoutExpired:
             self.server.kill()
             self.server.wait(timeout=5)
+        if self.server.stdout:
+            self.server.stdout.close()
+        if self.server.stderr:
+            self.server.stderr.close()
 
     def _post(self, path: str, payload: dict, auth: bool = True, timeout: float = 2.0) -> tuple[int, dict]:
         data = json.dumps(payload).encode("utf-8")
@@ -136,6 +140,20 @@ class InternalServiceIntakeShowcaseTests(unittest.TestCase):
         self.assertEqual(200, status)
         self.assertEqual("applied", state["request"]["status"])
         self.assertEqual(["registered", "approval_recorded", "apply_executed"], [e["event_type"] for e in state["audit"]])
+
+    def test_approval_response_supports_workflow_apply(self) -> None:
+        self._post("/v1/intake/register", self._valid_request("REQ-PROBE-001"))
+        status, approval = self._post("/v1/intake/approval", {"request_id":"REQ-PROBE-001","approver":"human","decision":"approve","rationale":"approved demo"})
+        self.assertEqual(200, status)
+        status, result = self._post("/v1/intake/apply", {"request_id":approval["request_id"],"actor":approval.get("approver")})
+        self.assertEqual(200, status, result)
+
+    def test_duplicate_id_with_different_payload_is_conflict(self) -> None:
+        payload = self._valid_request("REQ-PROBE-002")
+        self._post("/v1/intake/register", payload)
+        payload["justification"] = "An entirely different synthetic request"
+        status, _ = self._post("/v1/intake/register", payload)
+        self.assertEqual(409, status)
 
     def test_authentication_required(self) -> None:
         status, body = self._post("/v1/intake/register", self._valid_request(), auth=False)

@@ -88,6 +88,8 @@ class IntakeStore:
                 "SELECT request_id, classification, status, request_hash FROM requests WHERE request_id = ?",
                 (request_id,),
             ).fetchone()
+            if row and row["request_hash"] != request_hash:
+                return {"error": "request_id_conflict"}
             if row:
                 self._audit(conn, request_id, "register_duplicate", {"request_hash": row["request_hash"]})
                 return {
@@ -135,7 +137,7 @@ class IntakeStore:
                 (status, payload["approver"], decision, payload["rationale"], ts, ts, request_id),
             )
             self._audit(conn, request_id, "approval_recorded", payload)
-            return HTTPStatus.OK, {"request_id": request_id, "status": status, "decision": decision}
+            return HTTPStatus.OK, {"request_id": request_id, "status": status, "decision": decision, "approver": payload["approver"]}
 
     def apply(self, payload: dict[str, Any]) -> tuple[int, dict[str, Any]]:
         request_id = payload["request_id"]
@@ -304,7 +306,7 @@ def make_handler(config: ApiConfig, store: IntakeStore):
                     "payload": body,
                 }
                 result = store.register(payload)
-                self._json_response(HTTPStatus.OK, result)
+                self._json_response(HTTPStatus.CONFLICT if result.get("error") == "request_id_conflict" else HTTPStatus.OK, result)
                 return
 
             if parsed.path == "/v1/intake/approval":
