@@ -57,6 +57,13 @@ jobs:
           if [ "$ready" != true ]; then docker compose logs --no-color n8n; exit 1; fi
           intake='{"request_id":"REQ-E2E-001","requester":"synthetic","service_type":"analytics","urgency":"medium","justification":"Synthetic test request for review"}'
           approval='{"request_id":"REQ-E2E-001","approver":"reviewer","decision":"approve","rationale":"Synthetic demo approval"}'
-          curl --fail-with-body --silent --show-error -X POST http://127.0.0.1:5678/webhook/internal-service-intake -H "Content-Type: application/json" -H "X-INTAKE-TOKEN: $INTERNAL_INTAKE_TOKEN" -d "$intake" | jq -e '.request_id=="REQ-E2E-001" and .status=="pending"'
+          status=404
+          for attempt in {1..20}; do
+            status=$(curl --silent --show-error -o /tmp/sfs-intake-result.json -w '%{http_code}' -X POST http://127.0.0.1:5678/webhook/internal-service-intake -H "Content-Type: application/json" -H "X-INTAKE-TOKEN: $INTERNAL_INTAKE_TOKEN" -d "$intake")
+            [ "$status" = 404 ] || break
+            sleep 1
+          done
+          if [ "$status" != 200 ]; then echo "Intake webhook HTTP $status"; cat /tmp/sfs-intake-result.json; exit 1; fi
+          jq -e '.request_id=="REQ-E2E-001" and .status=="pending"' /tmp/sfs-intake-result.json
           curl --fail-with-body --silent --show-error -X POST http://127.0.0.1:5678/webhook/internal-service-intake-approval -H "Content-Type: application/json" -H "X-APPROVAL-TOKEN: $APPROVAL_TOKEN" -d "$approval" | jq -e '.status=="applied"'
           curl --fail-with-body --silent --show-error http://127.0.0.1:8080/v1/intake/request/REQ-E2E-001 -H "X-MOCK-API-KEY: $MOCK_API_KEY" | jq -e '.request.status=="applied" and ([.audit[].event_type] | index("apply_executed") != null)'
