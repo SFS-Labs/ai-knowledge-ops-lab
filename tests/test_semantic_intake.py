@@ -93,6 +93,12 @@ class SemanticIntakeTests(unittest.TestCase):
         self.assertEqual("http://model:8080/v1/chat/completions",
                          nodes["Local LLM Extract"]["parameters"]["url"])
         self.assertEqual("continueRegularOutput", nodes["Local LLM Extract"]["onError"])
+        typed_if = nodes["Needs Model Inference"]["parameters"]["conditions"]
+        self.assertEqual("and", typed_if["combinator"])
+        self.assertEqual("strict", typed_if["options"]["typeValidation"])
+        self.assertEqual("boolean", typed_if["conditions"][0]["operator"]["type"])
+        self.assertEqual("true", typed_if["conditions"][0]["operator"]["operation"])
+        self.assertNotIn("boolean", typed_if)
         self.assertIn("120000", str(nodes["Local LLM Extract"]["parameters"]["options"]))
         connections = workflow["connections"]
         self.assertEqual("Preflight Text",
