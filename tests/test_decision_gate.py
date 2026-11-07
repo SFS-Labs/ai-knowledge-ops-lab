@@ -65,6 +65,21 @@ class DecisionGateTests(unittest.TestCase):
                          report["next_gate"])
         self.assertFalse(report["economically_validated"])
 
+    def test_recruiter_sees_the_counterexample_before_the_technical_readme(self):
+        opening = (ROOT / "README.md").read_text(encoding="utf-8")[:1050]
+        self.assertIn("30-second decision sample", opening)
+        self.assertIn("22/32", opening)
+        self.assertIn("5/9", opening)
+        self.assertIn("DECISION_EVIDENCE_BRIEF.md", opening)
+        self.assertIn("await exact-HEAD CI", opening)
+
+    def test_scope_does_not_make_480_cases_or_customer_roi_a_job_entry_gate(self):
+        document = (SHOWCASE / "HYBRID_DECISION_RECORD.md").read_text(encoding="utf-8")
+        self.assertIn("Binding completion standard", document)
+        self.assertIn("optional future evidence gates, not prerequisites for paid market entry",
+                      document)
+        self.assertIn("current hybrid/method changes", document)
+
     def test_missing_falsifier_or_alternative_blocks_documentation(self):
         for key in ("hypothesis", "strongest_counterexample", "falsifier"):
             with self.subTest(key=key):
