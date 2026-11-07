@@ -12,12 +12,21 @@ It is intentionally isolated from the repository's research pipeline and from RE
 - `n8n/workflow.internal-service-intake.v1.json` — importable, versioned workflow export.
 - `mock-api/app.py` + `mock-api/Dockerfile` — minimal persisted mock API using SQLite.
 
+## Verified evidence (7 November 2026)
+
+- **Pre-hardening snapshot `0518333ab87b8881c314c7682265630b8c71d4ed`:** [successful GitHub Actions run #42381091511](https://github.com/SFS-Labs/ai-knowledge-ops-lab/actions/runs/42381091511). GitHub-hosted Docker imported and published the workflow, ran the synthetic intake and approval webhooks, checked wrong-token non-application, duplicate/idempotent intake, the persisted audit trail, and replay after container restart. The complete repository unit suite passed **46 tests**.
+- **Version:** Compose uses `n8nio/n8n:2.46.6`. In the run above the actual n8n audit still flagged **Official risky nodes** (Code/HTTP Request). The earlier outdated-instance warning was absent. An audit command with exit 0 is **not** a clean security clearance.
+- **Evidence boundary:** The above run concerns its exact historical SHA. Any later change to this PR (including documentation or API-key hardening) requires a new exact-head deterministic CI/E2E run before release; older green runs must never be relabeled as current-head verification.
+
 ## Security and data constraints
 
 - Synthetic data only; do not send production data.
 - No paid model/API is required for the core flow.
 - Core path runs fully local/offline once images and dependencies are already available.
-- No secrets are committed; all tokens are local environment variables.
+- No secrets are committed; all tokens are local environment variables. The mock API has **no built-in default key** and refuses startup without a non-empty `--api-key`.
+- Both ports bind to host loopback. n8n Code nodes can read environment variables in this isolated demo (`N8N_BLOCK_ENV_ACCESS_IN_NODE=false`); this is a **material security limitation**, not a production configuration.
+- Separate intake and approval bearer tokens protect demo endpoints, but possession of the approval token **does not establish a verified human identity or independent authorization**. The approver identifier is caller-supplied. Do not reuse this gate for external customer operations.
+- Official risky Code and HTTP nodes are retained only for the bounded local workflow. Do not expose n8n to the public network or import untrusted workflows.
 
 ## Quick start
 
@@ -114,29 +123,32 @@ Covered scenarios:
 - persistence across restart
 - bounded retry + timeout configuration in workflow JSON
 
-## n8n security audit status
+## n8n security audit — executed, outstanding findings
 
-Audit has not yet been run. To attempt it in an environment with Docker:
+The n8n audit was **actually executed** on 7 November 2026 in the [successful Actions run #42381091511](https://github.com/SFS-Labs/ai-knowledge-ops-lab/actions/runs/42381091511), at `0518333`. n8n `2.46.6` no longer triggered an outdated-version finding. It still reports official risky nodes (Code and HTTP Request), which can execute code or send HTTP requests if an attacker can edit workflows or control their parameters. These findings have **not** been dismissed or remediated by the successful E2E.
 
-```bash
-docker compose run --rm n8n n8n audit
-```
-
-If this fails in your environment (for example, Docker unavailable), use this actionable fallback:
+Reproduce against the currently imported stack (from this showcase directory):
 
 ```bash
-docker compose run --rm n8n n8n --help | grep -i audit
+docker compose exec -T n8n n8n audit
 ```
 
-Then run the listed n8n audit subcommand(s) available in your installed n8n image and record output with your demo evidence.
+Risk boundaries: use only synthetic data, keep 5678/8080 loopback-only, grant local n8n editing privileges only to the demonstrator, use distinct private credentials, and never label the test webhook as independently authenticated human approval. The workflow has static internal API destinations and no arbitrary external-target input; this reduces exposure, but is not a production isolation or code-execution guarantee. n8n Code-node environment access remains enabled to validate demonstration credentials.
 
-## Evidence template (fill after local run)
+## Recruiter inspection (15 seconds / 90 seconds / 5 minutes)
 
-- Tested commit SHA: _see `git rev-parse HEAD` after test run_
-- Commands run: list exact commands used
-- Results: pass/fail per command
-- Logs captured: mock-api stdout, n8n execution log, webhook request/response bodies
-- Limitations: any environment gaps (for example Docker unavailable)
+**15 seconds:** A service request arrives, is validated and classified, then requires a distinct approval token before a persisted state change. Duplicates are idempotent and every transition is auditable.
+
+**90 seconds:** Follow the Quick start/import steps, submit the synthetic intake curl, replay it to see `duplicate=true`, try a deliberately invalid approval token (no apply), then submit approved decision and read `apply_executed` in the mock API. Optional restart verifies persistence.
+
+**5 minutes:** Inspect the versioned [n8n workflow](n8n/workflow.internal-service-intake.v1.json), [Python mock API](mock-api/app.py), [behavioral tests](../../tests/test_internal_service_intake_showcase.py), [Compose](docker-compose.yml), and [CI implementation](../../.github/workflows/ci.yml). Cross-check exact SHA and [live CI run](https://github.com/SFS-Labs/ai-knowledge-ops-lab/actions/runs/42381091511). Explain the limitations: local synthetic test only, caller-supplied approver identity, risk-flagged n8n nodes and no production/customer deployment.
+
+## Evidence checklist after modifications
+
+1. Record `git rev-parse HEAD` and the exact Actions run ID for the same SHA.
+2. Require all repository tests to pass, Docker workflow import/publish, real authenticated intake/approval webhooks, wrong-token negative path, duplicate and restart recovery.
+3. Inspect the **actual findings** of `n8n audit`, not merely its exit code. Classify changes affecting security separately.
+4. Keep this draft unmerged until independent review and explicit owner approval.
 
 ## Shutdown
 

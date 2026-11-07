@@ -193,6 +193,17 @@ class InternalServiceIntakeShowcaseTests(unittest.TestCase):
         _, state = self._get("/v1/intake/request/REQ-CONCURRENT-001")
         self.assertEqual(1, sum(e["event_type"] == "apply_executed" for e in state["audit"]))
 
+    def test_standalone_api_requires_explicit_nonempty_key(self) -> None:
+        for key_args in ([], ["--api-key", ""]):
+            with self.subTest(key_args=key_args):
+                proc = subprocess.run(
+                    [sys.executable, str(APP), "--host", "127.0.0.1",
+                     "--port", "0", "--db-path", str(self.db_path), *key_args],
+                    text=True, capture_output=True, timeout=5, check=False,
+                )
+                self.assertNotEqual(0, proc.returncode)
+                self.assertIn("--api-key", proc.stderr)
+
     def test_authentication_required(self) -> None:
         status, body = self._post("/v1/intake/register", self._valid_request(), auth=False)
         self.assertEqual(401, status)

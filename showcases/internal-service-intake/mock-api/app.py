@@ -8,6 +8,7 @@ from dataclasses import dataclass
 from datetime import datetime, timezone
 from hashlib import sha256
 from http import HTTPStatus
+from secrets import compare_digest
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from typing import Any
@@ -268,7 +269,7 @@ def make_handler(config: ApiConfig, store: IntakeStore):
             return data if isinstance(data, dict) else None
 
         def _require_api_key(self) -> bool:
-            if self.headers.get("X-MOCK-API-KEY") != config.api_key:
+            if not compare_digest(self.headers.get("X-MOCK-API-KEY", ""), config.api_key):
                 self._json_response(HTTPStatus.UNAUTHORIZED, {"error": "unauthorized"})
                 return False
             return True
@@ -349,8 +350,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--host", default="0.0.0.0")
     parser.add_argument("--port", default=8080, type=int)
     parser.add_argument("--db-path", default="/data/intake.db")
-    parser.add_argument("--api-key", default="local-demo-api-key")
-    return parser.parse_args()
+    parser.add_argument("--api-key", required=True, help="Explicit nonempty local API key; no built-in default")
+    args = parser.parse_args()
+    if not args.api_key.strip():
+        parser.error("--api-key must not be empty")
+    return args
 
 
 def main() -> None:
