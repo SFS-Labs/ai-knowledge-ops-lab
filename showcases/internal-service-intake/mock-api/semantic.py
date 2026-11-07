@@ -144,6 +144,12 @@ def model_transport_diagnostic(response: Any) -> dict[str, Any]:
     else:
         diagnostic_text = ""
     indicators = {
+        "json_body_invalid": ('json body" field is not valid json',
+                              "json parameter needs to be valid json",
+                              "the value in the json body field is not valid json"),
+        "expression_evaluation": ("expressionerror", "cannot read properties of undefined",
+                                  "referenced node is unexecuted", "invalid expression"),
+        "model_api_request_rejected": ("bad request - please check your parameters",),
         "connection_refused": ("econnrefused", "connection refused"),
         "dns_failure": ("enotfound", "getaddrinfo", "dns"),
         "timeout": ("etimedout", "timeout", "timed out"),
@@ -155,6 +161,7 @@ def model_transport_diagnostic(response: Any) -> dict[str, Any]:
         (name for name, needles in indicators.items() if any(w in diagnostic_text for w in needles)),
         "unspecified" if error is not None else "none",
     )
+    details["error_length"] = min(len(diagnostic_text), 10000)
     return details
 
 
