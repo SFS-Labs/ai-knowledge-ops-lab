@@ -1,5 +1,6 @@
 [
   {
+    "id": "sfsIntakeDemo01",
     "name": "internal-service-intake-v1",
     "active": false,
     "nodes": [

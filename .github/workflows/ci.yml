@@ -47,7 +47,7 @@ jobs:
           if [ "$ready" != true ]; then docker compose logs --no-color n8n; exit 1; fi
           docker compose exec -T n8n n8n import:workflow --input=/opt/n8n-import/workflow.internal-service-intake.v1.json
           docker compose exec -T n8n n8n audit
-          docker compose exec -T n8n n8n update:workflow --all --active=true
+          docker compose exec -T n8n n8n publish:workflow --id=sfsIntakeDemo01
           docker compose restart n8n
           ready=false
           for attempt in {1..60}; do
