@@ -155,6 +155,28 @@ class InternalServiceIntakeShowcaseTests(unittest.TestCase):
         status, _ = self._post("/v1/intake/register", payload)
         self.assertEqual(409, status)
 
+    def test_approval_retry_is_idempotent(self) -> None:
+        self._post("/v1/intake/register", self._valid_request("REQ-RETRY-001"))
+        decision = {"request_id":"REQ-RETRY-001","approver":"human","decision":"approve","rationale":"approved demo"}
+        first, _ = self._post("/v1/intake/approval", decision)
+        second, response = self._post("/v1/intake/approval", decision)
+        self.assertEqual(200, first)
+        self.assertEqual(200, second, response)
+        status, state = self._get("/v1/intake/request/REQ-RETRY-001")
+        self.assertEqual(1, sum(event["event_type"] == "approval_recorded" for event in state["audit"]))
+
+    def test_invalid_json_types_are_rejected_without_disconnect(self) -> None:
+        payload = self._valid_request("REQ-TYPES-001")
+        payload["service_type"] = []
+        status, _ = self._post("/v1/intake/register", payload)
+        self.assertEqual(400, status)
+
+    def test_oversized_request_is_rejected(self) -> None:
+        payload = self._valid_request("REQ-SIZE-001")
+        payload["junk"] = "x" * 70000
+        status, _ = self._post("/v1/intake/register", payload)
+        self.assertEqual(413, status)
+
     def test_authentication_required(self) -> None:
         status, body = self._post("/v1/intake/register", self._valid_request(), auth=False)
         self.assertEqual(401, status)

@@ -84,6 +84,7 @@ class IntakeStore:
         classification = payload["classification"]
         ts = now_iso()
         with self._connect() as conn:
+            conn.execute("BEGIN IMMEDIATE")
             row = conn.execute(
                 "SELECT request_id, classification, status, request_hash FROM requests WHERE request_id = ?",
                 (request_id,),
@@ -118,12 +119,13 @@ class IntakeStore:
     def approval(self, payload: dict[str, Any]) -> tuple[int, dict[str, Any]]:
         request_id = payload["request_id"]
         with self._connect() as conn:
-            row = conn.execute("SELECT status, approval_decision FROM requests WHERE request_id = ?", (request_id,)).fetchone()
+            conn.execute("BEGIN IMMEDIATE")
+            row = conn.execute("SELECT status, approval_decision, approver, approval_rationale FROM requests WHERE request_id = ?", (request_id,)).fetchone()
             if not row:
                 return HTTPStatus.NOT_FOUND, {"error": "unknown_request_id"}
-            if row["status"] == "applied":
-                return HTTPStatus.CONFLICT, {"error": "already_applied"}
             if row["approval_decision"]:
+                if (row["approval_decision"] == payload["decision"] and row["approver"] == payload["approver"] and row["approval_rationale"] == payload["rationale"]):
+                    return HTTPStatus.OK, {"request_id": request_id, "status": row["status"], "decision": row["approval_decision"], "approver": row["approver"]}
                 return HTTPStatus.CONFLICT, {"error": "approval_already_recorded"}
             decision = payload["decision"]
             status = "approved" if decision == "approve" else "rejected"
@@ -142,6 +144,7 @@ class IntakeStore:
     def apply(self, payload: dict[str, Any]) -> tuple[int, dict[str, Any]]:
         request_id = payload["request_id"]
         with self._connect() as conn:
+            conn.execute("BEGIN IMMEDIATE")
             row = conn.execute(
                 "SELECT status, approval_decision FROM requests WHERE request_id = ?", (request_id,)
             ).fetchone()
@@ -200,9 +203,9 @@ def validate_register_payload(body: dict[str, Any]) -> tuple[bool, str | None]:
         return False, "invalid_request_id"
     if not isinstance(body["requester"], str) or not body["requester"].strip() or len(body["requester"]) > 80:
         return False, "invalid_requester"
-    if body["service_type"] not in SERVICE_TYPES:
+    if not isinstance(body["service_type"], str) or body["service_type"] not in SERVICE_TYPES:
         return False, "invalid_service_type"
-    if body["urgency"] not in URGENCIES:
+    if not isinstance(body["urgency"], str) or body["urgency"] not in URGENCIES:
         return False, "invalid_urgency"
     if not isinstance(body["justification"], str) or len(body["justification"].strip()) < 10 or len(body["justification"]) > 500:
         return False, "invalid_justification"
@@ -218,7 +221,7 @@ def validate_approval_payload(body: dict[str, Any]) -> tuple[bool, str | None]:
         return False, "invalid_request_id"
     if not isinstance(body["approver"], str) or not body["approver"].strip() or len(body["approver"]) > 80:
         return False, "invalid_approver"
-    if body["decision"] not in DECISIONS:
+    if not isinstance(body["decision"], str) or body["decision"] not in DECISIONS:
         return False, "invalid_decision"
     if not isinstance(body["rationale"], str) or len(body["rationale"].strip()) < 5 or len(body["rationale"]) > 500:
         return False, "invalid_rationale"
@@ -260,7 +263,7 @@ def make_handler(config: ApiConfig, store: IntakeStore):
             raw = self.rfile.read(size)
             try:
                 data = json.loads(raw.decode("utf-8")) if raw else {}
-            except json.JSONDecodeError:
+            except (json.JSONDecodeError, UnicodeDecodeError):
                 return None
             return data if isinstance(data, dict) else None
 
@@ -287,6 +290,15 @@ def make_handler(config: ApiConfig, store: IntakeStore):
         def do_POST(self) -> None:  # noqa: N802
             parsed = urlparse(self.path)
             if parsed.path.startswith("/v1/intake/") and not self._require_api_key():
+                return
+            try:
+                size = int(self.headers.get("Content-Length", "0"))
+            except ValueError:
+                self._json_response(HTTPStatus.BAD_REQUEST, {"error": "invalid_content_length"})
+                return
+            if size < 0 or size > 65536:
+                self._json_response(HTTPStatus.REQUEST_ENTITY_TOO_LARGE, {"error": "body_too_large"})
+                self.close_connection = True
                 return
             body = self._read_json()
             if body is None:
