@@ -36,8 +36,14 @@ manual_review. A model cannot grant approval or provide executable commands
 or outbound URLs. The existing credentials are possession-based demonstration
 tokens, **not independently verified people or separation of duties**.
 
-**Evidence boundary:** This LLM extension is committed in Draft PR #9, but the
-new real-model E2E and its 36-case evaluation have NOT passed an exact-HEAD run.
+**Evidence boundary:** [Actions #42392952295](https://github.com/SFS-Labs/ai-knowledge-ops-lab/actions/runs/42392952295)
+on SHA `b402f1b9513149f7885c4126d3ce6ae00fef9e72` executed 64 successful tests,
+the existing n8n E2E, verified model download and a real CPU model response
+(3,922 ms). The model returned a wrong schema type in the smoke response;
+the later adversarial webhook returned HTTP 500, causing the NEW LLM E2E to FAIL.
+The 36-case evaluation was not executed. Output schema constraints and failure
+diagnostics have since been tightened. **The extension has NOT passed a
+successful exact-HEAD real-model E2E and full evaluation.**
 Do not claim real inference, model accuracy, latency, production readiness or
 business outcomes on the basis of an unexecuted test script.
 
