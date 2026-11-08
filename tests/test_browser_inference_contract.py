@@ -38,7 +38,7 @@ class BrowserInferenceContractTests(unittest.TestCase):
         self.assertEqual(json.loads(encoded), source)
         self.assertIn("sfs-operator-de-verbatim-v1", JS)
         # The page explicitly attributes the prior v2 numbers to the older model prompt.
-        self.assertIn("früheren Prompt v2", HTML)
+        self.assertIn("englische v2-Fassung", HTML)
         for term in ("54/96", "46/96", "6/24", "Quantisierung"):
             self.assertIn(term, HTML)
 
