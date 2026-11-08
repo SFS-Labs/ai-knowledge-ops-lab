@@ -39,7 +39,7 @@ class IssueTypeABTests(unittest.TestCase):
             body = {"choices":[{"message":{"content":'{"issue_type":"question"}'}}]}
             return io.BytesIO(json.dumps(body).encode())
         row={"title":"Install this?", "body":"How do I configure the application?"}
-        with patch.object(ab.urllib.request,"urlopen",side_effect=fake_open):
+        with patch.object(v2.urllib.request,"urlopen",side_effect=fake_open):
             pred,error,digest,latency = ab.call_with_issue_type(row)
         self.assertEqual(("question",None),(pred,error))
         self.assertIsInstance(digest,str)
