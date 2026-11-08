@@ -1,0 +1,68 @@
+name: Qwen MCP taxonomy vs German questionmark real A/B
+
+on:
+  pull_request:
+    types: [opened]
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  mcp-taxonomy-prompt-ab:
+    if: >-
+      github.event_name == 'pull_request' &&
+      github.event.action == 'opened' &&
+      github.event.pull_request.head.ref == 'sfs/qwen-promptlab-taxonomy-ab-20261108' &&
+      github.event.pull_request.head.repo.full_name == 'SFS-Labs/ai-knowledge-ops-lab' &&
+      github.event.pull_request.user.login == 'SFS-Labs'
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    permissions:
+      contents: read
+    concurrency:
+      group: sfs-qwen-promptlab-taxonomy-one-shot
+      cancel-in-progress: false
+    steps:
+      - name: Checkout code without stored credentials
+        uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608
+        with:
+          persist-credentials: false
+      - name: Python 3.12
+        uses: actions/setup-python@82c7e631bb3cdc910f68e0081d67478d79c6982d
+        with:
+          python-version: '3.12'
+      - name: Preflight syntax and exact request contract tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m unittest tests.test_nlbse_promptlab_taxonomy_ab tests.test_nlbse_llm_eval tests.test_nlbse_llm_retest -v
+          node --check docs/live.js
+          test "$GITHUB_REPOSITORY" = "SFS-Labs/ai-knowledge-ops-lab"
+      - name: Retrieve pinned Qwen2.5 1.5B GGUF
+        shell: bash
+        run: |
+          set -euo pipefail
+          install -d -m 700 /tmp/sfs-qwen-promptlab-taxonomy
+          curl --fail --silent --show-error --location --retry 1 --connect-timeout 20 --max-time 600 \
+            'https://huggingface.co/Qwen/Qwen2.5-1.5B-Instruct-GGUF/resolve/dd26da440ef0330c47919d1ecae0966d24022222/qwen2.5-1.5b-instruct-q4_k_m.gguf?download=true' \
+            --output /tmp/sfs-qwen-promptlab-taxonomy/qwen.gguf
+          echo '6a1a2eb6d15622bf3c96857206351ba97e1af16c30d7a74ee38970e434e9407e  /tmp/sfs-qwen-promptlab-taxonomy/qwen.gguf' | sha256sum --check --status
+      - name: Compare 192 genuine Qwen responses on the same 96 GitHub issues
+        shell: bash
+        run: |
+          set -euo pipefail
+          IMAGE='ghcr.io/ggml-org/llama.cpp:server-b12019@sha256:d9e9e74ba3f7ef119b1939162b1631f99b75ec703c310d140cfa2fdac8907389'
+          trap 'docker rm -f sfs-qwen-promptlab-taxonomy >/dev/null 2>&1 || true; rm -rf /tmp/sfs-qwen-promptlab-taxonomy' EXIT
+          docker pull "$IMAGE"
+          docker run --detach --rm --name sfs-qwen-promptlab-taxonomy --cpus=3 --memory=6g \
+            -p 127.0.0.1:8081:8080 -v /tmp/sfs-qwen-promptlab-taxonomy:/models:ro \
+            "$IMAGE" -m /models/qwen.gguf --host 0.0.0.0 --port 8080 \
+            --ctx-size 1024 --threads 3 --parallel 1 --n-gpu-layers 0
+          ready=false
+          for attempt in {1..90}; do
+            if curl --silent --fail --max-time 3 http://127.0.0.1:8081/health >/dev/null; then ready=true; break; fi
+            sleep 2
+          done
+          [ "$ready" = true ] || { echo "qwen_model_unavailable"; exit 1; }
+          python showcases/internal-service-intake/evaluation/nlbse_promptlab_taxonomy_ab.py
