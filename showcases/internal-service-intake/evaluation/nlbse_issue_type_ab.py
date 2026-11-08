@@ -11,6 +11,7 @@ import hashlib
 import json
 import math
 import time
+import urllib.request
 from pathlib import Path
 
 import nlbse_llm_eval as v1
