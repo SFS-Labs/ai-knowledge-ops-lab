@@ -2,7 +2,7 @@ name: Qwen field-name A/B (one-shot real inference)
 
 on:
   pull_request:
-    types: [opened]
+    types: [opened, synchronize]
     branches: [main]
 
 permissions:
@@ -12,7 +12,7 @@ jobs:
   qwen-field-name-ab:
     if: >-
       github.event_name == 'pull_request' &&
-      github.event.action == 'opened' &&
+      github.event.action == 'synchronize' &&
       github.event.pull_request.head.ref == 'sfs/qwen-issue-type-ab-20261108' &&
       github.event.pull_request.head.repo.full_name == 'SFS-Labs/ai-knowledge-ops-lab' &&
       github.event.pull_request.user.login == 'SFS-Labs'
