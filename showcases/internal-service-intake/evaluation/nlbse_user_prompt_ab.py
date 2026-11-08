@@ -20,9 +20,9 @@ from nlbse_source import keyword_baseline
 
 PROMPT_FILE = Path(__file__).with_name("nlbse_user_prompt_de.txt")
 USER_SYSTEM_PROMPT = PROMPT_FILE.read_text(encoding="utf-8").rstrip("\n")
-PROMPT_VERSION = "sfs-operator-de-verbatim-v1"
+PROMPT_VERSION = "sfs-operator-de-questionmark-v2"
 assert USER_SYSTEM_PROMPT.startswith("Du wirst ein diverses Set")
-assert "JSON ist wahrscheinlich strukturierter" in USER_SYSTEM_PROMPT
+assert USER_SYSTEM_PROMPT.endswith("Alles was ein Fragezeichen am Ende des Satzes hat, wird als Question kategorisiert.")
 
 def call_with_user_prompt(row):
     title, body = row["title"][:200], row["body"][:1100]
