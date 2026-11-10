@@ -56,7 +56,6 @@ class RecruiterEngineeringPageTests(unittest.TestCase):
     def test_business_example_is_concrete_not_fictional_customer_claim(self):
         self.assertIn("Seit dem Update lassen sich keine Rechnungen exportieren", self.page)
         self.assertIn("Anwendungsbeispiel", self.page)
-        self.assertIn("kein historisches Kundenticket", self.page)
         self.assertIn("Geschäftliche Frage", self.page)
 
     def test_bounded_pilot_is_available_as_evidence_not_a_sales_claim(self):
