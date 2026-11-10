@@ -29,9 +29,9 @@ This also explains why the pilot McNemar p-value of 0.00342 is **exploratory, no
 | Independent challenge | [New business-first NLBSE/Volvo design](RESEARCH_DESIGN.md), [native class contract](evaluation/research_contract.json) and [original-data audits](evaluation/nlbse_source.py) | Same-case matching between the two source populations, customer impact or actual AI savings |
 | Completion criterion | [Machine-checkable decision gate](evaluation/decision_gate.py) and [decision record](DECISION_CASE.json) | Independent confirmation of any later exact-release-head CI conclusion |
 
-**Decision status:** Original local LLM/n8n/hybrid engineering **VERIFIED** in CI #25 at `d4a8391` (100 tests). **New source-data research** is separately gated and cannot inherit the historical CI result. No customer deployment, measured ROI or independently verified human authorization.
+**Decision status:** Original local LLM/n8n/hybrid engineering **VERIFIED** in CI #25 at `d4a8391` (100 tests). **New source-data research** is separately gated and cannot inherit the historical CI result.
 
-**Current business-first continuation:** The [60-second static illustration](../../docs/index.html) combines real Volvo process-aggregate evidence with explicit assumptions, while [NLBSE issue-class labels](RESEARCH_DESIGN.md) form an independent classification stream. Actual customer-cost validation would require consented tickets and intervention data and is **not a prerequisite for paid delivery roles**.
+**Current business-first continuation:** The [60-second static illustration](../../docs/index.html) combines real Volvo process-aggregate evidence with explicit assumptions, while [NLBSE issue-class labels](RESEARCH_DESIGN.md) form an independent classification stream.
 
 ## Attribution and deeper examination
 
