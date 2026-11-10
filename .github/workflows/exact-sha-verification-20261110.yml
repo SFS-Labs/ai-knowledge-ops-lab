@@ -5,7 +5,7 @@
 name: Exact-source revalidation (2026-11-10)
 'on':
   pull_request:
-    types: [opened]
+    types: [opened, synchronize]
     branches: [main]
     paths:
       - '.github/workflows/exact-sha-verification-20261110.yml'
@@ -14,7 +14,7 @@ permissions:
 jobs:
   preflight:
     if: >-
-      github.event.action == 'opened' &&
+      github.event.action == 'synchronize' &&
       github.event.pull_request.head.ref == 'sfs/verify-main-20261110' &&
       github.event.pull_request.head.repo.full_name == 'SFS-Labs/ai-knowledge-ops-lab' &&
       github.event.pull_request.user.login == 'SFS-Labs'
@@ -149,7 +149,7 @@ jobs:
 
   llm-feasibility:
     needs: [test]
-    if: github.event_name == 'pull_request' && github.event.action == 'opened'
+    if: github.event_name == 'pull_request' && github.event.action == 'synchronize'
     runs-on: ubuntu-latest
     timeout-minutes: 40
     permissions:
@@ -263,7 +263,7 @@ jobs:
           docker compose --profile llm up --build -d
           ready=false
           for attempt in {1..100}; do
-            if curl --silent --fail --max-time 2 http://127.0.0.1:5678/healthz >/dev/null &&
+            if curl --silent --fail --max-time 2 http://127.0.0.1:5678/healthz/readiness >/dev/null &&
                curl --silent --fail --max-time 2 http://127.0.0.1:8081/health >/dev/null &&
                curl --silent --fail --max-time 2 http://127.0.0.1:8080/health >/dev/null; then
               ready=true; break
@@ -271,6 +271,7 @@ jobs:
             sleep 2
           done
           if [ "$ready" != true ]; then echo "llm_stack_not_ready"; exit 1; fi
+          echo "N8N_DB_MIGRATED_AND_READY=PASS"
           docker compose exec -T n8n n8n import:workflow --input=/opt/n8n-import/workflow.internal-service-intake.v1.json
           # Separate DNS/network availability from actual workflow-node failures.
           docker compose exec -T n8n node -e 'fetch("http://model:8080/health").then(r => {if (!r.ok) process.exitCode = 1; console.log("n8n_to_model_health_http=" + r.status)}).catch(e => {console.error("n8n_to_model_unreachable", e.code || e.name); process.exitCode = 1})'
@@ -312,7 +313,7 @@ jobs:
           docker compose restart n8n
           ready=false
           for attempt in {1..70}; do
-            if curl --silent --fail http://127.0.0.1:5678/healthz >/dev/null; then ready=true; break; fi
+            if curl --silent --fail http://127.0.0.1:5678/healthz/readiness >/dev/null; then ready=true; break; fi
             sleep 2
           done
           [ "$ready" = true ] || { echo "n8n_not_ready_after_publish"; exit 1; }
@@ -368,7 +369,7 @@ jobs:
           docker compose --profile llm restart n8n mock-api model
           ready=false
           for attempt in {1..90}; do
-            if curl --silent --fail http://127.0.0.1:5678/healthz >/dev/null &&
+            if curl --silent --fail http://127.0.0.1:5678/healthz/readiness >/dev/null &&
                curl --silent --fail http://127.0.0.1:8081/health >/dev/null &&
                curl --silent --fail http://127.0.0.1:8080/health >/dev/null; then ready=true; break; fi
             sleep 2
