@@ -74,6 +74,6 @@ Machine-readable [complete v2 evidence with 96 paired labels, hashes, latency me
 
 ## Decision
 
-The selected v2 prompt has higher observed Accuracy and Macro-F1 than this diagnostic baseline, but the sample is limited and the paired 95% accuracy interval crosses zero. **Do not claim statistically established superiority** or production-ready autonomous classification. A public browser model interaction also does not demonstrate validated customer production quality. The real system-integration evidence remains separately valid: Qwen → n8n → Python API → SQLite, with human-separated approval and negative paths proven in historical exact-commit GitHub Actions.
+The selected v2 prompt has higher observed Accuracy and Macro-F1 than this diagnostic baseline, but the sample is limited and the paired 95% accuracy interval crosses zero. **Do not claim statistically established superiority** or production-ready autonomous classification. The real system-integration evidence remains separately valid: Qwen → n8n → Python API → SQLite, with human-separated approval and negative paths proven in historical exact-commit GitHub Actions.
 
 The website's optional browser-local Qwen demo is a **different inference runtime/quantization** and implements model classification only—not live n8n, persistence, approval or production operations. Verify actual device/browser behavior before treating it as a functioning public recruiter demo.

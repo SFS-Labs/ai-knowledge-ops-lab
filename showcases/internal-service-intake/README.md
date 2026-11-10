@@ -14,7 +14,7 @@
 
 **Technical prototype:** Authenticated local n8n 2.46.6 → local Qwen model → SQLite mock API; independent review/approval gate, rejection, idempotency and restart. **[CI #25 passed 100 tests and the real local LLM E2E](https://github.com/SFS-Labs/ai-knowledge-ops-lab/actions/runs/42405856175)** at immutable `d4a8391`. The original 32 labeled synthetic cases were an exploratory *different taxonomy*; don't transfer their hybrid 22/32 to NLBSE or Volvo.
 
-**Release semantics:** This is safe to **publish as static code + documentation** after exact-HEAD CI and review. It is not a hosted automation service. No production SLA, verified human identity, external customer or measured AI ROI. The original release passed [exact-HEAD CI #31](https://github.com/SFS-Labs/ai-knowledge-ops-lab/actions/runs/42413698800); later documentation changes need their own review.
+**Release semantics:** This is safe to **publish as static code + documentation** after exact-HEAD CI and review. The original release passed [exact-HEAD CI #31](https://github.com/SFS-Labs/ai-knowledge-ops-lab/actions/runs/42413698800); later documentation changes need their own review.
 
 **Research reproducibility (Python 3.12, no paid API):**
 
@@ -151,7 +151,7 @@ Risk boundaries: use only synthetic data, keep 5678/8080 loopback-only, grant lo
 
 **90 seconds:** Follow the Quick start/import steps, submit the synthetic intake curl, replay it to see `duplicate=true`, try a deliberately invalid approval token (no apply), then submit approved decision and read `apply_executed` in the mock API. Optional restart verifies persistence.
 
-**5 minutes:** Inspect the versioned [n8n workflow](n8n/workflow.internal-service-intake.v1.json), [Python mock API](mock-api/app.py), [behavioral tests](../../tests/test_internal_service_intake_showcase.py), [Compose](docker-compose.yml), and [CI implementation](../../.github/workflows/ci.yml). Cross-check exact SHA and [live CI run](https://github.com/SFS-Labs/ai-knowledge-ops-lab/actions/runs/42381091511). Explain the limitations: local synthetic test only, caller-supplied approver identity, risk-flagged n8n nodes and no production/customer deployment.
+**5 minutes:** Inspect the versioned [n8n workflow](n8n/workflow.internal-service-intake.v1.json), [Python mock API](mock-api/app.py), [behavioral tests](../../tests/test_internal_service_intake_showcase.py), [Compose](docker-compose.yml), and [CI implementation](../../.github/workflows/ci.yml). Cross-check exact SHA and [live CI run](https://github.com/SFS-Labs/ai-knowledge-ops-lab/actions/runs/42381091511). Explain the limitations: local synthetic test, caller-supplied approver identity and risk-flagged n8n nodes.
 
 ## Evidence checklist after modifications
 

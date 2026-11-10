@@ -6,11 +6,11 @@
 
 **Technisch ausgeführt:** Qwen (lokale CPU-Inferenz) → n8n → Python-API → SQLite; getrennte Review-/Approval-Schritte, Reject, Restart und Fail-closed. **36 tatsächlich ausgeführte LLM-Inferenzen** und **124 Python-Tests** (historischer Lauf) sind dokumentiert. Die erneute Prüfung vom 10.11.2026 bestand **135 Python-Tests** auf dem fixierten Anwendungscommit.
 
-**Bewertung:** Der retrospektive Pilot auf 32 *synthetischen* Anfragen erreichte **10/32 korrekte Zuordnungen mit LLM-only**, **11/32 mit Regeln** und **22/32 im Hybridpfad**; der Hybrid übersah aber **5/9** als dringend markierte Fälle. Darum ist unbeaufsichtigtes Routing nicht freigegeben. Separat wurden 96 echte NLBSE-Issues mit Qwen v2 (55/96) und einer Keyword-Baseline (46/96) auf einer neuen disjunkten Holdout-Stichprobe klassifiziert; die gepaarte Unsicherheit lässt einen Nullvorteil zu. Der unabhängige Volvo-Prozessdatensatz enthält 7.554 Fälle, 65.533 Ereignisse und 9.454 Gruppenwechsel, aber keine nachgewiesene Personal- oder ROI-Einsparung.
+**Bewertung:** Der retrospektive Pilot auf 32 *synthetischen* Anfragen erreichte **10/32 korrekte Zuordnungen mit LLM-only**, **11/32 mit Regeln** und **22/32 im Hybridpfad**; der Hybrid übersah aber **5/9** als dringend markierte Fälle. Darum ist unbeaufsichtigtes Routing nicht freigegeben. Separat wurden 96 echte NLBSE-Issues mit Qwen v2 (55/96) und einer Keyword-Baseline (46/96) auf einer neuen disjunkten Holdout-Stichprobe klassifiziert; die gepaarte Unsicherheit lässt einen Nullvorteil zu. Der unabhängige Volvo-Prozessdatensatz enthält 7.554 Fälle, 65.533 Ereignisse und 9.454 Gruppenwechsel.
 
 **Nachweise:** [Lokaler End-to-End-Lauf und Negativpfade](https://github.com/SFS-Labs/ai-knowledge-ops-lab/actions/runs/42828304593/job/129871453222) · [36 tatsächliche Inferenzen](https://github.com/SFS-Labs/ai-knowledge-ops-lab/actions/runs/42399345922) · [135 Tests am fixierten Commit](https://github.com/SFS-Labs/ai-knowledge-ops-lab/actions/runs/42827473405/job/129868488060) · [Entscheidungsbeleg](showcases/internal-service-intake/DECISION_EVIDENCE_BRIEF.md) · [Hybrid-Entscheidungsprotokoll](showcases/internal-service-intake/HYBRID_DECISION_RECORD.md) · [NLBSE-Holdout 10.11.2026](https://github.com/SFS-Labs/ai-knowledge-ops-lab/actions/runs/42827473405/job/129868488355) · [Projektübersicht](https://sfs-labs.github.io/ai-knowledge-ops-lab/recruiter.html).
 
-**Scope:** Persönlicher, AI-assisted entwickelter lokaler Prototyp und separat dokumentierte Forschungsdatensätze; weder produktiver Kundeneinsatz noch gemessener wirtschaftlicher Kundennutzen. Im weiteren Repository ist der ältere SEC-/Knowledge-Ops-Strang getrennt dokumentiert.
+Im weiteren Repository ist der ältere SEC-/Knowledge-Ops-Strang getrennt dokumentiert.
 
 ## Start here
 
@@ -61,8 +61,6 @@ python -m knowledge_ops review --run .local/rules-run --decisions .local/decisio
 - Owner supplied requirements and real-data direction.
 - Assistant proposed architecture and data-prep flow.
 - Copilot produced the initial MVP; ChatGPT Work performed independent review, reproduced defects, added regression tests and corrected the implementation. The failure analysis is in `docs/evaluation.md`.
-
-No claim is made of owner code authorship, owner annotation approval, or production-readiness.
 
 ## Evidence and limits
 

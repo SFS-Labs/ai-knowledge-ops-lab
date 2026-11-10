@@ -32,4 +32,3 @@ Mathias Steinbach defined the problem, requirements and real-source direction. C
 3. Freeze an untouched holdout and run an isolated direct/controlled comparison with complete model provenance.
 4. Add an optional model adapter only after cost and evaluation requirements are defined.
 
-No production, client delivery, model-quality benchmark or completed enterprise deployment is claimed.

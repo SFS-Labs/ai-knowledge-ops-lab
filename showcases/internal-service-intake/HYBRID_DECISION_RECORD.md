@@ -1,4 +1,4 @@
-# DR-001 · An exploratory hybrid decision, not a customer ROI result
+# DR-001 · An exploratory hybrid decision
 
 **Original decision date:** 7 November 2026 · **Pilot status:** VERIFIED technically at [CI #25 on exact SHA `d4a8391`](https://github.com/SFS-Labs/ai-knowledge-ops-lab/actions/runs/42405856175) · **Research status:** original 32 labeled examples synthetic, retrospectively assessed · **New business-data programme:** [Business-first research design](RESEARCH_DESIGN.md).
 
@@ -36,4 +36,4 @@ The €58.50/h 2025 Destatis information-and-communication average is used only 
 
 A future independent source of user requests or customer SLA/time studies is a possible *new evidence gate*, **not a prerequisite for paid market entry**. The correct outcome today is a technical/research work sample with validated historical data and explicit commercial uncertainty.
 
-**Attribution:** The owner formed the hybrid-routing hypothesis and required adversarial, scientific and business validation. The assistant supported quantitative analysis, scripts and repo engineering. This work does not prove relative intelligence or an independent human customer deployment.
+**Attribution:** The owner formed the hybrid-routing hypothesis and required adversarial, scientific and business validation. The assistant supported quantitative analysis, scripts and repo engineering.
