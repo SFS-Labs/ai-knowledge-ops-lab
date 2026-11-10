@@ -35,6 +35,10 @@ The router implements **real** runtime fallback:
 
 Do not use Fleet Fast as the runtime model: its internal free allowance is
 not publicly exposed as a callable model route to this custom proxy.
+Fleet Developer's 5 LCU monthly execution allowance is a separate hard cap:
+when exhausted, Fleet stops running the agent despite any available free model.
+This setup does **not** bypass Fleet's execution quota; for that use an
+independent runtime/client, not yet part of this integration.
 It remains an independent manual option in Fleet. Do not claim that the
 Fleet Fast allowance is part of the automatic fallback.
 Do not select any paid model or bypass the custom router.
