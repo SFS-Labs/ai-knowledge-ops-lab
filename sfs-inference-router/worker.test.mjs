@@ -51,3 +51,24 @@ test("bad max_completion_tokens fails before model dispatch",async()=>{
   const r=await worker.fetch(request({max_completion_tokens:-3}),env({OPENROUTER_API_KEY:undefined}));
   assert.equal(r.status,400);
 });
+
+
+test("Cloudflare fallback retains nested OpenAI function schema and required tool choice",async()=>{
+  let input;
+  const e=env({OPENROUTER_API_KEY:undefined,AI:{run:async(_model,body)=>{
+    input=body;
+    return {choices:[{message:{role:"assistant",content:"",tool_calls:[{
+      id:"call_example",type:"function",
+      function:{name:"lookup_contact",arguments:'{"email":"demo@example.test"}'}
+    }]},finish_reason:"tool_calls"}]};
+  }}});
+  const tool={type:"function",function:{name:"lookup_contact",description:"Read test CRM contact",
+    parameters:{type:"object",properties:{email:{type:"string"}},required:["email"]}}};
+  const r=await worker.fetch(request({tool_choice:"required",tools:[tool]}),e);
+  assert.equal(r.status,200);
+  assert.deepEqual(input.tools,[tool]);
+  assert.equal(input.tool_choice,"required");
+  const result=await r.json();
+  assert.equal(result.choices[0].finish_reason,"tool_calls");
+  assert.equal(result.choices[0].message.tool_calls[0].function.name,"lookup_contact");
+});
