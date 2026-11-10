@@ -4,7 +4,7 @@
 
 **Angewendet:** Serviceanfragen nach Kategorie und Dringlichkeit unterscheiden, Anforderungen und Prüfkriterien festlegen, lokale Komponenten zu einem überprüfbaren Ablauf verbinden und Modellentscheidungen kritisch auswerten.
 
-**Technisch ausgeführt:** Qwen (lokale CPU-Inferenz) → n8n → Python-API → SQLite; getrennte Review-/Approval-Schritte, Reject, Restart und Fail-closed. **36 tatsächlich ausgeführte LLM-Inferenzen** und **135 Python-Tests (10.11.2026)** sind in aufgezeichneten CI-Läufen dokumentiert.
+**Technisch ausgeführt:** Qwen (lokale CPU-Inferenz) → n8n → Python-API → SQLite; getrennte Review-/Approval-Schritte, Reject, Restart und Fail-closed. **36 tatsächlich ausgeführte LLM-Inferenzen** und **124 Python-Tests** (historischer Lauf) sind dokumentiert. Die erneute Prüfung vom 10.11.2026 bestand **135 Python-Tests** auf dem fixierten Anwendungscommit.
 
 **Bewertung:** Der retrospektive Pilot auf 32 *synthetischen* Anfragen erreichte **10/32 korrekte Zuordnungen mit LLM-only**, **11/32 mit Regeln** und **22/32 im Hybridpfad**; der Hybrid übersah aber **5/9** als dringend markierte Fälle. Darum ist unbeaufsichtigtes Routing nicht freigegeben. Separat wurden 96 echte NLBSE-Issues mit Qwen v2 (55/96) und einer Keyword-Baseline (46/96) auf einer neuen disjunkten Holdout-Stichprobe klassifiziert; die gepaarte Unsicherheit lässt einen Nullvorteil zu. Der unabhängige Volvo-Prozessdatensatz enthält 7.554 Fälle, 65.533 Ereignisse und 9.454 Gruppenwechsel, aber keine nachgewiesene Personal- oder ROI-Einsparung.
 
