@@ -42,14 +42,25 @@ function normalizeCloudflare(result) {
   // Workers AI models expose different response envelopes. Handle the documented
   // text/tool-call shapes and reject unexpected output instead of fabricating success.
   if (result && Array.isArray(result.choices) && result.choices[0]?.message) {
-    const m=result.choices[0].message;
-    return {role:"assistant",content:m.content ?? null,tool_calls:normalizeToolCalls(m.tool_calls)};
+    const choice=result.choices[0];
+    const m=choice.message;
+    const calls=normalizeToolCalls(m.tool_calls);
+    const hasCalls=Array.isArray(calls) && calls.length>0;
+    if (choice.finish_reason === "length") throw new Error("workers_ai_truncated_response");
+    if ((typeof m.content!=="string" || !m.content.trim()) && !hasCalls) {
+      throw new Error("workers_ai_empty_response");
+    }
+    return {role:"assistant",content:m.content ?? null, ...(hasCalls?{tool_calls:calls}:{})};
   }
   if (!result || (typeof result.response !== "string" &&
       typeof result.text !== "string" &&
       !Array.isArray(result.tool_calls))) throw new Error("workers_ai_invalid_response");
   const calls=normalizeToolCalls(result.tool_calls);
-  return {role:"assistant",content:result.response ?? result.text ?? null, ...(calls?.length?{tool_calls:calls}:{})};
+  const content=result.response ?? result.text ?? null;
+  if ((!content || typeof content!=="string" || !content.trim()) && !calls?.length) {
+    throw new Error("workers_ai_empty_response");
+  }
+  return {role:"assistant",content, ...(calls?.length?{tool_calls:calls}:{})};
 }
 
 function complete(message,model=ROUTER_MODEL) {
@@ -92,7 +103,7 @@ async function primaryOpenRouter(body,env) {
     model:"openrouter/free",
     messages:body.messages,
     stream:false,
-    max_tokens:Math.min(body.max_tokens??MAX_TOKENS,MAX_TOKENS),
+    max_tokens:Math.min(body.max_completion_tokens??body.max_tokens??MAX_TOKENS,MAX_TOKENS),
     ...(Array.isArray(body.tools)?{tools:body.tools}:{}),
     ...(body.tool_choice?{tool_choice:body.tool_choice}:{})
   };
@@ -111,7 +122,9 @@ async function primaryOpenRouter(body,env) {
   const data=await r.json();
   if (!data.choices?.[0]?.message) throw new Error("openrouter_missing_choice");
   const message=data.choices[0].message;
-  if (typeof message.content!=="string" && !Array.isArray(message.tool_calls)) throw new Error("openrouter_invalid_result");
+  if (data.choices[0].finish_reason==="length") throw new Error("openrouter_truncated_response");
+  if ((typeof message.content!=="string" || !message.content.trim()) &&
+      !message.tool_calls?.length) throw new Error("openrouter_invalid_result");
   return complete({role:"assistant",content:message.content??null,
       ...(message.tool_calls?.length?{tool_calls:normalizeToolCalls(message.tool_calls)}:{})});
 }
@@ -124,8 +137,10 @@ async function secondaryWorkersAI(body,env) {
     :undefined;
   const data=await env.AI.run(CF_MODEL,{
     messages:body.messages,
-    max_tokens:Math.min(body.max_tokens??MAX_TOKENS,MAX_TOKENS),
+    max_completion_tokens:Math.min(body.max_completion_tokens??body.max_tokens??MAX_TOKENS,MAX_TOKENS),
+    chat_template_kwargs:{enable_thinking:false},
     ...(tools?.length?{tools}:{}),
+    ...(body.tool_choice?{tool_choice:body.tool_choice}:{})
   });
   return complete(normalizeCloudflare(data));
 }
@@ -157,6 +172,7 @@ export default {
       return fail(400,"messages must contain 1-40 supported roles");
     if (body.model!==ROUTER_MODEL && body.model!=="openai:sfs/free-router") return fail(400,"Only sfs/free-router is permitted");
     if (body.max_tokens!==undefined && (!Number.isInteger(body.max_tokens)||body.max_tokens<1))return fail(400,"Invalid max_tokens");
+    if (body.max_completion_tokens!==undefined && (!Number.isInteger(body.max_completion_tokens)||body.max_completion_tokens<1))return fail(400,"Invalid max_completion_tokens");
     let out=null,route=null;
     if (env.OPENROUTER_API_KEY) {
       try {out=await primaryOpenRouter(body,env);route="openrouter/free";}
