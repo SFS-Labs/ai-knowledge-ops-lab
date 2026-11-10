@@ -155,7 +155,7 @@ export default {
     if (!Array.isArray(body.messages)||body.messages.length===0||body.messages.length>40
       ||body.messages.some(m=>!["system","developer","user","assistant","tool"].includes(m?.role)))
       return fail(400,"messages must contain 1-40 supported roles");
-    if (body.model!==ROUTER_MODEL) return fail(400,"Only sfs/free-router is permitted");
+    if (body.model!==ROUTER_MODEL && body.model!=="openai:sfs/free-router") return fail(400,"Only sfs/free-router is permitted");
     if (body.max_tokens!==undefined && (!Number.isInteger(body.max_tokens)||body.max_tokens<1))return fail(400,"Invalid max_tokens");
     let out=null,route=null;
     if (env.OPENROUTER_API_KEY) {
