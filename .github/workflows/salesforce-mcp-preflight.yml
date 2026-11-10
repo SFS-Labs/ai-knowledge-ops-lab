@@ -1,0 +1,49 @@
+name: Salesforce Remote MCP / CI preflight
+on:
+  push:
+    branches: [feat/sfs-salesforce-remote-mcp]
+    paths:
+      - "salesforce-mcp-bootstrap/**"
+      - ".github/workflows/salesforce-mcp-preflight.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build-test-package:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Fetch immutable upstream source
+        run: |
+          git clone https://github.com/tsmztech/salesforce-remote-mcp-cloudflare.git upstream
+          git -C upstream checkout --detach 1924d34d73f5f883af13a257507f3fd2b92ffcb5
+      - name: Apply server-side read-only policy
+        run: python3 salesforce-mcp-bootstrap/patch.py upstream
+      - name: Install dependencies
+        working-directory: upstream
+        run: npm ci --legacy-peer-deps
+      - name: Validate types
+        working-directory: upstream
+        run: npm run typecheck
+      - name: Unit and mock-OAuth tests
+        working-directory: upstream
+        run: npm test
+      - name: Cloudflare Worker build (dry run only)
+        working-directory: upstream
+        run: npx wrangler deploy --dry-run --outdir compiled
+      - name: Upload source and build for manual review
+        uses: actions/upload-artifact@v4
+        with:
+          name: sfs-salesforce-remote-mcp-preflight
+          path: |
+            upstream/compiled/
+            upstream/wrangler.jsonc
+            upstream/src/mcp/accessPolicy.ts
+            upstream/test/accessPolicy.test.ts
+          retention-days: 3
