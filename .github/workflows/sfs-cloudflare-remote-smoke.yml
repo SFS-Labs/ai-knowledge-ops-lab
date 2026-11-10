@@ -32,16 +32,21 @@ jobs:
           print('Salesforce MCP OAuth discovery:',status)
           assert status==200, (status,payload[:300])
           meta=json.loads(payload)
-          assert meta.get('authorization_endpoint','').startswith(sf+'/authorize')
+          assert meta.get('authorization_endpoint') == sf+'/authorize'
+          assert 'authorization_code' in meta.get('grant_types_supported', [])
+          assert 'S256' in meta.get('code_challenge_methods_supported', [])
           status,headers,payload=request(sf+'/mcp','POST',b'{}')
           print('Salesforce MCP unauthorized POST:',status)
           assert status==401,(status,payload[:300])
           status,headers,payload=request(router+'/health')
           print('Model router health:',status)
           assert status==200,(status,payload[:300])
-          h=json.loads(payload);assert h.get('zero_spend_mode') is True
+          h=json.loads(payload)
+          assert h.get('zero_spend_mode') is True
+          assert type(h.get('ready')) is bool
+          assert h.get('secondary') == '@cf/zai-org/glm-4.7-flash'
           status,headers,payload=request(router+'/v1/chat/completions','POST',b'{}')
           print('Router unauthenticated request:',status)
-          assert status in (401,503),status
+          assert status == (401 if h['ready'] else 503), status
           print('All live public smoke checks passed (no actual inference or Salesforce OAuth).')
           PY

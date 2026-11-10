@@ -47,14 +47,14 @@ If both are unavailable, it fails closed. It does **not** provide paid fallback.
 
 ## 3. LangSmith Fleet
 
-In your Fleet agent settings -> Model -> Add custom model:
+The [current Fleet documentation](https://docs.langchain.com/langsmith/fleet/essentials#custom-models) says the managed model picker only offers LangChain's managed tiers. Treat the required external model as blocked in managed Fleet until support is confirmed for this workspace. The settings below identify the intended connection if a supported custom-model option is available:
 - Display name: `SFS Free Router`
 - Model ID: `sfs/free-router`
 - OpenAI-compatible Base URL:
   `https://sfs-free-inference-router.sfs-salesforce-custom-mcp.workers.dev/v1`
 - API key: the same `ROUTER_CLIENT_TOKEN` generated in step 2.
 
-Select this custom model as the agent's **active model**.
+Activate this model only if the workspace exposes a supported custom-model option. Keep CRM connections limited to the designated test environments.
 
 Connect remote MCP integrations in Fleet:
 - Salesforce custom MCP:
@@ -75,9 +75,7 @@ After the secrets and OAuth connections are configured:
 5. Only after the user approves: one scoped, reversible test write.
 6. Inspect errors, tool-call arguments, duplicate behavior and rollback.
 
-**Hard limitation:** the LangSmith Fleet Developer monthly quota is a
-platform-level limit. Model-provider fallback does **not** bypass Fleet's own
-quota. An independent agent runtime would be needed after Fleet pauses runs.
+[Fleet Developer pricing](https://www.langchain.com/pricing) includes 7 LangChain Standard Units (LSUs) per organization per month. Fleet pauses new runs when this allowance is exhausted. The router only handles model requests, so its fallback cannot extend Fleet execution.
 
 ## Verification already completed
 

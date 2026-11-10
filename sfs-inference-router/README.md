@@ -41,25 +41,14 @@ Workers AI automatically serves as the free-only fallback.
 
 ## LangSmith Fleet setup
 
-Open the agent -> Settings -> Model -> Add custom model:
+The [managed Fleet model picker](https://docs.langchain.com/langsmith/fleet/essentials#custom-models) does not expose custom models. The router can be tested independently. Configure the following connection only in a workspace that exposes a supported custom-model option:
 - Name: `SFS Free Router`
 - Model ID: `sfs/free-router`
 - Base URL: `https://sfs-free-inference-router.sfs-salesforce-custom-mcp.workers.dev/v1`
 - API key name: `SFS_ROUTER_CLIENT_TOKEN` (workspace secret name; UI wording may vary).
 - API key value: the exact `ROUTER_CLIENT_TOKEN` stored in Cloudflare.
 
-Save and **choose this custom model as the agent's active model**.
-Fleet Fast is an independent managed model and cannot be automatically
-chained into an external proxy through a documented supported API.
-This router provides a mandatory automatic fallback across two independent
-free provider quotas instead.
-
-**Platform-level limit remains:** LangSmith Fleet's Developer plan currently
-includes only 5 LCUs per organization per month; after exhaustion, Fleet pauses
-new agent runs, regardless of whether the inference model uses an external API.
-The OpenRouter -> Workers AI failover applies to MODEL CALLS ONLY. To keep
-working after a Fleet cap, an independent agent runtime/client (outside Fleet)
-would be required and is not yet implemented. Do not claim this cap is bypassed.
+[Fleet Developer pricing](https://www.langchain.com/pricing) includes 7 LSUs per organization per month and pauses new runs when that allowance is exhausted. The router handles provider failover for inference requests. Fleet's execution allowance is separate.
 
 Use synthetic test data only; free OpenRouter models may have different
 prompt retention policies. Cloudflare Workers Free has its own Workers AI
