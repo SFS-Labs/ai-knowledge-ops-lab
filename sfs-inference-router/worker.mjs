@@ -131,9 +131,10 @@ async function primaryOpenRouter(body,env) {
 
 async function secondaryWorkersAI(body,env) {
   if (!env.AI?.run) throw new Error("workers_ai_binding_missing");
+  // GLM-4.7-Flash requires the OpenAI-style nested function tool schema.
+  // Flattening tools into {name, description, parameters} causes HTTP 400.
   const tools=Array.isArray(body.tools)
     ?body.tools.filter(t=>t.type==="function" && t.function?.name)
-      .map(t=>({name:t.function.name,description:t.function.description||"",parameters:t.function.parameters||{type:"object",properties:{}}}))
     :undefined;
   const data=await env.AI.run(CF_MODEL,{
     messages:body.messages,
