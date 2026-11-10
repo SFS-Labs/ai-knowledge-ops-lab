@@ -1,3 +1,5 @@
+> **Recruiter entry:** [AI & Automation Solutions — problem definition to verified delivery](https://sfs-labs.github.io/ai-knowledge-ops-lab/recruiter.html). This overview uses one evidence structure across projects: problem, analysis, decision, implementation, verification and boundary.
+
 # Mathias Steinbach | B2B AI Implementation – geprüfte Arbeitsprobe
 
 **Projekt:** Lokaler AI-Service-Intake für strukturierte Bearbeitung eingehender Anfragen.
