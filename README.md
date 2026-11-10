@@ -1,3 +1,16 @@
+## Candidate work sample | Problem-to-decision evidence
+
+- **Problem:** Structure inbound service requests and route them without hiding urgent work behind a better aggregate classification score.
+- **Analysis:** Separate category from urgency; compare LLM-only, rules-only and hybrid routing; examine missed-high and false-high outcomes and their conditional business costs.
+- **Decision:** Keep conflicts reviewable and do not treat the synthetic pilot's better aggregate score as sufficient evidence for operational release.
+- **Implementation:** Local Qwen CPU inference → n8n → Python API → SQLite, with separated review/approval, idempotency, restart and fail-closed behavior.
+- **Verification:** 36 real local model inferences; recorded n8n→LLM→SQLite end-to-end; 124 Python tests in the documented CI run.
+- **Boundary:** The 32-case routing pilot is synthetic and post-hoc. The separate NLBSE 96-case Qwen evaluation measures issue-type classification, not service urgency. No client deployment or measured ROI is claimed.
+
+[Open the recruiter overview](https://sfs-labs.github.io/ai-knowledge-ops-lab/recruiter.html) · [Decision brief](showcases/internal-service-intake/DECISION_EVIDENCE_BRIEF.md) · [Research design](showcases/internal-service-intake/RESEARCH_DESIGN.md)
+
+---
+
 > **Recruiter entry:** [AI & Automation Solutions — problem definition to verified delivery](https://sfs-labs.github.io/ai-knowledge-ops-lab/recruiter.html). This overview uses one evidence structure across projects: problem, analysis, decision, implementation, verification and boundary.
 
 # Mathias Steinbach | B2B AI Implementation – geprüfte Arbeitsprobe
