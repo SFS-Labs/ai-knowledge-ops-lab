@@ -58,6 +58,14 @@ Use synthetic test data only; free OpenRouter models may have different
 prompt retention policies. Cloudflare Workers Free has its own Workers AI
 10,000-neuron/day allocation and responds with quota errors when exhausted.
 
+## Verified compatibility corrections (2026-11-10)
+
+- Live Cloudflare GLM inference: `chat_template_kwargs: {enable_thinking:false}` produced a usable `OK` response; the default thinking mode exhausted a small completion-token budget without returning text.
+- The router rejects empty or truncated results instead of fabricating a successful answer.
+- Live Cloudflare GLM function calling succeeded with the **nested OpenAI schema** `{type:"function", function:{name,description,parameters}}` and `tool_choice:"required"`.
+- The earlier flattened tool schema returned Cloudflare HTTP 400 and has been removed from the Worker.
+- The updated Workers AI fallback has been uploaded to the dedicated Cloudflare account; the server-side router key is still unset.
+
 ## Evidence and limitations
 
 - Unit and simulated provider failure tests:
