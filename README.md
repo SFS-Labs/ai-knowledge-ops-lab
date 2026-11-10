@@ -1,39 +1,14 @@
-## Demonstrated competencies | service-intake analysis, integration and verification
+# AI Knowledge Ops Lab — Service Intake, Integration und Evaluation
 
-**Applied:** Classification and urgency analysis, requirements and review criteria, Qwen/n8n/Python/SQLite integration, negative-path testing and evidence-based evaluation.
+**Angewendet:** Serviceanfragen nach Kategorie und Dringlichkeit unterscheiden, Anforderungen und Prüfkriterien festlegen, lokale Komponenten zu einem überprüfbaren Ablauf verbinden und Modellentscheidungen kritisch auswerten.
 
-**Executed:** 36 genuine local model inferences, an end-to-end run including reject/restart/fail-closed and 124 recorded Python tests. The synthetic routing pilot and independently sourced real NLBSE evaluation answer different questions.
+**Technisch ausgeführt:** Qwen (lokale CPU-Inferenz) → n8n → Python API → SQLite; getrennte Review-/Approval-Schritte, Reject, Restart und Fail-closed. **36 echte lokale Modellinferenzen** und **124 Python-Tests** sind in aufgezeichneten CI-Läufen dokumentiert.
 
-- **Problem:** Structure inbound service requests and route them without hiding urgent work behind a better aggregate classification score.
-- **Analysis:** Separate category from urgency; compare LLM-only, rules-only and hybrid routing; examine missed-high and false-high outcomes and their conditional business costs.
-- **Decision:** Keep conflicts reviewable and do not treat the synthetic pilot's better aggregate score as sufficient evidence for operational release.
-- **Implementation:** Local Qwen CPU inference → n8n → Python API → SQLite, with separated review/approval, idempotency, restart and fail-closed behavior.
-- **Verification:** 36 real local model inferences; recorded n8n→LLM→SQLite end-to-end; 124 Python tests in the documented CI run.
-- **Boundary:** The 32-case routing pilot is synthetic and post-hoc. The separate NLBSE 96-case Qwen evaluation measures issue-type classification, not service urgency. No client deployment or measured ROI is claimed.
+**Bewertung:** Der retrospektive Hybridpilot auf 32 *synthetischen* Anfragen erreichte 22/32 korrekte gemeinsame Zuordnungen, übersah aber 5/9 als dringend markierte Fälle. Darum ist unbeaufsichtigtes Routing nicht freigegeben. Separat wurden 96 echte NLBSE-Issues mit Qwen v2 (54/96) und einer Keyword-Baseline (46/96) klassifiziert; die gepaarte Unsicherheit lässt einen Nullvorteil zu. Der unabhängige Volvo-Prozessdatensatz enthält 7.554 Fälle, 65.533 Ereignisse und 9.454 Gruppenwechsel, aber keine nachgewiesene Personal- oder ROI-Einsparung.
 
-[Open the recruiter overview](https://sfs-labs.github.io/ai-knowledge-ops-lab/recruiter.html) · [Decision brief](showcases/internal-service-intake/DECISION_EVIDENCE_BRIEF.md) · [Research design](showcases/internal-service-intake/RESEARCH_DESIGN.md)
+**Nachweise:** [Lokaler End-to-End-Lauf und Negativpfade](https://github.com/SFS-Labs/ai-knowledge-ops-lab/actions/runs/42413698800) · [36 tatsächliche Inferenzen](https://github.com/SFS-Labs/ai-knowledge-ops-lab/actions/runs/42399345922) · [124 Tests](https://github.com/SFS-Labs/ai-knowledge-ops-lab/actions/runs/42421588733) · [Entscheidungsbeleg](showcases/internal-service-intake/DECISION_EVIDENCE_BRIEF.md) · [NLBSE-Retest](showcases/internal-service-intake/evaluation/NLBSE_REAL_LLM_EVALUATION.md) · [Projektübersicht](https://sfs-labs.github.io/ai-knowledge-ops-lab/recruiter.html).
 
----
-
-> **Recruiter entry:** [AI & Automation Solutions — problem definition to verified delivery](https://sfs-labs.github.io/ai-knowledge-ops-lab/recruiter.html). This overview uses one evidence structure across projects: problem, analysis, decision, implementation, verification and boundary.
-
-# Mathias Steinbach | B2B AI Implementation – geprüfte Arbeitsprobe
-
-**Projekt:** Lokaler AI-Service-Intake für strukturierte Bearbeitung eingehender Anfragen.
-
-**Implementiert:** Qwen (lokale CPU-Inferenz) → n8n-Orchestrierung → Python-API → SQLite. Kategorie/Routing, Review- und Freigabeschritte sowie definierte Fehlerpfade sind als ausführbarer Workflow verbunden.
-
-**Verifiziert:** **36 tatsächlich ausgeführte LLM-Inferenzen** ([CI #24](https://github.com/SFS-Labs/ai-knowledge-ops-lab/actions/runs/42399345922)); **realer n8n→LLM→SQLite-End-to-End-Lauf mit Restart, Reject und Fail-closed** ([CI #31](https://github.com/SFS-Labs/ai-knowledge-ops-lab/actions/runs/42413698800), vier erfolgreiche Jobs); **124 Python-Tests** einschließlich Nachweisprüfungen ([CI #32](https://github.com/SFS-Labs/ai-knowledge-ops-lab/actions/runs/42421588733)).
-
-**Technische Entscheidung:** Drei Routing-Varianten wurden auf 32 gelabelten synthetischen Fällen ausgewertet: LLM-only **10/32**, Regeln **11/32**, retrospektiver Hybrid **22/32** gemeinsam korrekt. Gegenbefund: Der Hybrid übersah **5/9** als dringend gelabelte Fälle. Eine höhere Gesamtquote rechtfertigt daher noch keine wirtschaftliche oder operative Freigabe. [Entscheidungsprotokoll](showcases/internal-service-intake/HYBRID_DECISION_RECORD.md).
-
-**[Arbeitsprobe in 60 Sekunden: Architektur, Umsetzung, Tests und Entscheidung](https://sfs-labs.github.io/ai-knowledge-ops-lab/)** · [Browser-Qwen-Demo (Beta; ohne n8n-Backend)](https://sfs-labs.github.io/ai-knowledge-ops-lab/live.html) · [Technische Beschreibung](showcases/internal-service-intake/README.md) · [CI #31](https://github.com/SFS-Labs/ai-knowledge-ops-lab/actions/runs/42413698800).
-
-**Rolle / Beitrag:** Technische Problemstrukturierung, Hypothese und Evaluation, Auswahl der Prüfkriterien, mit AI-Unterstützung implementierter und verifizierter Code. Erfahrung im Technical Onboarding mit Kunden; Zielrolle: kundennahes, bezahltes B2B AI Implementation Engineering. Der Prototyp ist lokal ausgeführt und getestet, kein behaupteter Kunden-Deployment-Nachweis.
-
-**Echte Modellqualität auf Originaldaten:** [Zwei tatsächlich ausgeführte Qwen-Evaluationen](showcases/internal-service-intake/evaluation/NLBSE_REAL_LLM_EVALUATION.md) mit eingefrorenem Originalprompt, dokumentierter Entwicklungsauswahl und neuem 96-Fälle-Holdout. Auf denselben 96 neuen NLBSE-Issues erreichte **Qwen v2 54/96 korrekt (56,25 %, Macro-F1 54,45 %)**, die einfache Keyword-Baseline **46/96 (47,92 %, Macro-F1 46,80 %)**. **Kritischer Gegenbefund:** Question-Recall nur **6/24**, gepaarte Unsicherheit schließt einen Nullvorteil ein; kein produktiver Autonomous-Routing-Nachweis. Der [Volvo-Prozessaudit](showcases/internal-service-intake/RESEARCH_DESIGN.md) bleibt separat und belegt keinen Kunden-ROI.
-
-Das Repository enthält daneben die frühere SEC-Disclosure-/Knowledge-Ops-Arbeit. Diese ist technisch und methodisch vom AI-Service-Intake getrennt.
+**Scope:** Persönlicher, AI-assisted entwickelter lokaler Prototyp und separat dokumentierte Forschungsdatensätze; weder produktiver Kundeneinsatz noch gemessener wirtschaftlicher Kundennutzen. Im weiteren Repository ist der ältere SEC-/Knowledge-Ops-Strang getrennt dokumentiert.
 
 ## Start here
 
