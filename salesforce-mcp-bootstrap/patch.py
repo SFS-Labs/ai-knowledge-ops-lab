@@ -84,6 +84,8 @@ def main(root: Path):
                    '"name": "sfs-salesforce-remote-mcp"', str(wrangler))
     w = substitute(w, '"SALESFORCE_LOGIN_HOST": "login.salesforce.com"',
                    '"SALESFORCE_LOGIN_HOST": "login.salesforce.com", "SFS_READ_ONLY": "true"', str(wrangler))
+    w = substitute(w, '"id": "REPLACE_WITH_YOUR_KV_NAMESPACE_ID"',
+                   '"id": "d34ce8cc45574d069298a2fe3b15aeb6"', str(wrangler))
     # Apply only after all expected upstream anchors match; no partial edits.
     (root / "src/mcp/accessPolicy.ts").write_text(POLICY)
     (root / "test/accessPolicy.test.ts").write_text(TESTS)
