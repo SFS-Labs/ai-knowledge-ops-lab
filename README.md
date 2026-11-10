@@ -1,4 +1,8 @@
-## Candidate work sample | Problem-to-decision evidence
+## Demonstrated competencies | service-intake integration and evaluation
+
+**Applied:** Service-request problem analysis, category/urgency criteria, architecture and API/workflow integration, local model inference and reproducible test design.
+
+**Observed result:** A genuine local Qwen→n8n→Python→SQLite end-to-end execution with 36 model inferences, reject/restart/fail-closed paths and 124 Python tests. The 32-case synthetic routing comparison and the independent 96-case real NLBSE research evaluation have different aims and denominators.
 
 - **Problem:** Structure inbound service requests and route them without hiding urgent work behind a better aggregate classification score.
 - **Analysis:** Separate category from urgency; compare LLM-only, rules-only and hybrid routing; examine missed-high and false-high outcomes and their conditional business costs.
@@ -11,7 +15,7 @@
 
 ---
 
-> **Recruiter entry:** [AI & Automation Solutions — problem definition to verified delivery](https://sfs-labs.github.io/ai-knowledge-ops-lab/recruiter.html). This overview uses one evidence structure across projects: problem, analysis, decision, implementation, verification and boundary.
+ > **Portfolio entry:** [AI & Automation Solutions — competencies and verified work](https://sfs-labs.github.io/ai-knowledge-ops-lab/recruiter.html). This overview uses one evidence structure across projects: problem, analysis, decision, implementation, verification and boundary.
 
 # Mathias Steinbach | B2B AI Implementation – geprüfte Arbeitsprobe
 
