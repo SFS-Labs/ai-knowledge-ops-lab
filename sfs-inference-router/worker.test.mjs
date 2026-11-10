@@ -1,0 +1,14 @@
+import test from "node:test";
+import assert from "node:assert/strict";
+import worker from "./worker.mjs";
+const url="https://worker.example/v1/chat/completions";
+const env=(options={})=>({ROUTER_CLIENT_TOKEN:"test-client-secret",OPENROUTER_API_KEY:"test-openrouter",AI:{run:async()=>({response:"workersai-fallback"})},...options});
+const request=(body={},key="test-client-secret")=>new Request(url,{method:"POST",headers:{"authorization":"Bearer "+key,"content-type":"application/json"},body:JSON.stringify({model:"sfs/free-router",messages:[{role:"user",content:"test"}],...body})});
+test("missing client credential blocks all inference",async()=>{const r=await worker.fetch(request(),env({ROUTER_CLIENT_TOKEN:undefined}));assert.equal(r.status,503);});
+test("invalid client credential is unauthorized",async()=>{const r=await worker.fetch(request({},"bad"),env());assert.equal(r.status,401);});
+test("primary OpenRouter success",async()=>{const old=globalThis.fetch;globalThis.fetch=async()=>Response.json({choices:[{message:{role:"assistant",content:"primary"}}]});try{const r=await worker.fetch(request(),env());assert.equal(r.status,200);assert.equal(r.headers.get("x-sfs-route"),"openrouter/free");assert.equal((await r.json()).choices[0].message.content,"primary");}finally{globalThis.fetch=old;}});
+test("OpenRouter rate limit triggers Workers AI",async()=>{const old=globalThis.fetch;globalThis.fetch=async()=>new Response("",{status:429});try{const r=await worker.fetch(request(),env());assert.equal(r.status,200);assert.equal(r.headers.get("x-sfs-route"),"@cf/zai-org/glm-4.7-flash");assert.equal((await r.json()).choices[0].message.content,"workersai-fallback");}finally{globalThis.fetch=old;}});
+test("missing OpenRouter credential falls back immediately",async()=>{const r=await worker.fetch(request(),env({OPENROUTER_API_KEY:undefined}));assert.equal(r.status,200);assert.equal(r.headers.get("x-sfs-route"),"@cf/zai-org/glm-4.7-flash");});
+test("exhausted free routes fail closed without paid fallback",async()=>{const old=globalThis.fetch;globalThis.fetch=async()=>new Response("",{status:429});try{const r=await worker.fetch(request(),env({AI:{run:async()=>{throw new Error("free quota exhausted");}}}));assert.equal(r.status,503);}finally{globalThis.fetch=old;}});
+test("rejects unapproved model IDs",async()=>{const r=await worker.fetch(request({model:"anthropic/paid-model"}),env());assert.equal(r.status,400);});
+test("supports SSE response format for Fleet stream requests",async()=>{const r=await worker.fetch(request({stream:true}),env({OPENROUTER_API_KEY:undefined}));assert.equal(r.status,200);const s=await r.text();assert.match(s,/data: \[DONE\]/);assert.match(r.headers.get("content-type"),/event-stream/);});
