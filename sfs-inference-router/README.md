@@ -54,6 +54,13 @@ chained into an external proxy through a documented supported API.
 This router provides a mandatory automatic fallback across two independent
 free provider quotas instead.
 
+**Platform-level limit remains:** LangSmith Fleet's Developer plan currently
+includes only 5 LCUs per organization per month; after exhaustion, Fleet pauses
+new agent runs, regardless of whether the inference model uses an external API.
+The OpenRouter -> Workers AI failover applies to MODEL CALLS ONLY. To keep
+working after a Fleet cap, an independent agent runtime/client (outside Fleet)
+would be required and is not yet implemented. Do not claim this cap is bypassed.
+
 Use synthetic test data only; free OpenRouter models may have different
 prompt retention policies. Cloudflare Workers Free has its own Workers AI
 10,000-neuron/day allocation and responds with quota errors when exhausted.
