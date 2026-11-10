@@ -15,3 +15,39 @@ test("supports SSE response format for Fleet stream requests",async()=>{const r=
 
 test("accepts LangChain-qualified alias while returning canonical model",async()=>{const r=await worker.fetch(request({model:"openai:sfs/free-router"}),env({OPENROUTER_API_KEY:undefined}));assert.equal(r.status,200);assert.equal((await r.json()).model,"sfs/free-router");});
 test("Workers AI native tool call is converted to OpenAI protocol shape",async()=>{const e=env({OPENROUTER_API_KEY:undefined,AI:{run:async()=>({tool_calls:[{name:"find_contact",arguments:{email:"a@example.test"}}]})}});const r=await worker.fetch(request({tools:[{type:"function",function:{name:"find_contact",description:"lookup",parameters:{type:"object",properties:{email:{type:"string"}}}}}]}),e);assert.equal(r.status,200);const body=await r.json();assert.equal(body.choices[0].finish_reason,"tool_calls");assert.equal(body.choices[0].message.tool_calls[0].function.name,"find_contact");assert.equal(typeof body.choices[0].message.tool_calls[0].function.arguments,"string");});
+
+
+test("Workers AI reasoning-only/truncated output must never be reported as success", async()=>{
+  const e=env({OPENROUTER_API_KEY:undefined,AI:{run:async()=>({
+    choices:[{message:{role:"assistant",content:null,tool_calls:[],reasoning:"thinking"},finish_reason:"length"}]
+  })}});
+  const r=await worker.fetch(request(),e);
+  assert.equal(r.status,503);
+});
+test("Workers AI receives disabled reasoning and completion-token limit", async()=>{
+  let params;
+  const e=env({OPENROUTER_API_KEY:undefined,AI:{run:async(_model,request)=>{
+    params=request;
+    return {choices:[{message:{role:"assistant",content:"OK",tool_calls:[]},finish_reason:"stop"}]};
+  }}});
+  const r=await worker.fetch(request({max_completion_tokens:32}),e);
+  assert.equal(r.status,200);
+  assert.equal((await r.json()).choices[0].message.content,"OK");
+  assert.equal(params.max_completion_tokens,32);
+  assert.equal(params.chat_template_kwargs.enable_thinking,false);
+});
+test("OpenRouter reasoning-only response falls back rather than pretending success", async()=>{
+  const old=globalThis.fetch;
+  globalThis.fetch=async()=>Response.json({choices:[{message:{role:"assistant",content:null,tool_calls:[]},finish_reason:"length"}]});
+  try {
+    const r=await worker.fetch(request(),env());
+    assert.equal(r.status,200);
+    assert.equal(r.headers.get("X-SFS-Route"),"@cf/zai-org/glm-4.7-flash");
+  } finally {
+    globalThis.fetch=old;
+  }
+});
+test("bad max_completion_tokens fails before model dispatch",async()=>{
+  const r=await worker.fetch(request({max_completion_tokens:-3}),env({OPENROUTER_API_KEY:undefined}));
+  assert.equal(r.status,400);
+});
