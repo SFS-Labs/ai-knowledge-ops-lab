@@ -1,0 +1,47 @@
+name: SFS Salesforce MCP and free router live HTTP smoke
+on:
+  push:
+    branches: [feat/sfs-salesforce-remote-mcp]
+    paths:
+      - ".github/workflows/sfs-cloudflare-remote-smoke.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  live-smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Assert public OAuth discovery and closed inference endpoints
+        run: |
+          python3 - <<'PY'
+          import json,urllib.request,urllib.error
+          sf='https://sfs-salesforce-remote-mcp.sfs-salesforce-custom-mcp.workers.dev'
+          router='https://sfs-free-inference-router.sfs-salesforce-custom-mcp.workers.dev'
+          def request(url,method='GET',body=None):
+              q=urllib.request.Request(url,data=body,method=method,headers={'User-Agent':'SFS-smoke-check/1.0','Content-Type':'application/json'})
+              try:
+                  with urllib.request.urlopen(q,timeout=20) as r:return r.status,r.headers, r.read(5000)
+              except urllib.error.HTTPError as e:return e.code,e.headers,e.read(5000)
+          status,headers,payload=request(sf+'/')
+          print('Salesforce MCP /:',status)
+          assert status==200, (status,payload[:300])
+          status,headers,payload=request(sf+'/.well-known/oauth-authorization-server')
+          print('Salesforce MCP OAuth discovery:',status)
+          assert status==200, (status,payload[:300])
+          meta=json.loads(payload)
+          assert meta.get('authorization_endpoint','').startswith(sf+'/authorize')
+          status,headers,payload=request(sf+'/mcp','POST',b'{}')
+          print('Salesforce MCP unauthorized POST:',status)
+          assert status==401,(status,payload[:300])
+          status,headers,payload=request(router+'/health')
+          print('Model router health:',status)
+          assert status==200,(status,payload[:300])
+          h=json.loads(payload);assert h.get('zero_spend_mode') is True
+          status,headers,payload=request(router+'/v1/chat/completions','POST',b'{}')
+          print('Router unauthenticated request:',status)
+          assert status in (401,503),status
+          print('All live public smoke checks passed (no actual inference or Salesforce OAuth).')
+          PY
