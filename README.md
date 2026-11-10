@@ -1,4 +1,8 @@
-## Candidate work sample | Problem-to-decision evidence
+## Demonstrated competencies | service-intake analysis, integration and verification
+
+**Applied:** Classification and urgency analysis, requirements and review criteria, Qwen/n8n/Python/SQLite integration, negative-path testing and evidence-based evaluation.
+
+**Executed:** 36 genuine local model inferences, an end-to-end run including reject/restart/fail-closed and 124 recorded Python tests. The synthetic routing pilot and independently sourced real NLBSE evaluation answer different questions.
 
 - **Problem:** Structure inbound service requests and route them without hiding urgent work behind a better aggregate classification score.
 - **Analysis:** Separate category from urgency; compare LLM-only, rules-only and hybrid routing; examine missed-high and false-high outcomes and their conditional business costs.
