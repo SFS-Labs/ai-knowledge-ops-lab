@@ -1,5 +1,7 @@
 # AI Knowledge Ops Lab — Service Intake, Integration und Evaluation
 
+<img src="https://raw.githubusercontent.com/SFS-Labs/SFS-Labs/main/branding/sfs-lockup-light.svg" width="320" alt="SFS.Labs" />
+
 **Mathias Steinbach | AI & Automation Solutions**
 
 **Angewendet:** Serviceanfragen nach Kategorie und Dringlichkeit unterscheiden, Anforderungen und Prüfkriterien festlegen, lokale Komponenten zu einem überprüfbaren Ablauf verbinden und Modellentscheidungen kritisch auswerten.
