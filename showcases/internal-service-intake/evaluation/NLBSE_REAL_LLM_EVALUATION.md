@@ -72,6 +72,17 @@ The two predefined point-estimate hypotheses passed: v2 raised both `question` r
 
 Machine-readable [complete v2 evidence with 96 paired labels, hashes, latency measurements and confusion matrices](evidence/nlbse-qwen-prompt-retest-ci40.json), plus the preserved [v1 first-96-case evidence](evidence/nlbse-qwen-real-v1-ci34.json). No third-party raw issue content is committed.
 
+## Repeated v2 evaluation — 10 November 2026
+
+[GitHub Actions job](https://github.com/SFS-Labs/ai-knowledge-ops-lab/actions/runs/42827473405/job/129868488355), source commit `8b81da0aaafbe2b0ebb88c5a3a8de3aed54e0a08`. The 96 held-out issue hashes, keyword predictions, model checksum and v2 prompt checksum match the earlier v2 run. This repeat reused the v2 holdout, which is disjoint from the original v1 diagnostic sample.
+
+| Run | Keyword baseline | Original Qwen v1 | Selected Qwen v2 | v2 Macro-F1 | Paired 95% Accuracy difference vs baseline |
+|---|---:|---:|---:|---:|---:|
+| [Earlier run #40](https://github.com/SFS-Labs/ai-knowledge-ops-lab/actions/runs/42425405686) | 46/96 | 52/96 | 54/96 | 54.45% | [−2.08, +18.75] pp |
+| [10 November repeat](https://github.com/SFS-Labs/ai-knowledge-ops-lab/actions/runs/42827473405/job/129868488355) | 46/96 | 52/96 | 55/96 | 55.54% | [0, +20.83] pp |
+
+Two v2 predictions changed across runs, for a net gain of one correct answer. Question recall was 6/24 in both runs. Both intervals include zero. The repeat provides no independent holdout and no established accuracy advantage over the baseline.
+
 ## Decision
 
 The selected v2 prompt has higher observed Accuracy and Macro-F1 than this diagnostic baseline, but the sample is limited and the paired 95% accuracy interval crosses zero. **Do not claim statistically established superiority** or production-ready autonomous classification. The real system-integration evidence remains separately valid: Qwen → n8n → Python API → SQLite, with human-separated approval and negative paths proven in historical exact-commit GitHub Actions.
