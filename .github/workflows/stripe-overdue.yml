@@ -1,0 +1,24 @@
+name: Stripe sandbox overdue boundary
+'on':
+  push:
+    branches: [verify/stripe-sandbox-http]
+    paths: [.github/workflows/stripe-overdue.yml]
+permissions:
+  contents: read
+concurrency:
+  group: sfs-stripe-sandbox-verification
+  cancel-in-progress: false
+jobs:
+  verify:
+    environment: stripe-sandbox
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608
+        with:
+          persist-credentials: false
+      - name: Verify open invoice cutoff and void the synthetic fixture
+        working-directory: showcases/hubspot-stripe-reconciliation
+        env:
+          STRIPE_API_KEY: ${{ secrets.STRIPE_API_KEY }}
+        run: python3 verify_overdue_http.py
