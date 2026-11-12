@@ -1,0 +1,703 @@
+{
+  "run": 43181973570,
+  "verification_commit": "fc1da456fe88764b7e789771cfa00de12b4e5b6c",
+  "scope": "Single GitHub Actions job. Fresh Stripe GETs with one invoice per page. Deliberate input omission and adapter fault injection. Synthetic EUR expectation and temporary Stripe metadata reassignment. No open invoice in sandbox.",
+  "cycles": [
+    {
+      "cycle": 1,
+      "fault": null,
+      "initial": {
+        "real_http_responses": 2,
+        "audit": {
+          "started_at": "2026-11-12T08:19:26.162465+00:00",
+          "run_status": "complete",
+          "decisions_published": true,
+          "invoice_population": "pagination_completed",
+          "as_of": "2026-11-26",
+          "code_sha256": "ca49feead8a1101b7ccd9198f42a297a737b5b92990fe0e25d59b0348d57c7a8",
+          "deal_population": "caller_supplied_csv_unverified",
+          "snapshot_isolation": "not_guaranteed",
+          "deal_count": 3,
+          "invoice_count": 2,
+          "deals_sha256": "d9f020c067a0bed23fbd7790b768975151b8d917ff5954c4f8f41e3066fcc26d",
+          "invoices_sha256": "596792bc5f3372eb0fcbfeabc3621fb71f1f8b8b8dae0f6271addf21f6a2670d",
+          "finished_at": "2026-11-12T08:19:26.608654+00:00"
+        },
+        "results": [
+          {
+            "deal_id": "539935357174",
+            "status": "amount_mismatch",
+            "alerts": [
+              "amount_mismatch",
+              "missing_invoice"
+            ],
+            "invoice_ids": [
+              "in_1UamioE19wsOrukRDWKzG9Qn"
+            ]
+          },
+          {
+            "deal_id": "539817448636",
+            "status": "missing_invoice",
+            "alerts": [
+              "missing_invoice"
+            ],
+            "invoice_ids": []
+          },
+          {
+            "deal_id": "539978132699",
+            "status": "invoice_draft",
+            "alerts": [
+              "missing_invoice"
+            ],
+            "invoice_ids": [
+              "in_1UamitE19wsOrukR7goJaSyd"
+            ]
+          }
+        ]
+      },
+      "retry": null
+    },
+    {
+      "cycle": 2,
+      "fault": null,
+      "initial": {
+        "real_http_responses": 2,
+        "audit": {
+          "started_at": "2026-11-12T08:19:26.609544+00:00",
+          "run_status": "complete",
+          "decisions_published": true,
+          "invoice_population": "pagination_completed",
+          "as_of": "2026-11-26",
+          "code_sha256": "ca49feead8a1101b7ccd9198f42a297a737b5b92990fe0e25d59b0348d57c7a8",
+          "deal_population": "caller_supplied_csv_unverified",
+          "snapshot_isolation": "not_guaranteed",
+          "deal_count": 3,
+          "invoice_count": 2,
+          "deals_sha256": "d9f020c067a0bed23fbd7790b768975151b8d917ff5954c4f8f41e3066fcc26d",
+          "invoices_sha256": "596792bc5f3372eb0fcbfeabc3621fb71f1f8b8b8dae0f6271addf21f6a2670d",
+          "finished_at": "2026-11-12T08:19:27.060104+00:00"
+        },
+        "results": [
+          {
+            "deal_id": "539935357174",
+            "status": "amount_mismatch",
+            "alerts": [
+              "amount_mismatch",
+              "missing_invoice"
+            ],
+            "invoice_ids": [
+              "in_1UamioE19wsOrukRDWKzG9Qn"
+            ]
+          },
+          {
+            "deal_id": "539817448636",
+            "status": "missing_invoice",
+            "alerts": [
+              "missing_invoice"
+            ],
+            "invoice_ids": []
+          },
+          {
+            "deal_id": "539978132699",
+            "status": "invoice_draft",
+            "alerts": [
+              "missing_invoice"
+            ],
+            "invoice_ids": [
+              "in_1UamitE19wsOrukR7goJaSyd"
+            ]
+          }
+        ]
+      },
+      "retry": null
+    },
+    {
+      "cycle": 3,
+      "fault": "missing_input",
+      "initial": {
+        "audit": {
+          "run_status": "incomplete",
+          "decisions_published": false
+        },
+        "real_http_responses": 0,
+        "reason": "population check before CLI"
+      },
+      "retry": {
+        "real_http_responses": 2,
+        "audit": {
+          "started_at": "2026-11-12T08:19:27.061082+00:00",
+          "run_status": "complete",
+          "decisions_published": true,
+          "invoice_population": "pagination_completed",
+          "as_of": "2026-11-26",
+          "code_sha256": "ca49feead8a1101b7ccd9198f42a297a737b5b92990fe0e25d59b0348d57c7a8",
+          "deal_population": "caller_supplied_csv_unverified",
+          "snapshot_isolation": "not_guaranteed",
+          "deal_count": 3,
+          "invoice_count": 2,
+          "deals_sha256": "d9f020c067a0bed23fbd7790b768975151b8d917ff5954c4f8f41e3066fcc26d",
+          "invoices_sha256": "596792bc5f3372eb0fcbfeabc3621fb71f1f8b8b8dae0f6271addf21f6a2670d",
+          "finished_at": "2026-11-12T08:19:27.368496+00:00"
+        },
+        "results": [
+          {
+            "deal_id": "539935357174",
+            "status": "amount_mismatch",
+            "alerts": [
+              "amount_mismatch",
+              "missing_invoice"
+            ],
+            "invoice_ids": [
+              "in_1UamioE19wsOrukRDWKzG9Qn"
+            ]
+          },
+          {
+            "deal_id": "539817448636",
+            "status": "missing_invoice",
+            "alerts": [
+              "missing_invoice"
+            ],
+            "invoice_ids": []
+          },
+          {
+            "deal_id": "539978132699",
+            "status": "invoice_draft",
+            "alerts": [
+              "missing_invoice"
+            ],
+            "invoice_ids": [
+              "in_1UamitE19wsOrukR7goJaSyd"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "cycle": 4,
+      "fault": null,
+      "initial": {
+        "real_http_responses": 2,
+        "audit": {
+          "started_at": "2026-11-12T08:19:27.369541+00:00",
+          "run_status": "complete",
+          "decisions_published": true,
+          "invoice_population": "pagination_completed",
+          "as_of": "2026-11-26",
+          "code_sha256": "ca49feead8a1101b7ccd9198f42a297a737b5b92990fe0e25d59b0348d57c7a8",
+          "deal_population": "caller_supplied_csv_unverified",
+          "snapshot_isolation": "not_guaranteed",
+          "deal_count": 3,
+          "invoice_count": 2,
+          "deals_sha256": "d9f020c067a0bed23fbd7790b768975151b8d917ff5954c4f8f41e3066fcc26d",
+          "invoices_sha256": "596792bc5f3372eb0fcbfeabc3621fb71f1f8b8b8dae0f6271addf21f6a2670d",
+          "finished_at": "2026-11-12T08:19:27.810811+00:00"
+        },
+        "results": [
+          {
+            "deal_id": "539935357174",
+            "status": "amount_mismatch",
+            "alerts": [
+              "amount_mismatch",
+              "missing_invoice"
+            ],
+            "invoice_ids": [
+              "in_1UamioE19wsOrukRDWKzG9Qn"
+            ]
+          },
+          {
+            "deal_id": "539817448636",
+            "status": "missing_invoice",
+            "alerts": [
+              "missing_invoice"
+            ],
+            "invoice_ids": []
+          },
+          {
+            "deal_id": "539978132699",
+            "status": "invoice_draft",
+            "alerts": [
+              "missing_invoice"
+            ],
+            "invoice_ids": [
+              "in_1UamitE19wsOrukR7goJaSyd"
+            ]
+          }
+        ]
+      },
+      "retry": null
+    },
+    {
+      "cycle": 5,
+      "fault": null,
+      "initial": {
+        "real_http_responses": 2,
+        "audit": {
+          "started_at": "2026-11-12T08:19:27.811849+00:00",
+          "run_status": "complete",
+          "decisions_published": true,
+          "invoice_population": "pagination_completed",
+          "as_of": "2026-11-26",
+          "code_sha256": "ca49feead8a1101b7ccd9198f42a297a737b5b92990fe0e25d59b0348d57c7a8",
+          "deal_population": "caller_supplied_csv_unverified",
+          "snapshot_isolation": "not_guaranteed",
+          "deal_count": 3,
+          "invoice_count": 2,
+          "deals_sha256": "d9f020c067a0bed23fbd7790b768975151b8d917ff5954c4f8f41e3066fcc26d",
+          "invoices_sha256": "596792bc5f3372eb0fcbfeabc3621fb71f1f8b8b8dae0f6271addf21f6a2670d",
+          "finished_at": "2026-11-12T08:19:28.196061+00:00"
+        },
+        "results": [
+          {
+            "deal_id": "539935357174",
+            "status": "amount_mismatch",
+            "alerts": [
+              "amount_mismatch",
+              "missing_invoice"
+            ],
+            "invoice_ids": [
+              "in_1UamioE19wsOrukRDWKzG9Qn"
+            ]
+          },
+          {
+            "deal_id": "539817448636",
+            "status": "missing_invoice",
+            "alerts": [
+              "missing_invoice"
+            ],
+            "invoice_ids": []
+          },
+          {
+            "deal_id": "539978132699",
+            "status": "invoice_draft",
+            "alerts": [
+              "missing_invoice"
+            ],
+            "invoice_ids": [
+              "in_1UamitE19wsOrukR7goJaSyd"
+            ]
+          }
+        ]
+      },
+      "retry": null
+    },
+    {
+      "cycle": 6,
+      "fault": "second_page_empty",
+      "initial": {
+        "real_http_responses": 2,
+        "audit": {
+          "started_at": "2026-11-12T08:19:28.197062+00:00",
+          "run_status": "incomplete",
+          "decisions_published": false,
+          "invoice_population": "unverified",
+          "as_of": "2026-11-26",
+          "code_sha256": "ca49feead8a1101b7ccd9198f42a297a737b5b92990fe0e25d59b0348d57c7a8",
+          "deal_population": "caller_supplied_csv_unverified",
+          "snapshot_isolation": "not_guaranteed",
+          "error": {
+            "type": "ValueError"
+          },
+          "finished_at": "2026-11-12T08:19:28.497845+00:00"
+        },
+        "results": []
+      },
+      "retry": {
+        "real_http_responses": 2,
+        "audit": {
+          "started_at": "2026-11-12T08:19:28.498877+00:00",
+          "run_status": "complete",
+          "decisions_published": true,
+          "invoice_population": "pagination_completed",
+          "as_of": "2026-11-26",
+          "code_sha256": "ca49feead8a1101b7ccd9198f42a297a737b5b92990fe0e25d59b0348d57c7a8",
+          "deal_population": "caller_supplied_csv_unverified",
+          "snapshot_isolation": "not_guaranteed",
+          "deal_count": 3,
+          "invoice_count": 2,
+          "deals_sha256": "d9f020c067a0bed23fbd7790b768975151b8d917ff5954c4f8f41e3066fcc26d",
+          "invoices_sha256": "596792bc5f3372eb0fcbfeabc3621fb71f1f8b8b8dae0f6271addf21f6a2670d",
+          "finished_at": "2026-11-12T08:19:28.958899+00:00"
+        },
+        "results": [
+          {
+            "deal_id": "539935357174",
+            "status": "amount_mismatch",
+            "alerts": [
+              "amount_mismatch",
+              "missing_invoice"
+            ],
+            "invoice_ids": [
+              "in_1UamioE19wsOrukRDWKzG9Qn"
+            ]
+          },
+          {
+            "deal_id": "539817448636",
+            "status": "missing_invoice",
+            "alerts": [
+              "missing_invoice"
+            ],
+            "invoice_ids": []
+          },
+          {
+            "deal_id": "539978132699",
+            "status": "invoice_draft",
+            "alerts": [
+              "missing_invoice"
+            ],
+            "invoice_ids": [
+              "in_1UamitE19wsOrukR7goJaSyd"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "cycle": 7,
+      "fault": null,
+      "initial": {
+        "real_http_responses": 2,
+        "audit": {
+          "started_at": "2026-11-12T08:19:28.959930+00:00",
+          "run_status": "complete",
+          "decisions_published": true,
+          "invoice_population": "pagination_completed",
+          "as_of": "2026-11-26",
+          "code_sha256": "ca49feead8a1101b7ccd9198f42a297a737b5b92990fe0e25d59b0348d57c7a8",
+          "deal_population": "caller_supplied_csv_unverified",
+          "snapshot_isolation": "not_guaranteed",
+          "deal_count": 3,
+          "invoice_count": 2,
+          "deals_sha256": "d9f020c067a0bed23fbd7790b768975151b8d917ff5954c4f8f41e3066fcc26d",
+          "invoices_sha256": "596792bc5f3372eb0fcbfeabc3621fb71f1f8b8b8dae0f6271addf21f6a2670d",
+          "finished_at": "2026-11-12T08:19:29.346233+00:00"
+        },
+        "results": [
+          {
+            "deal_id": "539935357174",
+            "status": "amount_mismatch",
+            "alerts": [
+              "amount_mismatch",
+              "missing_invoice"
+            ],
+            "invoice_ids": [
+              "in_1UamioE19wsOrukRDWKzG9Qn"
+            ]
+          },
+          {
+            "deal_id": "539817448636",
+            "status": "missing_invoice",
+            "alerts": [
+              "missing_invoice"
+            ],
+            "invoice_ids": []
+          },
+          {
+            "deal_id": "539978132699",
+            "status": "invoice_draft",
+            "alerts": [
+              "missing_invoice"
+            ],
+            "invoice_ids": [
+              "in_1UamitE19wsOrukR7goJaSyd"
+            ]
+          }
+        ]
+      },
+      "retry": null
+    },
+    {
+      "cycle": 8,
+      "fault": null,
+      "initial": {
+        "real_http_responses": 2,
+        "audit": {
+          "started_at": "2026-11-12T08:19:29.347281+00:00",
+          "run_status": "complete",
+          "decisions_published": true,
+          "invoice_population": "pagination_completed",
+          "as_of": "2026-11-26",
+          "code_sha256": "ca49feead8a1101b7ccd9198f42a297a737b5b92990fe0e25d59b0348d57c7a8",
+          "deal_population": "caller_supplied_csv_unverified",
+          "snapshot_isolation": "not_guaranteed",
+          "deal_count": 3,
+          "invoice_count": 2,
+          "deals_sha256": "d9f020c067a0bed23fbd7790b768975151b8d917ff5954c4f8f41e3066fcc26d",
+          "invoices_sha256": "596792bc5f3372eb0fcbfeabc3621fb71f1f8b8b8dae0f6271addf21f6a2670d",
+          "finished_at": "2026-11-12T08:19:29.646831+00:00"
+        },
+        "results": [
+          {
+            "deal_id": "539935357174",
+            "status": "amount_mismatch",
+            "alerts": [
+              "amount_mismatch",
+              "missing_invoice"
+            ],
+            "invoice_ids": [
+              "in_1UamioE19wsOrukRDWKzG9Qn"
+            ]
+          },
+          {
+            "deal_id": "539817448636",
+            "status": "missing_invoice",
+            "alerts": [
+              "missing_invoice"
+            ],
+            "invoice_ids": []
+          },
+          {
+            "deal_id": "539978132699",
+            "status": "invoice_draft",
+            "alerts": [
+              "missing_invoice"
+            ],
+            "invoice_ids": [
+              "in_1UamitE19wsOrukR7goJaSyd"
+            ]
+          }
+        ]
+      },
+      "retry": null
+    },
+    {
+      "cycle": 9,
+      "fault": "transport_error",
+      "initial": {
+        "real_http_responses": 2,
+        "audit": {
+          "started_at": "2026-11-12T08:19:29.647820+00:00",
+          "run_status": "incomplete",
+          "decisions_published": false,
+          "invoice_population": "unverified",
+          "as_of": "2026-11-26",
+          "code_sha256": "ca49feead8a1101b7ccd9198f42a297a737b5b92990fe0e25d59b0348d57c7a8",
+          "deal_population": "caller_supplied_csv_unverified",
+          "snapshot_isolation": "not_guaranteed",
+          "error": {
+            "type": "URLError"
+          },
+          "finished_at": "2026-11-12T08:19:29.950809+00:00"
+        },
+        "results": []
+      },
+      "retry": {
+        "real_http_responses": 2,
+        "audit": {
+          "started_at": "2026-11-12T08:19:29.951833+00:00",
+          "run_status": "complete",
+          "decisions_published": true,
+          "invoice_population": "pagination_completed",
+          "as_of": "2026-11-26",
+          "code_sha256": "ca49feead8a1101b7ccd9198f42a297a737b5b92990fe0e25d59b0348d57c7a8",
+          "deal_population": "caller_supplied_csv_unverified",
+          "snapshot_isolation": "not_guaranteed",
+          "deal_count": 3,
+          "invoice_count": 2,
+          "deals_sha256": "d9f020c067a0bed23fbd7790b768975151b8d917ff5954c4f8f41e3066fcc26d",
+          "invoices_sha256": "596792bc5f3372eb0fcbfeabc3621fb71f1f8b8b8dae0f6271addf21f6a2670d",
+          "finished_at": "2026-11-12T08:19:30.331914+00:00"
+        },
+        "results": [
+          {
+            "deal_id": "539935357174",
+            "status": "amount_mismatch",
+            "alerts": [
+              "amount_mismatch",
+              "missing_invoice"
+            ],
+            "invoice_ids": [
+              "in_1UamioE19wsOrukRDWKzG9Qn"
+            ]
+          },
+          {
+            "deal_id": "539817448636",
+            "status": "missing_invoice",
+            "alerts": [
+              "missing_invoice"
+            ],
+            "invoice_ids": []
+          },
+          {
+            "deal_id": "539978132699",
+            "status": "invoice_draft",
+            "alerts": [
+              "missing_invoice"
+            ],
+            "invoice_ids": [
+              "in_1UamitE19wsOrukR7goJaSyd"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "cycle": 10,
+      "fault": null,
+      "initial": {
+        "real_http_responses": 2,
+        "audit": {
+          "started_at": "2026-11-12T08:19:30.332904+00:00",
+          "run_status": "complete",
+          "decisions_published": true,
+          "invoice_population": "pagination_completed",
+          "as_of": "2026-11-26",
+          "code_sha256": "ca49feead8a1101b7ccd9198f42a297a737b5b92990fe0e25d59b0348d57c7a8",
+          "deal_population": "caller_supplied_csv_unverified",
+          "snapshot_isolation": "not_guaranteed",
+          "deal_count": 3,
+          "invoice_count": 2,
+          "deals_sha256": "d9f020c067a0bed23fbd7790b768975151b8d917ff5954c4f8f41e3066fcc26d",
+          "invoices_sha256": "596792bc5f3372eb0fcbfeabc3621fb71f1f8b8b8dae0f6271addf21f6a2670d",
+          "finished_at": "2026-11-12T08:19:30.708959+00:00"
+        },
+        "results": [
+          {
+            "deal_id": "539935357174",
+            "status": "amount_mismatch",
+            "alerts": [
+              "amount_mismatch",
+              "missing_invoice"
+            ],
+            "invoice_ids": [
+              "in_1UamioE19wsOrukRDWKzG9Qn"
+            ]
+          },
+          {
+            "deal_id": "539817448636",
+            "status": "missing_invoice",
+            "alerts": [
+              "missing_invoice"
+            ],
+            "invoice_ids": []
+          },
+          {
+            "deal_id": "539978132699",
+            "status": "invoice_draft",
+            "alerts": [
+              "missing_invoice"
+            ],
+            "invoice_ids": [
+              "in_1UamitE19wsOrukR7goJaSyd"
+            ]
+          }
+        ]
+      },
+      "retry": null
+    }
+  ],
+  "currency": {
+    "real_http_responses": 2,
+    "audit": {
+      "started_at": "2026-11-12T08:19:30.709910+00:00",
+      "run_status": "complete",
+      "decisions_published": true,
+      "invoice_population": "pagination_completed",
+      "as_of": "2026-11-26",
+      "code_sha256": "ca49feead8a1101b7ccd9198f42a297a737b5b92990fe0e25d59b0348d57c7a8",
+      "deal_population": "caller_supplied_csv_unverified",
+      "snapshot_isolation": "not_guaranteed",
+      "deal_count": 1,
+      "invoice_count": 2,
+      "deals_sha256": "e786f3c0932057ab91e11696ef6c1cc5cb849e6d0abd57daed0febc721734ca2",
+      "invoices_sha256": "596792bc5f3372eb0fcbfeabc3621fb71f1f8b8b8dae0f6271addf21f6a2670d",
+      "finished_at": "2026-11-12T08:19:31.089832+00:00"
+    },
+    "results": [
+      {
+        "deal_id": "539978132699",
+        "status": "currency_mismatch",
+        "alerts": [
+          "currency_mismatch",
+          "missing_invoice"
+        ],
+        "invoice_ids": [
+          "in_1UamitE19wsOrukR7goJaSyd"
+        ]
+      }
+    ]
+  },
+  "duplicate": {
+    "real_http_responses": 2,
+    "audit": {
+      "started_at": "2026-11-12T08:19:31.401342+00:00",
+      "run_status": "complete",
+      "decisions_published": true,
+      "invoice_population": "pagination_completed",
+      "as_of": "2026-11-26",
+      "code_sha256": "ca49feead8a1101b7ccd9198f42a297a737b5b92990fe0e25d59b0348d57c7a8",
+      "deal_population": "caller_supplied_csv_unverified",
+      "snapshot_isolation": "not_guaranteed",
+      "deal_count": 1,
+      "invoice_count": 2,
+      "deals_sha256": "c4601dbde7eef4fabc458adb345a6fdfae5edecdc156e6fe61ade7e1e155e53f",
+      "invoices_sha256": "d33abe8fc27015f26700a7fd0d7008f242b8761a84c5f2665b171f272715f56e",
+      "finished_at": "2026-11-12T08:19:31.807104+00:00"
+    },
+    "results": [
+      {
+        "deal_id": "539978132699",
+        "status": "multiple_invoices",
+        "alerts": [
+          "amount_mismatch",
+          "missing_invoice",
+          "multiple_invoices"
+        ],
+        "invoice_ids": [
+          "in_1UamitE19wsOrukR7goJaSyd",
+          "in_1UamioE19wsOrukRDWKzG9Qn"
+        ]
+      }
+    ]
+  },
+  "restoration": {
+    "checked_at_utc": "2026-11-12T08:19:33.179911+00:00",
+    "restored": true,
+    "read_after_restore": [
+      {
+        "id": "in_1UamitE19wsOrukR7goJaSyd",
+        "status": "draft",
+        "livemode": false,
+        "metadata": {
+          "hubspot_deal_id": "539978132699",
+          "sfs_fixture": "hubspot_reconciliation_20261112"
+        },
+        "total": 100000,
+        "currency": "usd",
+        "auto_advance": false,
+        "amount_paid": 0,
+        "attempted": false,
+        "status_transitions": {
+          "finalized_at": null,
+          "marked_uncollectible_at": null,
+          "paid_at": null,
+          "voided_at": null
+        },
+        "subtotal": 100000,
+        "total_taxes": []
+      },
+      {
+        "id": "in_1UamioE19wsOrukRDWKzG9Qn",
+        "status": "draft",
+        "livemode": false,
+        "metadata": {
+          "hubspot_deal_id": "539935357174",
+          "sfs_fixture": "hubspot_reconciliation_20261112"
+        },
+        "total": 190000,
+        "currency": "usd",
+        "auto_advance": false,
+        "amount_paid": 0,
+        "attempted": false,
+        "status_transitions": {
+          "finalized_at": null,
+          "marked_uncollectible_at": null,
+          "paid_at": null,
+          "voided_at": null
+        },
+        "subtotal": 190000,
+        "total_taxes": []
+      }
+    ],
+    "failures": []
+  }
+}
