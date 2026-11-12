@@ -37,13 +37,13 @@
     },
     {
       "id": "APQC_AR_FTE",
-      "value": 34000,
+      "value": 33333,
       "unit": "invoices/FTE/year (median)",
       "reference_year": "not indicated",
       "source": "https://www.apqc.org/resources/benchmarking/open-standards-benchmarking/measures/number-invoices-processed-fte-performs",
-      "sample": "3434 companies worldwide; unsegmented cross-industry APQC measure 100797",
+      "sample": "3496 companies worldwide; unsegmented cross-industry APQC measure 100797",
       "process": "process accounts receivable including received customer funds, NOT specific CRM-Stripe invoice-control task",
-      "derivation": "Currently displayed median 34000 and N3434 verified 2026-11-12 from source page; may change when benchmark is updated; explicitly excluded from model timing",
+      "derivation": "APQC first-party measure 100797 displays median 33333 and N3496 on recheck 2026-11-12; corrected from previously recorded 34000/N3434; excluded from model timing",
       "quality": "B_ADJACENT",
       "status": "external_statistic"
     },
@@ -421,7 +421,7 @@
     }
   ],
   "research_notes": [
-    "2026-11-12 official APQC source inspection corrected earlier third-party search preview (33333, N3496) to current APQC page median 34000, N3434. This figure does not enter model computations.",
+    "2026-11-12 recheck of APQC first-party measure 100797 confirms median 33333 and N3496; earlier registry snapshot (34000, N3434) is superseded. The statistic does not enter model computations.",
     "BA NRW accounting median not sufficiently verified and omitted from registry. 4451 Germany fulltime confirmed on first-party BA page.",
     "Manual checks, AR fault incidence, monitoring overhead, incident cost and monetizable worker minutes lack process-identical observational statistics; results are conditional scenarios.",
     "Unmatched literature from Peru (cash collection), invoice OCR data-entry trials and AP invoice processing is deliberately excluded; no task-equivalence inference.",
