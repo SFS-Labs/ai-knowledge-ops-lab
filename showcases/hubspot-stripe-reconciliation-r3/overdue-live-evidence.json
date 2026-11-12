@@ -1,0 +1,81 @@
+{
+  "workflow_run": 43182639885,
+  "verification_commit": "060c922b9ecbce54ab1280a953b6afad24c34e5f",
+  "stripe_account": "acct_1Uaj2tE19wsOrukR",
+  "fixture": "separate synthetic obligation; explicit hypothetical as-of dates",
+  "stripe_due_date_utc": "2026-11-13",
+  "control_cutoff_utc": "2026-11-14",
+  "checks": [
+    {
+      "audit": {
+        "started_at": "2026-11-12T08:24:21.283862+00:00",
+        "run_status": "complete",
+        "decisions_published": true,
+        "invoice_population": "pagination_completed",
+        "as_of": "2026-11-13",
+        "code_sha256": "ca49feead8a1101b7ccd9198f42a297a737b5b92990fe0e25d59b0348d57c7a8",
+        "deal_population": "caller_supplied_csv_unverified",
+        "snapshot_isolation": "not_guaranteed",
+        "deal_count": 1,
+        "invoice_count": 4,
+        "deals_sha256": "05f1e2c8d9c4168190d89551246d83921196e163b8f88cee9ffbfc04e0f4113d",
+        "invoices_sha256": "29085e29d666ebdb97cd2095b81fdd9b6880519565bceb82eebfae7165f4fdaa",
+        "finished_at": "2026-11-12T08:24:21.525560+00:00"
+      },
+      "results": [
+        {
+          "deal_id": "sfs-overdue-43182639885-1-synthetic-deal",
+          "status": "invoice_open",
+          "alerts": [],
+          "invoice_ids": [
+            "in_1UatItE19wsOrukRwYHYPxue"
+          ]
+        }
+      ]
+    },
+    {
+      "audit": {
+        "started_at": "2026-11-12T08:24:21.593132+00:00",
+        "run_status": "complete",
+        "decisions_published": true,
+        "invoice_population": "pagination_completed",
+        "as_of": "2026-11-14",
+        "code_sha256": "ca49feead8a1101b7ccd9198f42a297a737b5b92990fe0e25d59b0348d57c7a8",
+        "deal_population": "caller_supplied_csv_unverified",
+        "snapshot_isolation": "not_guaranteed",
+        "deal_count": 1,
+        "invoice_count": 4,
+        "deals_sha256": "05f1e2c8d9c4168190d89551246d83921196e163b8f88cee9ffbfc04e0f4113d",
+        "invoices_sha256": "29085e29d666ebdb97cd2095b81fdd9b6880519565bceb82eebfae7165f4fdaa",
+        "finished_at": "2026-11-12T08:24:21.742126+00:00"
+      },
+      "results": [
+        {
+          "deal_id": "sfs-overdue-43182639885-1-synthetic-deal",
+          "status": "payment_overdue",
+          "alerts": [
+            "payment_overdue"
+          ],
+          "invoice_ids": [
+            "in_1UatItE19wsOrukRwYHYPxue"
+          ]
+        }
+      ]
+    }
+  ],
+  "readback": {
+    "id": "in_1UatItE19wsOrukRwYHYPxue",
+    "status": "void",
+    "livemode": false,
+    "auto_advance": false,
+    "collection_method": "send_invoice",
+    "amount_paid": 0,
+    "attempted": false,
+    "status_transitions": {
+      "finalized_at": 1794471860,
+      "marked_uncollectible_at": null,
+      "paid_at": null,
+      "voided_at": 1794471862
+    }
+  }
+}
