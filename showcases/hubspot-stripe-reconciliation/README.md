@@ -180,6 +180,11 @@ Nach einer bewusst geprüften Änderung erzeugt `python3 run_study.py --write`
 Rohdaten, Ergebnistabellen und Hashmanifest neu. Änderungen an Regeln, Eingaben
 und Ergebnissen sind anschließend zusammen im Git-Diff zu prüfen. Das Manifest
 ist ein Integritätsnachweis für die Dateien, keine unabhängige Beglaubigung.
+Die Prüfung verwendet ausschließlich die im Manifest aufgelisteten Quellen.
+Laufzeitdateien wie `audit.json` bleiben außerhalb der Belegbasis, sodass
+CLI-Tests und erneute Reproduktion im selben Arbeitsverzeichnis möglich sind.
+Neue bewusst versionierte Evidenzdateien müssen bei einer Überarbeitung explizit
+ins Manifest aufgenommen werden.
 
 Der Legacy-Status bleibt eine priorisierte Zusammenfassung. Insbesondere kann
 `invoice_draft` gleichzeitig den Alert `missing_invoice` besitzen. Die
