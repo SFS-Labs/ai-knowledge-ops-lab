@@ -1,0 +1,52 @@
+name: HubSpot Stripe R3 offline verification
+
+'on':
+  push:
+    branches:
+      - study/hubspot-stripe-reconciliation-r3
+    paths:
+      - 'showcases/hubspot-stripe-reconciliation/**'
+      - 'showcases/hubspot-stripe-reconciliation-r3/**'
+      - '.github/workflows/reconciliation-r3.yml'
+  pull_request:
+    branches:
+      - study/hubspot-stripe-reconciliation
+    paths:
+      - 'showcases/hubspot-stripe-reconciliation/**'
+      - 'showcases/hubspot-stripe-reconciliation-r3/**'
+      - '.github/workflows/reconciliation-r3.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  reproduce:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout exact event revision without persisted token
+        uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608
+        with:
+          persist-credentials: false
+      - name: Set up Python 3.12
+        uses: actions/setup-python@82c7e631bb3cdc910f68e0081d67478d79c6982d
+        with:
+          python-version: '3.12'
+      - name: Repository regression tests
+        run: python -m unittest discover -s tests -v
+      - name: Reproduce frozen Revision 2 and verify its evidence manifest
+        run: python showcases/hubspot-stripe-reconciliation/run_study.py
+      - name: Reproduce Revision 3 factorial data and rendered report
+        shell: bash
+        run: |
+          set -euo pipefail
+          python showcases/hubspot-stripe-reconciliation-r3/factorial.py > "$RUNNER_TEMP/r3-factorial.jsonl"
+          echo '38a813bcaec4323e0f8990cd7174ed8c9b5ce21a502f07cce05240bc52909ffa  '"$RUNNER_TEMP/r3-factorial.jsonl" | sha256sum --check -
+          python showcases/hubspot-stripe-reconciliation-r3/render_results.py "$RUNNER_TEMP/r3-factorial.jsonl" > "$RUNNER_TEMP/r3-results.md"
+          diff -u showcases/hubspot-stripe-reconciliation-r3/RESULTS.md "$RUNNER_TEMP/r3-results.md"
+      - name: Replay ten offline cycles and compare recorded output
+        shell: bash
+        run: |
+          set -euo pipefail
+          python showcases/hubspot-stripe-reconciliation-r3/cycles.py > "$RUNNER_TEMP/r3-cycles.json"
+          diff -u showcases/hubspot-stripe-reconciliation-r3/cycles-results.json "$RUNNER_TEMP/r3-cycles.json"

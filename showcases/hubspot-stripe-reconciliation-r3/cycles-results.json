@@ -1,0 +1,118 @@
+{
+  "environment": "offline adapter replay; HTTP transport mocked",
+  "cycles": [
+    {
+      "cycle": 1,
+      "fault": null,
+      "initial": {
+        "status": "complete",
+        "decisions": 2,
+        "network_calls": 2
+      },
+      "retry": null
+    },
+    {
+      "cycle": 2,
+      "fault": null,
+      "initial": {
+        "status": "complete",
+        "decisions": 2,
+        "network_calls": 2
+      },
+      "retry": null
+    },
+    {
+      "cycle": 3,
+      "fault": "crm_row_missing",
+      "initial": {
+        "status": "incomplete",
+        "reason": "unexpected_crm_population",
+        "decisions": 0,
+        "network_calls": 0
+      },
+      "retry": {
+        "status": "complete",
+        "decisions": 2,
+        "network_calls": 2
+      }
+    },
+    {
+      "cycle": 4,
+      "fault": null,
+      "initial": {
+        "status": "complete",
+        "decisions": 2,
+        "network_calls": 2
+      },
+      "retry": null
+    },
+    {
+      "cycle": 5,
+      "fault": null,
+      "initial": {
+        "status": "complete",
+        "decisions": 2,
+        "network_calls": 2
+      },
+      "retry": null
+    },
+    {
+      "cycle": 6,
+      "fault": "stripe_page_missing",
+      "initial": {
+        "status": "incomplete",
+        "decisions": 0,
+        "network_calls": 2
+      },
+      "retry": {
+        "status": "complete",
+        "decisions": 2,
+        "network_calls": 2
+      }
+    },
+    {
+      "cycle": 7,
+      "fault": null,
+      "initial": {
+        "status": "complete",
+        "decisions": 2,
+        "network_calls": 2
+      },
+      "retry": null
+    },
+    {
+      "cycle": 8,
+      "fault": null,
+      "initial": {
+        "status": "complete",
+        "decisions": 2,
+        "network_calls": 2
+      },
+      "retry": null
+    },
+    {
+      "cycle": 9,
+      "fault": "stripe_transport_error",
+      "initial": {
+        "status": "incomplete",
+        "decisions": 0,
+        "network_calls": 2
+      },
+      "retry": {
+        "status": "complete",
+        "decisions": 2,
+        "network_calls": 2
+      }
+    },
+    {
+      "cycle": 10,
+      "fault": null,
+      "initial": {
+        "status": "complete",
+        "decisions": 2,
+        "network_calls": 2
+      },
+      "retry": null
+    }
+  ]
+}

@@ -1,0 +1,79 @@
+{
+  "workflow_run": 43180713631,
+  "verification_commit": "752b7741a0ee61f185cb58d4cd3eddb37cb6dee0",
+  "original_export": {
+    "original_sha256": "72b2dfbe3c913ce9e7ca3e346d4be48cd4db38b129c4f565cdce17d2b5115301",
+    "records": [
+      {
+        "Record ID": "539935357174",
+        "Deal Name": "SFS LAB 20261112 | Amount mismatch",
+        "Deal Stage": "Closed Won",
+        "Amount": "2000.0"
+      },
+      {
+        "Record ID": "539817448636",
+        "Deal Name": "SFS LAB 20261112 | Missing invoice",
+        "Deal Stage": "Closed Won",
+        "Amount": "1500.0"
+      },
+      {
+        "Record ID": "539978132699",
+        "Deal Name": "SFS LAB 20261112 | Matching invoice",
+        "Deal Stage": "Closed Won",
+        "Amount": "1000.0"
+      }
+    ],
+    "portal_id": 149743226,
+    "currency": "USD",
+    "currency_source": "HubSpot account default; no additional currencies; deal property and CSV currency absent",
+    "export_audit_id": 164215342,
+    "csv_input": "Original HubSpot UI CSV supplied by user; projection omits owner and unused fields"
+  },
+  "audit": {
+    "started_at": "2026-11-12T08:10:03.025974+00:00",
+    "run_status": "complete",
+    "decisions_published": true,
+    "invoice_population": "pagination_completed",
+    "as_of": "2026-11-12",
+    "code_sha256": "ca49feead8a1101b7ccd9198f42a297a737b5b92990fe0e25d59b0348d57c7a8",
+    "deal_population": "caller_supplied_csv_unverified",
+    "snapshot_isolation": "not_guaranteed",
+    "deal_count": 3,
+    "invoice_count": 2,
+    "deals_sha256": "d9f020c067a0bed23fbd7790b768975151b8d917ff5954c4f8f41e3066fcc26d",
+    "invoices_sha256": "596792bc5f3372eb0fcbfeabc3621fb71f1f8b8b8dae0f6271addf21f6a2670d",
+    "finished_at": "2026-11-12T08:10:03.315406+00:00"
+  },
+  "results": [
+    {
+      "deal_id": "539935357174",
+      "status": "amount_mismatch",
+      "alerts": [
+        "amount_mismatch",
+        "missing_invoice"
+      ],
+      "invoice_ids": [
+        "in_1UamioE19wsOrukRDWKzG9Qn"
+      ]
+    },
+    {
+      "deal_id": "539817448636",
+      "status": "missing_invoice",
+      "alerts": [
+        "missing_invoice"
+      ],
+      "invoice_ids": []
+    },
+    {
+      "deal_id": "539978132699",
+      "status": "invoice_draft",
+      "alerts": [
+        "missing_invoice"
+      ],
+      "invoice_ids": [
+        "in_1UamitE19wsOrukR7goJaSyd"
+      ]
+    }
+  ],
+  "source_sha256": "72b2dfbe3c913ce9e7ca3e346d4be48cd4db38b129c4f565cdce17d2b5115301"
+}
