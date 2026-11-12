@@ -20,7 +20,8 @@ def stripe(path, fields=None, suffix=None):
         with urlopen(req, timeout=20) as response:
             return json.load(response)
     except HTTPError as exc:
-        raise RuntimeError(f'Stripe {path.split("/")[0]} HTTP {exc.code}') from None
+        err = json.load(exc).get('error', {})
+        raise RuntimeError(f'Stripe {path.split("/")[0]} HTTP {exc.code}: {err.get("code")} {err.get("param")}') from None
 
 def guard(inv, status):
     assert inv['livemode'] is False and inv['status'] == status
@@ -32,7 +33,7 @@ assert stripe('account')['id'] == 'acct_1Uaj2tE19wsOrukR'
 customer = stripe('customers', {'name': 'SFS synthetic overdue fixture', 'metadata[sfs_fixture]': tag}, 'customer')
 assert customer['livemode'] is False and not customer.get('email')
 invoice = stripe('invoices', {'customer': customer['id'], 'collection_method': 'send_invoice',
-    'days_until_due': 1, 'auto_advance': 'false', 'pending_invoice_items_behavior': 'exclude',
+    'days_until_due': 1, 'auto_advance': 'false',
     'metadata[hubspot_deal_id]': deal, 'metadata[sfs_fixture]': tag}, 'draft')
 path = 'invoices/' + invoice['id']
 checks = []
