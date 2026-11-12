@@ -36,26 +36,14 @@
       "status": "external_statistic"
     },
     {
-      "id": "BA_BOOKKEEPER_NRW_2025",
-      "value": 4550,
-      "unit": "EUR gross monthly fulltime median",
-      "reference_year": 2025,
-      "source": "https://web.arbeitsagentur.de/entgeltatlas/beruf/7692?region=8",
-      "sample": "Full-time accounting specialist NRW",
-      "process": "accounting group; no AR-specific stopwatch time",
-      "derivation": "Published regional median, context only",
-      "quality": "A_CONTEXT",
-      "status": "external_statistic"
-    },
-    {
       "id": "APQC_AR_FTE",
-      "value": 33333,
+      "value": 34000,
       "unit": "invoices/FTE/year (median)",
       "reference_year": "not indicated",
       "source": "https://www.apqc.org/resources/benchmarking/open-standards-benchmarking/measures/number-invoices-processed-fte-performs",
-      "sample": "3496 companies international, displayed unsegmented sample",
+      "sample": "3434 companies worldwide; unsegmented cross-industry APQC measure 100797",
       "process": "process accounts receivable including received customer funds, NOT specific CRM-Stripe invoice-control task",
-      "derivation": "Published descriptive AR throughput; excluded from model timing",
+      "derivation": "Currently displayed median 34000 and N3434 verified 2026-11-12 from source page; may change when benchmark is updated; explicitly excluded from model timing",
       "quality": "B_ADJACENT",
       "status": "external_statistic"
     },
@@ -322,6 +310,121 @@
       "derivation": "1+0.35",
       "quality": "A_SIMULATION_INTERNAL",
       "status": "technical_model_design"
+    },
+    {
+      "id": "REFERENCE_SIZE_STAFF",
+      "value": 80,
+      "unit": "assumed persons",
+      "reference_year": 2026,
+      "source": null,
+      "sample": "none; synthetic profile",
+      "process": "reference German software/IT services B2B staff",
+      "derivation": "synthetic scenario not an observed company statistic",
+      "quality": "D_ASSUMPTION",
+      "status": "assumption"
+    },
+    {
+      "id": "REFERENCE_REVENUE",
+      "value": 12000000,
+      "unit": "assumed EUR revenue/year",
+      "reference_year": 2026,
+      "source": null,
+      "sample": "none; synthetic profile",
+      "process": "reference B2B firm revenue",
+      "derivation": "synthetic scale assumption, not inferred from observed deals",
+      "quality": "D_ASSUMPTION",
+      "status": "assumption"
+    },
+    {
+      "id": "REFERENCE_FINANCE_FTE",
+      "value": 5,
+      "unit": "assumed FTE",
+      "reference_year": 2026,
+      "source": null,
+      "sample": "none; synthetic profile",
+      "process": "finance accounting group incl receivables",
+      "derivation": "hypothesis, partial AR responsibilities only",
+      "quality": "D_ASSUMPTION",
+      "status": "assumption"
+    },
+    {
+      "id": "SMALL_SIZE_STAFF",
+      "value": 20,
+      "unit": "assumed persons",
+      "reference_year": 2026,
+      "source": null,
+      "sample": "none; synthetic profile",
+      "process": "small profile staff",
+      "derivation": "hypothesis, company not identified",
+      "quality": "D_ASSUMPTION",
+      "status": "assumption"
+    },
+    {
+      "id": "SMALL_REVENUE",
+      "value": 2400000,
+      "unit": "assumed EUR revenue/year",
+      "reference_year": 2026,
+      "source": null,
+      "sample": "none; synthetic profile",
+      "process": "small profile annual revenue",
+      "derivation": "hypothesis, independent from transactions",
+      "quality": "D_ASSUMPTION",
+      "status": "assumption"
+    },
+    {
+      "id": "SMALL_FINANCE_FTE",
+      "value": 1.5,
+      "unit": "assumed FTE",
+      "reference_year": 2026,
+      "source": null,
+      "sample": "none; synthetic profile",
+      "process": "small profile finance group",
+      "derivation": "hypothesis, not measured time",
+      "quality": "D_ASSUMPTION",
+      "status": "assumption"
+    },
+    {
+      "id": "INTENSIVE_SIZE_STAFF",
+      "value": 180,
+      "unit": "assumed persons",
+      "reference_year": 2026,
+      "source": null,
+      "sample": "none; synthetic profile",
+      "process": "transaction-intensive profile staff",
+      "derivation": "hypothesis, company not identified",
+      "quality": "D_ASSUMPTION",
+      "status": "assumption"
+    },
+    {
+      "id": "INTENSIVE_REVENUE",
+      "value": 30000000,
+      "unit": "assumed EUR revenue/year",
+      "reference_year": 2026,
+      "source": null,
+      "sample": "none; synthetic profile",
+      "process": "transaction-intensive annual revenue",
+      "derivation": "hypothesis, independent from synthetic transaction mix",
+      "quality": "D_ASSUMPTION",
+      "status": "assumption"
+    },
+    {
+      "id": "INTENSIVE_FINANCE_FTE",
+      "value": 9,
+      "unit": "assumed FTE",
+      "reference_year": 2026,
+      "source": null,
+      "sample": "none; synthetic profile",
+      "process": "transaction-intensive finance group",
+      "derivation": "hypothesis, not measured time",
+      "quality": "D_ASSUMPTION",
+      "status": "assumption"
     }
+  ],
+  "research_notes": [
+    "2026-11-12 official APQC source inspection corrected earlier third-party search preview (33333, N3496) to current APQC page median 34000, N3434. This figure does not enter model computations.",
+    "BA NRW accounting median not sufficiently verified and omitted from registry. 4451 Germany fulltime confirmed on first-party BA page.",
+    "Manual checks, AR fault incidence, monitoring overhead, incident cost and monetizable worker minutes lack process-identical observational statistics; results are conditional scenarios.",
+    "Unmatched literature from Peru (cash collection), invoice OCR data-entry trials and AP invoice processing is deliberately excluded; no task-equivalence inference.",
+    "Elicit API access denied by plan: no paid upgrade, not used in calibration."
   ]
 }
