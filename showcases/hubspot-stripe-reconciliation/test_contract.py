@@ -92,6 +92,21 @@ class StudyAcceptanceTests(unittest.TestCase):
         self.assertEqual(row["hurdle_100_eur_extra_minutes_per_alert"], .97)
         self.assertFalse(row["meets_illustrative_100_eur_hurdle"])
 
+    def test_manifest_files_ignore_untracked_runtime_audits(self):
+        import run_study
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / "source.csv").write_text("original,source\n")
+            (root / "audit.json").write_text('{"run_status":"complete"}')
+            (root / "extra-output.jsonl").write_text("{}\n")
+            (root / "evidence-manifest.json").write_text(
+                json.dumps({"sha256": {"source.csv": "expected-original-hash"}}))
+            with patch.object(run_study, "ROOT", root):
+                self.assertEqual(
+                    [p.relative_to(root).as_posix() for p in run_study.evidence_paths()],
+                    ["source.csv"],
+                )
+
     def test_event_without_exposure_remains_undefined(self):
         from evaluate import event_metrics
         counts = event_metrics({}, {})["currency_mismatch"]

@@ -115,9 +115,12 @@ def render(records):
 
 
 def evidence_paths():
-    return sorted(path for path in ROOT.rglob("*") if path.is_file()
-                  and path.name != "evidence-manifest.json" and "__pycache__" not in path.parts
-                  and path.suffix in {".py", ".md", ".csv", ".json", ".jsonl"})
+    """Verify the explicit evidence set; ignore unrelated runtime files."""
+    manifest = json.loads((ROOT / "evidence-manifest.json").read_text(encoding="utf-8"))
+    paths = [ROOT / name for name in manifest["sha256"]]
+    if any(not path.resolve().is_relative_to(ROOT.resolve()) for path in paths):
+        raise ValueError("Evidence manifest contains a path outside the study directory")
+    return sorted(paths)
 
 
 def main():
