@@ -6,7 +6,7 @@
 
 R4 ergänzt R2/R3 um ein nachvollziehbares Kostenmodell mit externem deutschen Arbeitgeberkostenanker. Hier wird **keine empirisch gemessene Prozesszeit**, **keine realisierte Ersparnis**, **kein nachgewiesener ROI** und **kein echter Produktionsbetrieb** behauptet. KfW und APQC dienen der strukturellen Kontextualisierung, nicht als Soll-Ist-Aufwandsmessung.
 
-**Vorläufige Entscheidung:** FREIGEGEBEN MIT KONKRETEN EINSCHRÄNKUNGEN **für die konditionale, synthetische wirtschaftliche Szenarienrechnung**; abschließende technische Freigabe der R4-CI erst nach erfolgreichem Lauf auf finalem Head. Eine **empirisch kalibrierte Tätigkeitszeit und Betriebskostenmessung** bleibt methodisch **BLOCKIERT**, da die erforderlichen Direktevidenzen fehlen.
+**Freigabeentscheidung:** Technisches R4-Modell: **FREIGEGEBEN** nach isoliertem Ausführungstest und R4 Push-/PR-CI auf dem belegten Code-Commit. Konditionale methodische Szenariostudie: **FREIGEGEBEN MIT KONKRETEN EINSCHRÄNKUNGEN**. Ein **empirisch gemessener/konsistent extern kalibrierter Nettoeffizienzgewinn** bleibt **BLOCKIERT**, weil direkte Zeit-/Betriebsdatenevidenz fehlt. Gesamtentscheid R4: **FREIGEGEBEN MIT KONKRETEN EINSCHRÄNKUNGEN** ausschließlich als modellbasierte Studie.
 
 ## Provenienz und wissenschaftliche Fixierung
 
@@ -46,7 +46,7 @@ Weitere Zellresultate, Break-even-Schwellen, bedingte Amortisation, Kosten-/Revi
 
 TDD-Akzeptanztests prüfen R3-Quelle, Einheiten, symmetrischen gemeinsamen Review, Vorzeichenumkehr, Grenzwerte, fehlende Amortisation und bytegleiche Resultate. Secretfreie GitHub-Actions-CI `.github/workflows/reconciliation-r4.yml` prüft zusätzlich R2-Code-Blob, Repository-Regressionstests, R2-Fachtests und R4-Reproduktion.
 
-**CI-Status:** wird mit den finalen GitHub-Run-Links und dem finalen Head nachverifiziert; kein ungeprüfter Erfolg wird behauptet.
+**CI-Nachweis für berechnete R4-Dateien, Head `4e5ce870749d89dc17719de04fe378ac3fe1056d`:** [Push-Run 43225985808](https://github.com/SFS-Labs/ai-knowledge-ops-lab/actions/runs/43225985808) **SUCCESS**, [Draft-PR-Run 43226096758](https://github.com/SFS-Labs/ai-knowledge-ops-lab/actions/runs/43226096758) **SUCCESS**. Auf isoliertem Sprite-Checkout desselben Heads zusätzlich **10/10 R4-, 19/19 R2- und 135/135 allgemeinen Tests PASS**, bytegleiche JSON-/Markdown-Reproduktion PASS (Python 3.13.17); CI nutzt Python 3.12. Dieser Handoff-Dokumentationscommit erfolgt danach: **sein eigener Head-Status ist gesondert zu prüfen**, nicht aus älteren Jobs abzuleiten. [Draft PR #49](https://github.com/SFS-Labs/ai-knowledge-ops-lab/pull/49), Base `study/hubspot-stripe-reconciliation-r3`, keine Merges.
 
 **Keine wissenschaftliche Freigabe** für tatsächliche externe Wirtschaftlichkeit: Die zentrale unbekannte Grenzgröße von ~1,95 s manuellem Prüfumfang im Basisfall kann ohne echte Zeit-/Prozessmessung nicht entschieden werden. Insbesondere kann ein Tabellenfilter weniger Grenzarbeit erfordern; bei hoher Alertzahl und Wartung kann die Automation schlechter ausfallen. Der Kapazitätswert ist eine modellierte Opportunitätsbewertung, nicht Cashflow. Negative Modellstunden werden als voller Kostenaufwand bewertet. Implementierungskosten werden nur in der bedingten Amortisation, nicht noch einmal im periodischen Netto berechnet.
 
