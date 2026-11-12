@@ -21,7 +21,7 @@ def stripe(path, fields=None, suffix=None):
             return json.load(response)
     except HTTPError as exc:
         err = json.load(exc).get('error', {})
-        raise RuntimeError(f'Stripe {path.split("/")[0]} HTTP {exc.code}: {err.get("code")} {err.get("param")}') from None
+        raise RuntimeError(f'Stripe {path.split("/")[0]} HTTP {exc.code}: {err.get("code")} {err.get("param")} {err.get("message", "")[:240]}') from None
 
 def guard(inv, status):
     assert inv['livemode'] is False and inv['status'] == status
@@ -30,8 +30,8 @@ def guard(inv, status):
     assert inv['amount_paid'] == 0 and inv['attempted'] is False
 
 assert stripe('account')['id'] == 'acct_1Uaj2tE19wsOrukR'
-customer = stripe('customers', {'name': 'SFS synthetic overdue fixture', 'metadata[sfs_fixture]': tag}, 'customer')
-assert customer['livemode'] is False and not customer.get('email')
+customer = stripe('customers', {'name': 'SFS synthetic overdue fixture', 'email': 'sfs-overdue@example.invalid', 'metadata[sfs_fixture]': tag}, 'customer')
+assert customer['livemode'] is False and customer.get('email') == 'sfs-overdue@example.invalid'
 invoice = stripe('invoices', {'customer': customer['id'], 'collection_method': 'send_invoice',
     'days_until_due': 1, 'auto_advance': 'false',
     'metadata[hubspot_deal_id]': deal, 'metadata[sfs_fixture]': tag}, 'draft')
