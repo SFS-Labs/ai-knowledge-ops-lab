@@ -1,0 +1,29 @@
+name: Stripe live alert coverage and repeated cycles
+'on':
+  push:
+    branches: [verify/stripe-sandbox-http]
+    paths: [.github/workflows/stripe-live-coverage.yml]
+permissions:
+  contents: read
+concurrency:
+  group: sfs-stripe-sandbox-verification
+  cancel-in-progress: false
+jobs:
+  verify:
+    environment: stripe-sandbox
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    defaults:
+      run:
+        working-directory: showcases/hubspot-stripe-reconciliation
+    steps:
+      - uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608
+        with:
+          persist-credentials: false
+      - run: python3 live_coverage.py "$RUNNER_TEMP/coverage"
+        env:
+          STRIPE_API_KEY: ${{ secrets.STRIPE_API_KEY }}
+      - if: failure() || cancelled()
+        run: python3 verify_sandbox_http.py --restore-only --output "$RUNNER_TEMP/coverage"
+        env:
+          STRIPE_API_KEY: ${{ secrets.STRIPE_API_KEY }}
