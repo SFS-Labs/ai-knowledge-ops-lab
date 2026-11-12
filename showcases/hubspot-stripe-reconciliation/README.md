@@ -106,7 +106,7 @@ künstlichen Verzögerungswert von null.
 ## Versuchsplanung
 
 Drei kombinierte Belastungsprofile haben 3, 6 beziehungsweise 18 neue Deals
-pro Geschäftstag und 5%, 28% beziehungsweise 40% injizierte Abweichungsszenarien.
+pro Geschäftstag und 5%, 28% beziehungsweise 40% injizierte Abweichungsszenarien je Verpflichtung.
 Jedes Profil umfasst zwölf gepaarte Läufe über 100 Geschäftstage mit Seeds
 20261112 bis 20261123. Die Profile schätzen keine getrennten Effekte von
 Volumen und Fehlerquote. Jeder Lauf verwendet identische Snapshots für beide
@@ -127,8 +127,17 @@ beträgt 40 EUR/Stunde, zusätzliche Betriebskosten 20 EUR je 100 Tage.
 Zusätzlicher Reviewaufwand wird mit 0, 1 oder 3 Minuten je eindeutigem Alertpaar
 variiert. Gleicher gemeinsamer Prüfaufwand hebt sich im Vergleich auf.
 
-Kapazitätswert = (manuelle Aktualisierung − Aufsicht/Pflege − zusätzliche
-Prüfung − zusätzliche Störungsarbeit) × Stundensatz − Betriebskosten.
+Kapazitätswert in EUR je 100 Geschäftstage = (100 × Refreshminuten pro Tag
+− 60 Minuten Aufsicht/Pflege − Alertpaare × zusätzliche Reviewminuten pro Paar
+− Störungsminuten) / 60 × 40 EUR/Stunde − 20 EUR.
+
+Bei fünf Refreshminuten pro Tag stehen nach Aufsicht und Betriebskosten
+410 Minuten für Zusatzreviews bis zur Nullschwelle zur Verfügung. Für
+mindestens 100 EUR sind es 260 Minuten. Bei einer Zusatzminute je Paar
+überschreitet Low beide Schwellenziele, Default bleibt positiv unter 100 EUR
+und Stress ist negativ. Bei drei Zusatzminuten je Paar ist Default selbst
+bei acht Refreshminuten pro Tag negativ. Die 27 Szenarien und beide
+Schwellen wurden aus den Medianen der Rohdaten separat nachgerechnet.
 
 Der aktuelle Rechenlauf setzt zusätzliche Störungsarbeit auf null. Jede
 zusätzliche Stunde reduziert das ausgewiesene Ergebnis um 40 EUR.
@@ -184,8 +193,6 @@ ungültige Beträge und fehlerhafte Rechnungsantworten führen zum Abbruch ohne
 Entscheidungen. Leere Populationen werden mit Anzahl null im Audit ausgewiesen;
 ihre fachliche Vollständigkeit muss der Aufrufer bestätigen.
 
-Die [Sandbox-/Review-Notizen](EVIDENCE_NOTES.md) trennen den historischen
-MCP-Test, die erneute Read-only-Prüfung und die lokalen Adaptertests.
-Direkter Live-HTTP-Lauf, vollständiger Exportpfad und menschliche Zeitmessung
-sind weiterhin offen. Die Vorlage `timing-template.csv` enthält keine
-erfundenen Messwerte.
+Die [Sandbox- und Review-Notizen](EVIDENCE_NOTES.md) dokumentieren den
+historischen MCP-Ratentest, den lokalen Adapter-Replay, den direkten HTTP-Lauf
+mit zwei separaten Deals und den HubSpot-abgeleiteten Sandbox-Ratentest.

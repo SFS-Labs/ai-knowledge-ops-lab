@@ -10,16 +10,16 @@ Der Live-Abruf über Stripe MCP erfolgte mit limit=1. Nach einer ersten Seite mi
 
 Die temporären Metadaten wurden anschließend erfolgreich auf die ursprünglichen Deal-Zuordnungen zurückgesetzt. Es wurden keine Rechnungen finalisiert oder versendet. Der Ratenplan war eine explizite Testeingabe, kein aus HubSpot automatisch extrahierter Zahlungsplan.
 
-Der HTTP-Adapter wurde lokal mit einem Abbruch auf Seite 2 getestet. Die CLI veröffentlichte keine Entscheidungen und schrieb incomplete in den Auditdatensatz. Der Wiederholungslauf schrieb complete. Der Live-MCP-Test und der lokale HTTP-Adaptertest sind getrennte Nachweise. Ein direkter Live-HTTP-Lauf des Skripts sowie wiederholte betriebliche Zuverlässigkeitsmessungen stehen aus.
+Der HTTP-Adapter wurde lokal mit einem Abbruch auf Seite 2 getestet. Die CLI veröffentlichte keine Entscheidungen und schrieb incomplete in den Auditdatensatz. Der Wiederholungslauf schrieb complete. Der Live-MCP-Test und der lokale HTTP-Adaptertest sind getrennte Nachweise. Wiederholte betriebliche Zuverlässigkeitsmessungen liegen außerhalb dieser Arbeitsprobe.
 
 ## Review-Abdeckung
 
 | Review-Punkt | Umsetzung und verbleibende Evidenzgrenze |
 | --- | --- |
-| Aussagekraft | Hauptaussage auf synthetische Snapshots und definierte Regeln begrenzt. Vollständiger Export-/Bedienpfad bleibt ungeprüft. |
+| Aussagekraft | Hauptaussage auf synthetische Snapshots und definierte Regeln begrenzt. Der native HubSpot-UI-Export und menschliche Bedienpfad liegen außerhalb des nachgewiesenen Pfads. |
 | Mehrfachfehler und Stichtage | Vollständige Alertmengen, sieben zusätzliche unabhängig gelabelte Grenzsituationen. |
 | Nenner | Ereignisse je Alerttyp, Fehlalarmepisoden, Verzögerung und offene Fenster in Rohdaten und Bericht. |
-| Vollständigkeit | Pagination, Abbruch ohne Entscheidungen, Neustart und Auditstatus getestet. HubSpot-CSV-Vollständigkeit und atomare API-Snapshots bleiben unbestätigt. |
+| Vollständigkeit | Pagination, Abbruch ohne Entscheidungen, Neustart und Auditstatus getestet. Die auf einen HubSpot-Deal begrenzte Auswahl ist geprüft. Atomare API-Snapshots bleiben unbestätigt. |
 | Wirtschaftlichkeit | Null- und 100-EUR-Schwelle neu gerechnet, Investitionskosten und Horizont in Amortisationsformel berücksichtigt. |
 | Arbeitszeit | Szenarioannahmen gekennzeichnet, Vorlage und gepaartes Messprotokoll vorbereitet. Menschliche Zeitmessung steht aus. |
 
@@ -38,16 +38,83 @@ Die erste war wieder Deal `539978132699`, die zweite Deal `539935357174`
 zugeordnet; beide Metadaten enthielten keine `obligation_id`. Das bestätigt den
 aktuellen Rücksetzungszustand. Es wurde bei dieser Prüfung ausschließlich gelesen.
 
-Ein direkter Live-HTTP-Test von `reconcile.py` wurde nicht ausgeführt, da in der
-Ausführungsumgebung kein Sandbox-API-Schlüssel verfügbar war. Der MCP-Zugriff
-stellt dem Python-Prozess keinen Schlüssel zur Verfügung. Das bleibt ein offener
-Integrationsnachweis; der lokale Adapter-Replay ersetzt ihn nicht.
+## Direkter HTTP-Lauf mit zwei separaten Deals
+
+Der [GitHub-Actions-Lauf 43142463091](https://github.com/SFS-Labs/ai-knowledge-ops-lab/actions/runs/43142463091)
+bestand auf Commit `c444e73b477d4685dd9bbc723a7a57a24f60c46a`. Der
+Workflow schrieb zwei separate synthetische Dealzeilen inline in eine CSV und
+führte `reconcile.py --audit` per Stripe-HTTP aus. Beide Drafts meldeten
+`missing_invoice`, einer zusätzlich `amount_mismatch`. Die Invoice-Liste
+wurde vollständig durchlaufen. Dieser Lauf enthielt weder einen HubSpot-Abruf
+noch Raten oder einen expliziten Ausstellungsstichtag.
+
+## HubSpot-abgeleiteter direkter HTTP-Ratentest
+
+Die [aufgezeichnete Quelle](evidence/hubspot-source.json) stammt aus dem
+HubSpot-MCP-Abruf `search_crm_objects` im Portal 149743226, gefiltert auf
+`hs_object_id=539935357174` und `dealstage=closedwon`. Genau ein Treffer
+wurde mit einem separaten Abruf nach ID und der Pipeline-Definition geprüft.
+Der Betrag ist 2.000 USD. Weil `deal_currency_code` in beiden Antworten
+fehlt, stammt USD aus den Kontoeinstellungen ohne weitere Währungen.
+Der native UI-Export wurde nicht geprüft.
+
+`prepare_sandbox_input.py` erzeugt die [Closed-Won-CSV](evidence/derived/hubspot-closed-won.csv)
+und die [Verpflichtungs-CSV](evidence/derived/obligations.csv). Die
+[Feldherkunft und Hashes](evidence/derived/transformation.json) dokumentieren
+die Umrechnung in 200.000 Minor Units. Der [separate Testplan](evidence/installment-plan.json)
+teilt diese in zwei Sollraten von je 100.000 USD-Minor-Units inklusive
+modellierter Steuer von null. Er setzt beide Ausstellungsstichtage auf
+2026-11-12 und beide Zahlungskontrollstichtage auf 2026-11-26.
+
+Der [GitHub-Actions-Lauf 43177257680](https://github.com/SFS-Labs/ai-knowledge-ops-lab/actions/runs/43177257680)
+bestand auf `b5b6c19aa7ab30d6e452286ef9300944bee10feb` im separaten
+Verifikationsbranch. Der Job prüfte Konto und Drafts per HTTP, sicherte die
+Originalmetadaten, setzte temporär die Ratenzuordnungen und rief das bytegleiche
+`reconcile.py` mit der abgeleiteten CSV, `--as-of 2026-11-12` und `--audit`
+auf. Der separate Job verwendet das vorhandene Environment `stripe-sandbox`.
+
+| Rate | Stripe-Entwurf | Soll / Ist (USD-Minor-Units) | Vollständige Alerts |
+| --- | --- | ---: | --- |
+| 1 | `in_1UamitE19wsOrukR7goJaSyd` | 100.000 / 100.000 | `missing_invoice` |
+| 2 | `in_1UamioE19wsOrukRDWKzG9Qn` | 100.000 / 190.000 | `amount_mismatch`, `missing_invoice` |
+
+Der [Auditdatensatz](evidence/live-43177257680/audit.json) meldet `complete`
+und `pagination_completed` für zwei Verpflichtungen und zwei gelesene
+Rechnungen. Die [Ausgabe](evidence/live-43177257680/results.json) belegt die
+eindeutigen Zuordnungen. Die Vollständigkeit der begrenzten HubSpot-Auswahl
+wurde vor dem CLI-Aufruf separat geprüft. Der Audit beschreibt die
+CSV wie vorgesehen als vom Aufrufer bereitgestellt. Die Rechnungsliste
+endete vollständig, ohne Garantie atomarer Snapshot-Isolation oder
+Aussage über Zuverlässigkeit im wiederholten Betrieb.
+
+Die [Sicherung](evidence/live-43177257680/metadata-backup.json) stimmt mit dem
+[erneut gelesenen Rücksetzungszustand](evidence/live-43177257680/restoration.json)
+überein. Beide Rechnungen blieben Drafts mit deaktivierter automatischer
+Weiterverarbeitung und ohne Zahlungsversuch. Es wurden ausschließlich
+Metadaten geändert. Die Hashes im [Laufnachweis](evidence/live-43177257680/summary.json)
+wurden gegen die versionierten Artefakte geprüft. Ein lokal injizierter
+Fehler nach der zweiten Metadatenänderung prüft die Rücksetzung beider Drafts.
+
+## Fachübergreifender Gegencheck der Revision 2
+
+Der Gegencheck mit `bpm-peer-review` bewertet die Arbeitsprobe für die
+definierten synthetischen Zustände und den begrenzten Integrationsnachweis
+als tragfähig. Die stärkste alternative Erklärung für die perfekte
+Übereinstimmung sind gemeinsame Regeln und Generatorannahmen. Die 17
+Handfälle prüfen diese Regeln gegen separate Labels und decken auch den
+im Massengenerator fehlenden Währungsfehler ab. Der Live-Test prüft eine
+andere Fehlerquelle: Quelle, Ratenzuordnung, echter Transport und Rücksetzung
+im selben Ablauf. Die Modellannahmen zur Reviewzeit können das wirtschaftliche
+Urteil trotz gleicher Kontrollgüte umkehren. Die Nachrechnung der 27
+Szenarien und beider Schwellen aus den Rohdaten bestätigt die Berichtswerte.
+Die Befunde begrenzen die Aussage auf die Arbeitsprobe und begründen
+keine Änderung an Regeln, Seeds oder Referenzlabels.
 
 ## Fachübergreifende Einordnung
 
 | Perspektive | Nachweis / Grenze |
 | --- | --- |
-| Wirtschaftsinformatik / BPM | Read-only-Abgleich und Paarzuordnung implementiert; vollständiger HubSpot-Exportpfad offen. |
+| Wirtschaftsinformatik / BPM | Read-only-Abgleich und Paarzuordnung implementiert; begrenzter HubSpot-MCP-Datenpfad mit CSV-Transformation geprüft. |
 | Operations Management | Drei Belastungsprofile und offene Ereignisse; keine gemessene Bearbeitungskapazität. |
 | Operations Research | Gepaarte Snapshots und Kosten-Sensitivität; Volumen und Inzidenz nicht separat identifiziert. |
 | Empirisches Software Engineering | Handlabels, Mehrfachfehler, Adapterfehler, Wiederholung, Status- und Alertvergleich. |
@@ -56,7 +123,7 @@ Integrationsnachweis; der lokale Adapter-Replay ersetzt ihn nicht.
 | Controlling | Laufender Kapazitätswert und Investitionsformel; realisierte Zahlungseffekte nicht gemessen. |
 | Arbeitswissenschaft | Vorlage für gepaarte Zeitmessung; alle Zeitparameter bleiben Annahmen. |
 | HCI | Kein gemessener Spreadsheet-/Dashboard-Bedienpfad. |
-| Data Quality | Importvalidierung, Pagination, Hashes; Population und Snapshot-Atomizität offen. |
+| Data Quality | Importvalidierung, Pagination, Hashes; begrenzte Population geprüft. Snapshot-Atomizität offen. |
 | Interne Kontrolle / Revision | Reproduzierbare Kontrollregeln und Audit; keine betriebliche Wirksamkeitsprüfung. |
 | Kausale Inferenz | Kein kausal identifizierter betrieblicher Nutzen; modellbedingte Ergebnisse. |
 | Organisationspsychologie | Alarmmüdigkeit und Adoption nicht untersucht; zusätzliche Reviewzeit als Sensitivität. |

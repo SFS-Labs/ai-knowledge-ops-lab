@@ -1,0 +1,2 @@
+deal_id,dealstage,amount_major,currency,currency_source
+539935357174,closedwon,2000,USD,account.companyCurrency; no additional currencies; deal field absent

@@ -1,0 +1,166 @@
+{
+  "recorded_at_utc": "2026-11-12T02:45:35.763Z",
+  "data_path": "HubSpot MCP search_crm_objects -> captured JSON -> deterministic CSV transformation",
+  "ui_export_tested": false,
+  "portal_id": 149743226,
+  "selection": {
+    "objectType": "DEAL",
+    "hs_object_id": "539935357174",
+    "dealstage": "closedwon",
+    "limit": 100,
+    "offset": 0
+  },
+  "requested_properties": [
+    "hs_object_id",
+    "dealname",
+    "dealstage",
+    "pipeline",
+    "amount",
+    "deal_currency_code",
+    "hs_is_closed_won",
+    "closedate",
+    "hs_lastmodifieddate"
+  ],
+  "search": {
+    "results": [
+      {
+        "id": 539935357174,
+        "properties": {
+          "pipeline": "default",
+          "dealname": "SFS LAB 20261112 | Amount mismatch",
+          "hs_is_closed_won": "true",
+          "amount": "2000",
+          "closedate": "2026-11-12T01:21:56.806Z",
+          "hs_lastmodifieddate": "2026-11-12T01:22:06.658Z",
+          "dealstage": "closedwon",
+          "hs_object_id": "539935357174",
+          "createdate": "2026-11-12T01:21:56.806Z"
+        },
+        "displayName": "SFS LAB 20261112 | Amount mismatch"
+      }
+    ],
+    "total": 1,
+    "urlTemplate": "https://app.hubspot.com/contacts/149743226/record/0-3/{id}?utm_source=app_12360546_mcp&utm_medium=ai_agent&utm_campaign=search",
+    "offset": 1
+  },
+  "independent_get": {
+    "objects": [
+      {
+        "id": 539935357174,
+        "properties": {
+          "pipeline": "default",
+          "dealname": "SFS LAB 20261112 | Amount mismatch",
+          "hs_is_closed_won": "true",
+          "amount": "2000",
+          "closedate": "2026-11-12T01:21:56.806Z",
+          "hs_lastmodifieddate": "2026-11-12T01:22:06.658Z",
+          "dealstage": "closedwon",
+          "hs_object_id": "539935357174"
+        },
+        "updatedAt": "2026-11-12T01:22:06.658Z",
+        "archived": false,
+        "url": "https://app.hubspot.com/contacts/149743226/record/0-3/539935357174?utm_source=app_12360546_mcp&utm_medium=ai_agent&utm_campaign=fetch",
+        "displayName": "SFS LAB 20261112 | Amount mismatch"
+      }
+    ],
+    "notFound": []
+  },
+  "account": {
+    "accountInformation": {
+      "timeZone": "US/Eastern",
+      "accountType": "STANDARD",
+      "companyCurrency": "USD",
+      "additionalCurrencies": [],
+      "utcOffset": "-05:00",
+      "utcOffsetMilliseconds": -18000000,
+      "uiDomain": "app-eu1.hubspot.com",
+      "accountId": 149743226,
+      "portalName": "SFS",
+      "createdAt": 1794328558000
+    }
+  },
+  "pipelines": {
+    "pipelineResults": {
+      "objectType": "DEAL",
+      "results": [
+        {
+          "id": "default",
+          "label": "Sales Pipeline",
+          "displayOrder": 0,
+          "stages": [
+            {
+              "id": "appointmentscheduled",
+              "label": "Appointment Scheduled",
+              "displayOrder": 0,
+              "metadata": {
+                "probability": "0.2"
+              },
+              "color": "BLUE",
+              "stageCalculatedPropertiesEnabled": true
+            },
+            {
+              "id": "qualifiedtobuy",
+              "label": "Qualified To Buy",
+              "displayOrder": 1,
+              "metadata": {
+                "probability": "0.4"
+              },
+              "color": "ORANGE",
+              "stageCalculatedPropertiesEnabled": true
+            },
+            {
+              "id": "presentationscheduled",
+              "label": "Presentation Scheduled",
+              "displayOrder": 2,
+              "metadata": {
+                "probability": "0.6"
+              },
+              "color": "PINK",
+              "stageCalculatedPropertiesEnabled": true
+            },
+            {
+              "id": "decisionmakerboughtin",
+              "label": "Decision Maker Bought-In",
+              "displayOrder": 3,
+              "metadata": {
+                "probability": "0.8"
+              },
+              "color": "PURPLE",
+              "stageCalculatedPropertiesEnabled": true
+            },
+            {
+              "id": "contractsent",
+              "label": "Contract Sent",
+              "displayOrder": 4,
+              "metadata": {
+                "probability": "0.9"
+              },
+              "color": "YELLOW",
+              "stageCalculatedPropertiesEnabled": true
+            },
+            {
+              "id": "closedwon",
+              "label": "Closed Won",
+              "displayOrder": 5,
+              "metadata": {
+                "probability": "1.0"
+              },
+              "color": "GREEN",
+              "stageCalculatedPropertiesEnabled": true
+            },
+            {
+              "id": "closedlost",
+              "label": "Closed Lost",
+              "displayOrder": 6,
+              "metadata": {
+                "probability": "0.0"
+              },
+              "color": "RED",
+              "stageCalculatedPropertiesEnabled": true
+            }
+          ]
+        }
+      ]
+    }
+  }
+}
