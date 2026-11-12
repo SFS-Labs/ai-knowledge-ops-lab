@@ -1,0 +1,430 @@
+{
+  "frozen_on": "2026-11-12",
+  "base_r3_commit": "b52bea2f9651334ffb2b3662f2e706ee180fbc45",
+  "source_quality_levels": {
+    "A_SIMULATION_INTERNAL": "reproducible internal simulation, not external reality",
+    "A_CONTEXT": "official occupational context, task not identical",
+    "B_PROXY": "official proxy, mismatched population/task",
+    "B_ADJACENT": "external adjacent process, not task-identical",
+    "B_CONTEXT": "context only",
+    "C_DESIGN": "artificial experiment parameter",
+    "D_ASSUMPTION": "unmeasured hypothetical process input"
+  },
+  "parameters": [
+    {
+      "id": "DESTATIS_LABOR_2025",
+      "value": 45,
+      "unit": "EUR per paid productive hour",
+      "reference_year": 2025,
+      "source": "https://www.destatis.de/DE/Presse/Pressemitteilungen/2026/04/PD26_148_624.html",
+      "sample": "German employers NACE B-S ex O; annual estimate",
+      "process": "all industry and services labor costs including non-wage",
+      "derivation": "Direct official mean, not AR occupation mean; approximation for costing",
+      "quality": "B_PROXY",
+      "status": "external_statistic"
+    },
+    {
+      "id": "BA_BOOKKEEPER_2025",
+      "value": 4451,
+      "unit": "EUR gross monthly fulltime median",
+      "reference_year": 2025,
+      "source": "https://web.arbeitsagentur.de/entgeltatlas/beruf/7692",
+      "sample": "Full-time social-insurance employment, accounting specialist Germany; minimum disclosure count generally 500",
+      "process": "accounting occupational group not specifically automated control",
+      "derivation": "Published occupational median; NOT added to employer cost or converted to hourly; context only",
+      "quality": "A_CONTEXT",
+      "status": "external_statistic"
+    },
+    {
+      "id": "APQC_AR_FTE",
+      "value": 33333,
+      "unit": "invoices/FTE/year (median)",
+      "reference_year": "not indicated",
+      "source": "https://www.apqc.org/resources/benchmarking/open-standards-benchmarking/measures/number-invoices-processed-fte-performs",
+      "sample": "3496 companies worldwide; unsegmented cross-industry APQC measure 100797",
+      "process": "process accounts receivable including received customer funds, NOT specific CRM-Stripe invoice-control task",
+      "derivation": "APQC first-party measure 100797 displays median 33333 and N3496 on recheck 2026-11-12; corrected from previously recorded 34000/N3434; excluded from model timing",
+      "quality": "B_ADJACENT",
+      "status": "external_statistic"
+    },
+    {
+      "id": "KFW_SERVICE_SHARE",
+      "value": 78.3,
+      "unit": "percent SME firms services",
+      "reference_year": 2025,
+      "source": "https://www.kfw.de/%C3%9Cber-die-KfW/KfW-Research/Mittelstand.html",
+      "sample": "KfW Mittelstandspanel 2026; German SMEs",
+      "process": "industry structure not receivables operations",
+      "derivation": "Sector context only; does not determine an individual company",
+      "quality": "B_CONTEXT",
+      "status": "external_statistic"
+    },
+    {
+      "id": "R3_EVALUATIONS",
+      "value": "by R3 RESULTS.md cell total / 12",
+      "unit": "obligation-day evaluations per 100-day replicate mean",
+      "reference_year": 2026,
+      "source": "https://github.com/SFS-Labs/ai-knowledge-ops-lab/blob/b52bea2f9651334ffb2b3662f2e706ee180fbc45/showcases/hubspot-stripe-reconciliation-r3/RESULTS.md",
+      "sample": "12 independent generator runs per 9 factorial cells",
+      "process": "repeated evaluations of accumulated synthetic due obligations",
+      "derivation": "sum / 12; dependent within-run snapshots",
+      "quality": "A_SIMULATION_INTERNAL",
+      "status": "technical_model_measurement"
+    },
+    {
+      "id": "R3_ALERT_PAIRS",
+      "value": "by R3 RESULTS.md cell median",
+      "unit": "unique obligation/alert-type pairs per run",
+      "reference_year": 2026,
+      "source": "https://github.com/SFS-Labs/ai-knowledge-ops-lab/blob/b52bea2f9651334ffb2b3662f2e706ee180fbc45/showcases/hubspot-stripe-reconciliation-r3/RESULTS.md",
+      "sample": "12 generator seeds in each of nine cells",
+      "process": "unique synthetic critical exception pairs; not independently confirmed real incidents",
+      "derivation": "median full-run count; may include overlapping error types",
+      "quality": "A_SIMULATION_INTERNAL",
+      "status": "technical_model_measurement"
+    },
+    {
+      "id": "DAYS",
+      "value": 100,
+      "unit": "working days/cell",
+      "reference_year": 2026,
+      "source": "R3/PROTOCOL.md",
+      "sample": "fixed R3 design",
+      "process": "simulation window",
+      "derivation": "fixed 100 days",
+      "quality": "A_SIMULATION_INTERNAL",
+      "status": "technical_model_measurement"
+    },
+    {
+      "id": "DEALS_DAILY",
+      "value": [
+        3,
+        6,
+        18
+      ],
+      "unit": "synthetic deals/day",
+      "reference_year": 2026,
+      "source": "R3/PROTOCOL.md",
+      "sample": "3 scenarios",
+      "process": "new synthetic won deals generated each working day",
+      "derivation": "experimental factor; not sector average",
+      "quality": "C_DESIGN",
+      "status": "simulation_design"
+    },
+    {
+      "id": "INCIDENCE",
+      "value": [
+        0.05,
+        0.28,
+        0.4
+      ],
+      "unit": "injected issue scenario probability per obligation",
+      "reference_year": 2026,
+      "source": "R3/PROTOCOL.md",
+      "sample": "nine factorial combinations",
+      "process": "generator outcome assignment not realized business errors",
+      "derivation": "design factors; no real error-incidence estimate",
+      "quality": "C_DESIGN",
+      "status": "simulation_design"
+    },
+    {
+      "id": "M_DAILY",
+      "value": 3,
+      "range": [
+        1,
+        8
+      ],
+      "unit": "minutes/day",
+      "reference_year": 2026,
+      "source": null,
+      "sample": "none",
+      "process": "manual export and table preparation",
+      "derivation": "unverified hypothetical base",
+      "quality": "D_ASSUMPTION",
+      "status": "assumption"
+    },
+    {
+      "id": "M_PER_EVAL",
+      "value": 0.025,
+      "range": [
+        0.005,
+        0.06
+      ],
+      "unit": "minutes/obligation-day evaluation",
+      "reference_year": 2026,
+      "source": null,
+      "sample": "none",
+      "process": "incremental manual table-filter check per currently active obligation; 1.5 seconds baseline",
+      "derivation": "unverified hypothetical base; dominant uncertain factor",
+      "quality": "D_ASSUMPTION",
+      "status": "assumption"
+    },
+    {
+      "id": "A_DAILY",
+      "value": 1.5,
+      "range": [
+        0.5,
+        5
+      ],
+      "unit": "minutes/day",
+      "reference_year": 2026,
+      "source": null,
+      "sample": "none",
+      "process": "automation monitoring, source completeness and handoff checks",
+      "derivation": "unverified hypothetical base",
+      "quality": "D_ASSUMPTION",
+      "status": "assumption"
+    },
+    {
+      "id": "COMMON_REVIEW",
+      "value": 8,
+      "range": [
+        2,
+        20
+      ],
+      "unit": "minutes/unique alert pair",
+      "reference_year": 2026,
+      "source": null,
+      "sample": "none",
+      "process": "identical triage/resolution-routing effort on both paths excluding final correction",
+      "derivation": "cancels in comparison; hypothetical total-time count",
+      "quality": "D_ASSUMPTION",
+      "status": "assumption"
+    },
+    {
+      "id": "A_EXTRA_REVIEW",
+      "value": 4,
+      "range": [
+        0,
+        8
+      ],
+      "unit": "extra minutes/unique alert pair",
+      "reference_year": 2026,
+      "source": null,
+      "sample": "none",
+      "process": "additional workflow triage over common exception work, verification of alert",
+      "derivation": "unverified hypothetical base",
+      "quality": "D_ASSUMPTION",
+      "status": "assumption"
+    },
+    {
+      "id": "MAINTENANCE",
+      "value": 120,
+      "range": [
+        0,
+        480
+      ],
+      "unit": "minutes/100 working days",
+      "reference_year": 2026,
+      "source": null,
+      "sample": "none",
+      "process": "human system and mapping maintenance",
+      "derivation": "unverified hypothetical base",
+      "quality": "D_ASSUMPTION",
+      "status": "assumption"
+    },
+    {
+      "id": "INCIDENT",
+      "value": 0,
+      "range": [
+        0,
+        240
+      ],
+      "unit": "minutes/100 working days",
+      "reference_year": 2026,
+      "source": null,
+      "sample": "none",
+      "process": "operational outage and manual recovery incremental on automated path",
+      "derivation": "zero in base is favorable assumption, stress applies time",
+      "quality": "D_ASSUMPTION",
+      "status": "assumption"
+    },
+    {
+      "id": "OPERATING",
+      "value": 100,
+      "range": [
+        0,
+        300
+      ],
+      "unit": "EUR/100 working days",
+      "reference_year": 2026,
+      "source": null,
+      "sample": "none",
+      "process": "incremental hosted automation runtime relative to sunk spreadsheet tools",
+      "derivation": "unverified hypothetical gross budget; not actual subscription quote",
+      "quality": "D_ASSUMPTION",
+      "status": "assumption"
+    },
+    {
+      "id": "SETUP",
+      "value": 50,
+      "range": [
+        10,
+        150
+      ],
+      "unit": "human hours one-time",
+      "reference_year": 2026,
+      "source": null,
+      "sample": "none",
+      "process": "implementation testing security release and training for incremental workflow",
+      "derivation": "unverified hypothetical base",
+      "quality": "D_ASSUMPTION",
+      "status": "assumption"
+    },
+    {
+      "id": "UTILIZATION",
+      "value": 0.5,
+      "range": [
+        0,
+        1
+      ],
+      "unit": "fraction released positive time economically usable",
+      "reference_year": 2026,
+      "source": null,
+      "sample": "none",
+      "process": "economic opportunity value not proven budget/cash reduction",
+      "derivation": "unverified scenario fraction; sensitivity 0 0.5 1",
+      "quality": "D_ASSUMPTION",
+      "status": "assumption"
+    },
+    {
+      "id": "BIZ_DAYS_YEAR",
+      "value": 220,
+      "unit": "working days/year",
+      "reference_year": 2026,
+      "source": null,
+      "sample": "none",
+      "process": "hypothetical sales and billing operating calendar",
+      "derivation": "scenario assumption not company survey",
+      "quality": "D_ASSUMPTION",
+      "status": "assumption"
+    },
+    {
+      "id": "INSTALLMENT_FACTOR",
+      "value": 1.35,
+      "unit": "obligations/deal expected",
+      "reference_year": 2026,
+      "source": "R2/simulate.py",
+      "sample": "R3 synthetic RNG 35% two installments otherwise one",
+      "process": "generator invoice obligations not observed invoices",
+      "derivation": "1+0.35",
+      "quality": "A_SIMULATION_INTERNAL",
+      "status": "technical_model_design"
+    },
+    {
+      "id": "REFERENCE_SIZE_STAFF",
+      "value": 80,
+      "unit": "assumed persons",
+      "reference_year": 2026,
+      "source": null,
+      "sample": "none; synthetic profile",
+      "process": "reference German software/IT services B2B staff",
+      "derivation": "synthetic scenario not an observed company statistic",
+      "quality": "D_ASSUMPTION",
+      "status": "assumption"
+    },
+    {
+      "id": "REFERENCE_REVENUE",
+      "value": 12000000,
+      "unit": "assumed EUR revenue/year",
+      "reference_year": 2026,
+      "source": null,
+      "sample": "none; synthetic profile",
+      "process": "reference B2B firm revenue",
+      "derivation": "synthetic scale assumption, not inferred from observed deals",
+      "quality": "D_ASSUMPTION",
+      "status": "assumption"
+    },
+    {
+      "id": "REFERENCE_FINANCE_FTE",
+      "value": 5,
+      "unit": "assumed FTE",
+      "reference_year": 2026,
+      "source": null,
+      "sample": "none; synthetic profile",
+      "process": "finance accounting group incl receivables",
+      "derivation": "hypothesis, partial AR responsibilities only",
+      "quality": "D_ASSUMPTION",
+      "status": "assumption"
+    },
+    {
+      "id": "SMALL_SIZE_STAFF",
+      "value": 20,
+      "unit": "assumed persons",
+      "reference_year": 2026,
+      "source": null,
+      "sample": "none; synthetic profile",
+      "process": "small profile staff",
+      "derivation": "hypothesis, company not identified",
+      "quality": "D_ASSUMPTION",
+      "status": "assumption"
+    },
+    {
+      "id": "SMALL_REVENUE",
+      "value": 2400000,
+      "unit": "assumed EUR revenue/year",
+      "reference_year": 2026,
+      "source": null,
+      "sample": "none; synthetic profile",
+      "process": "small profile annual revenue",
+      "derivation": "hypothesis, independent from transactions",
+      "quality": "D_ASSUMPTION",
+      "status": "assumption"
+    },
+    {
+      "id": "SMALL_FINANCE_FTE",
+      "value": 1.5,
+      "unit": "assumed FTE",
+      "reference_year": 2026,
+      "source": null,
+      "sample": "none; synthetic profile",
+      "process": "small profile finance group",
+      "derivation": "hypothesis, not measured time",
+      "quality": "D_ASSUMPTION",
+      "status": "assumption"
+    },
+    {
+      "id": "INTENSIVE_SIZE_STAFF",
+      "value": 180,
+      "unit": "assumed persons",
+      "reference_year": 2026,
+      "source": null,
+      "sample": "none; synthetic profile",
+      "process": "transaction-intensive profile staff",
+      "derivation": "hypothesis, company not identified",
+      "quality": "D_ASSUMPTION",
+      "status": "assumption"
+    },
+    {
+      "id": "INTENSIVE_REVENUE",
+      "value": 30000000,
+      "unit": "assumed EUR revenue/year",
+      "reference_year": 2026,
+      "source": null,
+      "sample": "none; synthetic profile",
+      "process": "transaction-intensive annual revenue",
+      "derivation": "hypothesis, independent from synthetic transaction mix",
+      "quality": "D_ASSUMPTION",
+      "status": "assumption"
+    },
+    {
+      "id": "INTENSIVE_FINANCE_FTE",
+      "value": 9,
+      "unit": "assumed FTE",
+      "reference_year": 2026,
+      "source": null,
+      "sample": "none; synthetic profile",
+      "process": "transaction-intensive finance group",
+      "derivation": "hypothesis, not measured time",
+      "quality": "D_ASSUMPTION",
+      "status": "assumption"
+    }
+  ],
+  "research_notes": [
+    "2026-11-12 recheck of APQC first-party measure 100797 confirms median 33333 and N3496; earlier registry snapshot (34000, N3434) is superseded. The statistic does not enter model computations.",
+    "BA NRW accounting median not sufficiently verified and omitted from registry. 4451 Germany fulltime confirmed on first-party BA page.",
+    "Manual checks, AR fault incidence, monitoring overhead, incident cost and monetizable worker minutes lack process-identical observational statistics; results are conditional scenarios.",
+    "Unmatched literature from Peru (cash collection), invoice OCR data-entry trials and AP invoice processing is deliberately excluded; no task-equivalence inference.",
+    "Elicit API access denied by plan: no paid upgrade, not used in calibration."
+  ]
+}

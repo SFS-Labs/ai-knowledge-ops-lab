@@ -1,0 +1,54 @@
+name: HubSpot Stripe R4 economic scenario verification
+
+'on':
+  push:
+    branches:
+      - study/hubspot-stripe-economic-r4
+    paths:
+      - 'showcases/hubspot-stripe-economic-r4/**'
+      - '.github/workflows/reconciliation-r4.yml'
+  pull_request:
+    branches:
+      - study/hubspot-stripe-reconciliation-r3
+    paths:
+      - 'showcases/hubspot-stripe-economic-r4/**'
+      - '.github/workflows/reconciliation-r4.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  economic-model:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - name: Checkout without persisted credentials
+        uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608
+        with:
+          persist-credentials: false
+      - name: Python 3.12
+        uses: actions/setup-python@82c7e631bb3cdc910f68e0081d67478d79c6982d
+        with:
+          python-version: '3.12'
+      - name: Confirm frozen R2 reconciliation source
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "f8a3a62d6920037373f96341f67f9ff3891da9aa" > "$RUNNER_TEMP/expected-blob"
+          git hash-object showcases/hubspot-stripe-reconciliation/reconcile.py > "$RUNNER_TEMP/actual-blob"
+          diff -u "$RUNNER_TEMP/expected-blob" "$RUNNER_TEMP/actual-blob"
+      - name: Repository regression tests
+        run: python -m unittest discover -s tests -v
+      - name: R2 reconciliation targeted regression tests
+        run: python -m unittest discover -s showcases/hubspot-stripe-reconciliation -p 'test_*.py' -v
+      - name: R4 economic model tests
+        run: python -m unittest discover -s showcases/hubspot-stripe-economic-r4 -p 'test_model.py' -v
+      - name: Reproduce R4 JSON and Markdown byte-for-byte
+        shell: bash
+        working-directory: showcases/hubspot-stripe-economic-r4
+        run: |
+          set -euo pipefail
+          python model.py --json > "$RUNNER_TEMP/r4-results.json"
+          python model.py --report > "$RUNNER_TEMP/r4-results.md"
+          diff -u RESULTS.json "$RUNNER_TEMP/r4-results.json"
+          diff -u RESULTS.md "$RUNNER_TEMP/r4-results.md"
