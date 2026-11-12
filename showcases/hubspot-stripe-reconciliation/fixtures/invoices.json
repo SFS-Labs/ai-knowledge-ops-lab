@@ -1,0 +1,18 @@
+[
+  {
+    "id": "in_sfs_fixture_match",
+    "livemode": false,
+    "metadata": {"hubspot_deal_id": "sfs-match"},
+    "status": "draft",
+    "currency": "eur",
+    "total": 100000
+  },
+  {
+    "id": "in_sfs_fixture_mismatch",
+    "livemode": false,
+    "metadata": {"hubspot_deal_id": "sfs-mismatch"},
+    "status": "draft",
+    "currency": "eur",
+    "total": 190000
+  }
+]

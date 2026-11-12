@@ -1,0 +1,4 @@
+deal_id,amount_minor,currency
+sfs-match,100000,EUR
+sfs-missing,150000,EUR
+sfs-mismatch,200000,EUR
