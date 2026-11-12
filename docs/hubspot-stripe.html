@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Mathias Steinbach – HubSpot–Stripe-Abrechnungskontrolle mit automatisierter Abweichungserkennung und Wirtschaftlichkeitsmodell.">
+<title>HubSpot–Stripe-Abrechnungskontrolle | Mathias Steinbach</title>
+<link rel="stylesheet" href="hubspot-stripe.css">
+</head>
+<body>
+<header class="wrap masthead">
+<a href="recruiter.html">Mathias Steinbach</a>
+<a href="hubspot-stripe-case-study.pdf">Fallstudie als PDF</a>
+</header>
+<main class="wrap">
+<section aria-labelledby="title">
+<p class="label">Arbeitsprobe · SFS.Labs</p>
+<h1 id="title">HubSpot–Stripe-Abrechnungskontrolle</h1>
+<p class="lead">Welche vereinbarten Raten wurden korrekt in Rechnung gestellt? Ich habe einen lesenden Abgleich entwickelt, der HubSpot-Verpflichtungen mit Stripe-Rechnungen verknüpft und Abweichungen für Finance-Teams nachvollziehbar meldet.</p>
+<ul class="facts">
+<li><strong>108</strong> gepaarte Simulationsläufe auf synthetischen Daten</li>
+<li><strong>6.631.538</strong> Verpflichtungs-Tagesbewertungen je Methode in R3</li>
+<li><strong>164</strong> Tests im R4-CI-Umfang und bytegleiche Reproduktion der Ergebnisdateien</li>
+</ul>
+<p>Der Python-Workflow liest einen HubSpot-CSV-Export und Stripe-Rechnungen. Er prüft unter anderem fehlende und doppelte Rechnungen, Betrag, Währung und überfällige Zahlungen. Im Sandbox-Test wurden der native HubSpot-Export und direkte Stripe-Lesezugriffe geprüft.</p>
+<p>Ein ergänzendes Kostenmodell bewertet, ab wann sich der Abgleich angesichts von Prüfaufwand, Ausnahmebearbeitung und Betriebskosten wirtschaftlich rechnet.</p>
+<p><a class="button" href="#technik">Technische Vertiefung</a></p>
+</section>
+<section id="technik" aria-labelledby="tech-title">
+<h2 id="tech-title">Architektur und Geschäftsregeln</h2>
+<ol>
+<li><strong>Soll.</strong> Der HubSpot-Export liefert vereinbarte Zahlungen. Deal-ID und Verpflichtungs-ID identifizieren jede Rate. Beträge werden in der kleinsten Währungseinheit abgeglichen.</li>
+<li><strong>Ist.</strong> Der Stripe-Adapter liest die Rechnungen seitenweise. Bei einem unvollständigen Abruf veröffentlicht der Workflow keine Entscheidungen.</li>
+<li><strong>Abgleich.</strong> Ausstellungs- und Zahlungskontrollstichtag werden getrennt geprüft. Stornierte Rechnungen zählen nicht als Erfüllung. Der Workflow meldet mehrere gleichzeitig auftretende Abweichungen.</li>
+<li><strong>Prüfspur.</strong> Der Auditdatensatz erfasst Zeitpunkt, Eingabe- und Code-Hashes, Umfang und Vollständigkeit des Abrufs.</li>
+</ol>
+<h2>Validierung und Wirtschaftlichkeit</h2>
+<p><strong>R2.</strong> Die Fachtests decken unter anderem Stichtagsgrenzen, Rechnungsersatz und gleichzeitige Fehler ab. Die ausführbare Tabellenbaseline nutzt Filter, Gruppierung und Lookup.</p>
+<p><strong>R3.</strong> Beide Verfahren erhielten identische synthetische Datenstände. Alle neun Szenariozellen erfüllten die festgelegten Modellkriterien. Wiederholte Tagesbewertungen sind Bestandsaufnahmen derselben Verpflichtungen. Währungsfehler sind durch Fachtests abgedeckt und wurden im R3-Massengenerator nicht injiziert.</p>
+<p><strong>R4.</strong> Bei sechs Deals pro Tag wechselt der modellierte Nettoeffekt je 100 Geschäftstage von +225,22 € bei 5 % injizierter Szenarioinzidenz auf −128,47 € bei 28 %. Im zweiten Szenario liegt die Schwelle bei rund 1,95 Sekunden manueller Prüfzeit pro Bewertung. Destatis liefert den Arbeitskostenanker von 45 €/Stunde. Prüfzeiten und Betriebsaufwand sind Modellannahmen.</p>
+<h2>Quellen und Reproduktion</h2>
+<ul>
+<li><a href="https://github.com/SFS-Labs/ai-knowledge-ops-lab/tree/a092b896ea3544a0e67c1fbda52e116d1eb23206/showcases/hubspot-stripe-reconciliation">R2 · Fachregeln, Code und Tests</a></li>
+<li><a href="https://github.com/SFS-Labs/ai-knowledge-ops-lab/blob/b52bea2f9651334ffb2b3662f2e706ee180fbc45/showcases/hubspot-stripe-reconciliation-r3/RESULTS.md">R3 · Ergebnisse und Reproduktionsbefehle</a></li>
+<li><a href="https://github.com/SFS-Labs/ai-knowledge-ops-lab/actions/runs/43180713631">R3 · HubSpot-Export und Stripe-Sandbox-Abruf</a></li>
+<li><a href="https://github.com/SFS-Labs/ai-knowledge-ops-lab/tree/7f589c3581005514603277113c9a6de5fb8d77dd/showcases/hubspot-stripe-economic-r4">R4 · Protokoll, Parameter, Modell und Ergebnisse</a></li>
+<li><a href="https://github.com/SFS-Labs/ai-knowledge-ops-lab/actions/runs/43229011845">R4 · GitHub-Actions-Prüflauf</a></li>
+</ul>
+</section>
+</main>
+<footer class="wrap"><a href="recruiter.html">Zurück zum Portfolio</a> · <a href="https://www.linkedin.com/in/mathias-steinbach/">Kontakt auf LinkedIn</a></footer>
+</body>
+</html>

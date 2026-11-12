@@ -7,8 +7,11 @@ name: ci
     branches: [main]
     paths:
       - 'docs/index.html'
+      - 'docs/recruiter.html'
+      - 'docs/hubspot-stripe*'
       - 'README.md'
       - 'tests/test_recruiter_site.py'
+      - 'tests/test_hubspot_stripe_publication.py'
       - 'tests/test_decision_gate.py'
       - 'showcases/internal-service-intake/**'
       - '.github/workflows/ci.yml'
@@ -28,6 +31,9 @@ jobs:
           python-version: '3.12'
       - name: Run unit tests
         run: python -m unittest discover -s tests -v
+      - name: Verify portfolio publication files
+        run: |
+          test "$(head -c 5 docs/hubspot-stripe-case-study.pdf)" = "%PDF-"
       - name: Verify browser demo JavaScript parses
         run: node --check docs/live.js
 
