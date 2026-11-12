@@ -1,0 +1,56 @@
+name: Native HubSpot export Stripe verification
+'on':
+  push:
+    branches: [verify/stripe-sandbox-http]
+    paths: [.github/workflows/native-hubspot-export.yml]
+permissions:
+  contents: read
+jobs:
+  verify:
+    environment: stripe-sandbox
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608
+        with:
+          persist-credentials: false
+      - name: Reconcile three native-export deals over Stripe HTTP
+        env:
+          STRIPE_API_KEY: ${{ secrets.STRIPE_API_KEY }}
+        run: |
+          python3 - <<'PY'
+          import csv, hashlib, json, os, subprocess, tempfile
+          from decimal import Decimal
+          from pathlib import Path
+          from urllib.request import Request, urlopen
+          source = json.loads(Path('showcases/hubspot-stripe-reconciliation-r3/native-export-projection.json').read_text())
+          rows = source['records']
+          assert len(rows) == len({r['Record ID'] for r in rows}) == 3
+          assert source['currency'] == 'USD' and all(r['Deal Stage'] == 'Closed Won' for r in rows)
+          key = os.environ['STRIPE_API_KEY']
+          assert key.startswith(('sk_test_', 'rk_test_'))
+          with urlopen(Request('https://api.stripe.com/v1/account', headers={'Authorization': 'Bearer ' + key}), timeout=20) as f:
+              assert json.load(f)['id'] == 'acct_1Uaj2tE19wsOrukR'
+          with tempfile.TemporaryDirectory() as tmp:
+              p = Path(tmp)
+              with (p/'deals.csv').open('w', newline='') as f:
+                  w = csv.writer(f)
+                  w.writerow(['deal_id','amount_minor','currency','issue_due','pay_due'])
+                  for row in rows:
+                      amount = Decimal(row['Amount']) * 100
+                      assert amount == int(amount)
+                      w.writerow([row['Record ID'], int(amount), 'usd', '2026-11-12', '2026-11-26'])
+              script = Path('showcases/hubspot-stripe-reconciliation/reconcile.py')
+              assert hashlib.sha256(script.read_bytes()).hexdigest() == 'ca49feead8a1101b7ccd9198f42a297a737b5b92990fe0e25d59b0348d57c7a8'
+              report = json.loads(subprocess.check_output(['python3',str(script),str(p/'deals.csv'),'--as-of','2026-11-12','--audit',str(p/'audit.json')]))
+              audit = json.loads((p/'audit.json').read_text())
+              assert audit['run_status'] == 'complete' and audit['invoice_population'] == 'pagination_completed'
+              assert audit['deal_count'] == 3 and audit['invoice_count'] == 2
+              expected = {
+                  '539935357174': ('amount_mismatch', ['amount_mismatch','missing_invoice'], ['in_1UamioE19wsOrukRDWKzG9Qn']),
+                  '539817448636': ('missing_invoice', ['missing_invoice'], []),
+                  '539978132699': ('invoice_draft', ['missing_invoice'], ['in_1UamitE19wsOrukR7goJaSyd']),
+              }
+              assert len(report) == 3 and {r['deal_id']:(r['status'],r['alerts'],r['invoice_ids']) for r in report} == expected
+              print('NATIVE_EVIDENCE ' + json.dumps({'audit':audit,'results':report,'source_sha256':source['original_sha256']}))
+          PY

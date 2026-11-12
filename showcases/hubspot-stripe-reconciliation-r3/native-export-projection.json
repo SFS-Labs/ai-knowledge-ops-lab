@@ -1,0 +1,28 @@
+{
+  "original_sha256": "72b2dfbe3c913ce9e7ca3e346d4be48cd4db38b129c4f565cdce17d2b5115301",
+  "records": [
+    {
+      "Record ID": "539935357174",
+      "Deal Name": "SFS LAB 20261112 | Amount mismatch",
+      "Deal Stage": "Closed Won",
+      "Amount": "2000.0"
+    },
+    {
+      "Record ID": "539817448636",
+      "Deal Name": "SFS LAB 20261112 | Missing invoice",
+      "Deal Stage": "Closed Won",
+      "Amount": "1500.0"
+    },
+    {
+      "Record ID": "539978132699",
+      "Deal Name": "SFS LAB 20261112 | Matching invoice",
+      "Deal Stage": "Closed Won",
+      "Amount": "1000.0"
+    }
+  ],
+  "portal_id": 149743226,
+  "currency": "USD",
+  "currency_source": "HubSpot account default; no additional currencies; deal property and CSV currency absent",
+  "export_audit_id": 164215342,
+  "csv_input": "Original HubSpot UI CSV supplied by user; projection omits owner and unused fields"
+}
