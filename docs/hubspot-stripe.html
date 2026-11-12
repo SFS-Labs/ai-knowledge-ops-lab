@@ -16,14 +16,9 @@
 <section aria-labelledby="title">
 <p class="label">Arbeitsprobe · SFS.Labs</p>
 <h1 id="title">HubSpot–Stripe-Abrechnungskontrolle</h1>
-<p class="lead">Welche vereinbarten Raten wurden korrekt in Rechnung gestellt? Ich habe einen lesenden Abgleich entwickelt, der HubSpot-Verpflichtungen mit Stripe-Rechnungen verknüpft und Abweichungen für Finance-Teams nachvollziehbar meldet.</p>
-<ul class="facts">
-<li><strong>108</strong> gepaarte Simulationsläufe auf synthetischen Daten</li>
-<li><strong>6.631.538</strong> Verpflichtungs-Tagesbewertungen je Methode in R3</li>
-<li><strong>164</strong> Tests im R4-CI-Umfang und bytegleiche Reproduktion der Ergebnisdateien</li>
-</ul>
-<p>Der Python-Workflow liest einen HubSpot-CSV-Export und Stripe-Rechnungen. Er prüft unter anderem fehlende und doppelte Rechnungen, Betrag, Währung und überfällige Zahlungen. Im Sandbox-Test wurden der native HubSpot-Export und direkte Stripe-Lesezugriffe geprüft.</p>
-<p>Ein ergänzendes Kostenmodell bewertet, ab wann sich der Abgleich angesichts von Prüfaufwand, Ausnahmebearbeitung und Betriebskosten wirtschaftlich rechnet.</p>
+<p class="lead">Der automatisierte Rechnungsabgleich spart im Szenario mit sechs Deals pro Tag und 5 % eingespielten Abweichungen <strong>14 Std. 27 Min. Prüfaufwand je 100 Geschäftstage</strong>. Die nutzbare Kapazität ergibt nach Betriebskosten einen modellierten Nettoeffekt von <strong>+225,22 €</strong>.</p>
+<p>Bei gleichem Volumen und 28 % eingespielten Abweichungen kehrt sich der Vorteil um. Zusätzliche Ausnahmeprüfung führt zu rund 38 Minuten Mehraufwand und einem Nettoeffekt von −128,47 € je 100 Geschäftstage.</p>
+<p>Ich habe einen lesenden Python-Abgleich entwickelt, der vereinbarte Raten aus HubSpot mit Stripe-Rechnungen verknüpft. Er meldet fehlende und doppelte Rechnungen, falsche Beträge oder Währungen und überfällige Zahlungen.</p>
 <p><a class="button" href="#technik">Technische Vertiefung</a></p>
 </section>
 <section id="technik" aria-labelledby="tech-title">
@@ -35,9 +30,14 @@
 <li><strong>Prüfspur.</strong> Der Auditdatensatz erfasst Zeitpunkt, Eingabe- und Code-Hashes, Umfang und Vollständigkeit des Abrufs.</li>
 </ol>
 <h2>Validierung und Wirtschaftlichkeit</h2>
+<ul class="facts">
+<li><strong>108</strong> gepaarte Simulationsläufe auf synthetischen Daten</li>
+<li><strong>6.631.538</strong> Verpflichtungs-Tagesbewertungen je Methode in R3</li>
+<li><strong>164</strong> Tests im R4-CI-Umfang und bytegleiche Reproduktion der Ergebnisdateien</li>
+</ul>
 <p><strong>R2.</strong> Die Fachtests decken unter anderem Stichtagsgrenzen, Rechnungsersatz und gleichzeitige Fehler ab. Die ausführbare Tabellenbaseline nutzt Filter, Gruppierung und Lookup.</p>
 <p><strong>R3.</strong> Beide Verfahren erhielten identische synthetische Datenstände. Alle neun Szenariozellen erfüllten die festgelegten Modellkriterien. Wiederholte Tagesbewertungen sind Bestandsaufnahmen derselben Verpflichtungen. Währungsfehler sind durch Fachtests abgedeckt und wurden im R3-Massengenerator nicht injiziert.</p>
-<p><strong>R4.</strong> Bei sechs Deals pro Tag wechselt der modellierte Nettoeffekt je 100 Geschäftstage von +225,22 € bei 5 % injizierter Szenarioinzidenz auf −128,47 € bei 28 %. Im zweiten Szenario liegt die Schwelle bei rund 1,95 Sekunden manueller Prüfzeit pro Bewertung. Destatis liefert den Arbeitskostenanker von 45 €/Stunde. Prüfzeiten und Betriebsaufwand sind Modellannahmen.</p>
+<p><strong>R4.</strong> Destatis liefert den Arbeitskostenanker von 45 €/Stunde. Das Modell bewertet 50 % der frei werdenden Kapazität wirtschaftlich und zieht 100 € Betriebskosten je 100 Geschäftstage ab. Bei sechs Deals pro Tag und 28 % eingespielten Abweichungen liegt die Gewinnschwelle bei rund 1,95 Sekunden manueller Prüfzeit je Bewertung.</p>
 <h2>Quellen und Reproduktion</h2>
 <ul>
 <li><a href="https://github.com/SFS-Labs/ai-knowledge-ops-lab/tree/a092b896ea3544a0e67c1fbda52e116d1eb23206/showcases/hubspot-stripe-reconciliation">R2 · Fachregeln, Code und Tests</a></li>
