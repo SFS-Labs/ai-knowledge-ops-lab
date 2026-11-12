@@ -33,7 +33,7 @@ assert stripe('account')['id'] == 'acct_1Uaj2tE19wsOrukR'
 customer = stripe('customers', {'name': 'SFS synthetic overdue fixture', 'email': 'sfs-overdue@example.invalid', 'metadata[sfs_fixture]': tag}, 'customer')
 assert customer['livemode'] is False and customer.get('email') == 'sfs-overdue@example.invalid'
 invoice = stripe('invoices', {'customer': customer['id'], 'collection_method': 'send_invoice',
-    'days_until_due': 1, 'auto_advance': 'false',
+    'currency': 'usd', 'days_until_due': 1, 'auto_advance': 'false',
     'metadata[hubspot_deal_id]': deal, 'metadata[sfs_fixture]': tag}, 'draft')
 path = 'invoices/' + invoice['id']
 checks = []

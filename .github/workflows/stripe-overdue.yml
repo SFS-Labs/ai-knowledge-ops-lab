@@ -17,7 +17,7 @@ jobs:
       - uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608
         with:
           persist-credentials: false
-      - name: Verify overdue cutoff without delivery and void the synthetic fixture
+      - name: Verify USD invoice cutoff without delivery and void the synthetic fixture
         working-directory: showcases/hubspot-stripe-reconciliation
         env:
           STRIPE_API_KEY: ${{ secrets.STRIPE_API_KEY }}
