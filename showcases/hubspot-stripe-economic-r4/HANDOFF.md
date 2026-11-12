@@ -35,7 +35,7 @@ Weitere Zellresultate, Break-even-Schwellen, bedingte Amortisation, Kosten-/Revi
 
 - Destatis Arbeitskosten 2025: 45,00 EUR je geleisteter Stunde (amtliche Jahresschätzung, NACE B–S ohne O); sektorübergreifender Proxy: https://www.destatis.de/DE/Presse/Pressemitteilungen/2026/04/PD26_148_624.html
 - BA Entgeltatlas Buchhalter/in, bundesweiter Median 4.451 EUR brutto/Monat; kein Arbeitgebervollkostensatz, nicht zusätzlich zum Destatis-Kostensatz addiert: https://web.arbeitsagentur.de/entgeltatlas/beruf/7692
-- APQC AR Invoice/FTE: aktuell **34.000** (Median, 3.434 Unternehmen), AR-Prozess inkl. Verarbeitung von Kundenzahlungen, **kein** Nachweis dieser speziellen Soll-Ist-Kontrolle: https://www.apqc.org/what-we-do/benchmarking/open-standards-benchmarking/measures/number-invoices-processed-fte-performs
+- APQC AR Invoice/FTE: **33.333** (Median, 3.496 Unternehmen; Primärquellenstand 12.11.2026, Measure 100797), AR-Prozess inkl. Verarbeitung von Kundenzahlungen; ausschließlich benachbarter Kontextindikator: https://www.apqc.org/resources/benchmarking/open-standards-benchmarking/measures/number-invoices-processed-fte-performs
 - KfW Mittelstandspanel 2026, 78,3 % Mittelständler in Dienstleistungsbereichen: Branchenkontext, keine Unternehmenskennzahl: https://www.kfw.de/%C3%9Cber-die-KfW/KfW-Research/Mittelstand.html
 - Apollo-Free-Kandidat Personio als Technologieprofil entdeckt, **ohne** daraus Rechnungsvolumen, Umsatz oder Mitarbeiterzahl als Fakten abzuleiten.
 - Elicit abgewiesen wegen Tarif `api_access_denied`; kein Upgrade, keine erneute bezahlte Abfrage.
@@ -51,5 +51,22 @@ TDD-Akzeptanztests prüfen R3-Quelle, Einheiten, symmetrischen gemeinsamen Revie
 **Keine wissenschaftliche Freigabe** für tatsächliche externe Wirtschaftlichkeit: Die zentrale unbekannte Grenzgröße von ~1,95 s manuellem Prüfumfang im Basisfall kann ohne echte Zeit-/Prozessmessung nicht entschieden werden. Insbesondere kann ein Tabellenfilter weniger Grenzarbeit erfordern; bei hoher Alertzahl und Wartung kann die Automation schlechter ausfallen. Der Kapazitätswert ist eine modellierte Opportunitätsbewertung, nicht Cashflow. Negative Modellstunden werden als voller Kostenaufwand bewertet. Implementierungskosten werden nur in der bedingten Amortisation, nicht noch einmal im periodischen Netto berechnet.
 
 **Nächster empirisch notwendiger Beleg:** eine definierte, vollständige, vergleichbare Tätigkeitszeitmessung des Export-/Tabellenpfads inklusive Überwachungs- und Alarmreview, reale Betriebs-/Wartungsdaten und für Cash-Claims nachweisbare Verwendung freier Kapazität. Keine menschliche Gegenprobe als Voraussetzung für **diese** rein konditionale R4-Freigabe.
+
+## Quellenkorrektur und Interpretation der Kennzahlen
+
+- Die APQC-Primärquelle zeigt beim aktuellen erneuten Abruf **33.333 Rechnungen/FTE, N=3.496**. Die zuvor notierte Fassung **34.000/N=3.434** wurde in `PARAMETERS.json` korrigiert. Die APQC-Kennzahl ist **kein Rechenparameter** des Modells; `RESULTS.json` und `RESULTS.md` bleiben numerisch unverändert.
+- Das Modellfeld `verified_cash_savings_eur: 0` bedeutet **0 EUR nachgewiesene Einsparungen**, nicht die empirische Feststellung, dass ein Betrieb tatsächlich exakt 0 EUR spart. Die wirtschaftlichen Szenarien sind davon getrennt.
+
+## Übergabeschnittstelle an Phase 1: positive, belegbare Positionierung
+
+Phase 1 wurde in R4 **nicht** ausgeführt. Die folgende Schnittstelle dient der nachgelagerten recruiterorientierten Präsentation, ohne eine Änderung an R2/R3/R4 oder an deren Nachweislogik.
+
+**Primärer Leistungsnachweis:** Konzeption und Implementierung einer read-only HubSpot–Stripe-Soll-Ist-Abrechnungskontrolle, regelbasierte Erkennung kritischer Rechnungsabweichungen, nachvollziehbare Prüf- und Testführung sowie reproduzierbares, sensitivitätsgeprüftes Kostenmodell.
+
+**Sichtbare Fakten für Projektseite, Profil und CV:** 108 gepaarte R3-Simulationsläufe auf konsistenten synthetischen Szenarien; 6.631.538 Verpflichtungs-Tagesbewertungen pro Methode; R4-CI mit 135 allgemeinen Repository-, 19 R2-Fach- und 10 R4-Modelltests; bytegenaue Reproduktion der Ergebnisdateien. Genaue Zuordnung jedes Zahlenwerts und ein öffentlicher Beleglink gehören in die Case Study.
+
+**Ein-Satz-Vorschlag für den Recruiter-Einstieg:** „HubSpot–Stripe: Read-only-Abrechnungskontrolle mit reproduzierbaren Tests, 108 gepaarten Simulationsläufen und transparenter Wirtschaftlichkeitssensitivität.“
+
+**Darstellungsstandard:** Problem → eigene Entscheidung/Umsetzung → überprüfbares Ergebnis → beruflicher Nutzen. Aussagen über simulierte Testdaten klar als solche kennzeichnen. Keine unbelegten Aussagen über einen Kundeneinsatz oder gemessene Einsparungen einführen. In Karriereprofilen **keine ungefragten Negativkataloge**, keine „kein ROI / keine Produktionsdaten / keine menschliche Gegenprobe“-Litanei: Diese methodischen Details sind im technischen Anhang direkt verlinkt und bei Nachfrage vollständig verfügbar. Nicht aus Unbelegtheit einen persönlichen Kompetenzmangel insinuieren.
 
 **Wiederaufnahme:** Aus diesem Verzeichnis: `python3 -m unittest discover -s . -p test_model.py -v`, `python3 model.py --json | diff - RESULTS.json -`, `python3 model.py --report | diff - RESULTS.md -`. Finaler PR wird gegen `study/hubspot-stripe-reconciliation-r3` erstellt. Nicht mergen.
