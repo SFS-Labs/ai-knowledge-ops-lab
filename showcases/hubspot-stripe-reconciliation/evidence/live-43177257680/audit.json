@@ -1,0 +1,15 @@
+{
+  "started_at": "2026-11-12T07:42:47.899935+00:00",
+  "run_status": "complete",
+  "decisions_published": true,
+  "invoice_population": "pagination_completed",
+  "as_of": "2026-11-12",
+  "code_sha256": "ca49feead8a1101b7ccd9198f42a297a737b5b92990fe0e25d59b0348d57c7a8",
+  "deal_population": "caller_supplied_csv_unverified",
+  "snapshot_isolation": "not_guaranteed",
+  "deal_count": 2,
+  "invoice_count": 2,
+  "deals_sha256": "e704fa40b5a0aaf1fc185c2a53828039bbba4bdaba53c0a9bbc34411c1b3abc2",
+  "invoices_sha256": "06cfe6a1e1aba69f8743a8f708b20409514f41fab4f96763f175731ea4aa0238",
+  "finished_at": "2026-11-12T07:42:48.042369+00:00"
+}

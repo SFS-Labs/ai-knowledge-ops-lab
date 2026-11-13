@@ -1,0 +1,25 @@
+{
+  "data_path": "HubSpot MCP search_crm_objects -> captured JSON -> deterministic CSV transformation",
+  "ui_export_tested": false,
+  "portal_id": 149743226,
+  "source_rows": 1,
+  "obligation_rows": 2,
+  "source_amount_minor": 200000,
+  "installment_sum_minor": 200000,
+  "currency_source": "account.companyCurrency; no additional currencies; deal field absent",
+  "field_origins": {
+    "deal_id": "HubSpot hs_object_id, confirmed by object id and separate get",
+    "dealstage": "HubSpot dealstage, hs_is_closed_won and pipeline stage",
+    "amount_minor": "Separate test-plan allocation of Decimal(HubSpot amount) * 100; sum conserved; modeled tax 0",
+    "currency": "account.companyCurrency; no additional currencies; deal field absent",
+    "obligation_id": "Separate synthetic installment plan",
+    "issue_due": "Separate synthetic installment plan; ISO date",
+    "pay_due": "Separate synthetic installment plan; first payment control day; ISO date"
+  },
+  "sha256": {
+    "hubspot-source.json": "dff06a8ca17fd912a15e5886f153d60a8458134a9cc85a0805cda4bf33dcd9c2",
+    "installment-plan.json": "dade16bac5b4e19dec499bc47c46c4b8cfe6fdbd43a630d6df0669ad56221093",
+    "hubspot-closed-won.csv": "22882dee5763fe44218a68ef03a76f06be7030d919a44761c33752df4f5f0611",
+    "obligations.csv": "800cb6a15ebc88a7094b7600d7d50cc3643860b424824496416fb9d57431e6a5"
+  }
+}

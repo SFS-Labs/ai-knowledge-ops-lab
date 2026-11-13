@@ -1,0 +1,51 @@
+{
+  "checked_at_utc": "2026-11-12T07:42:49.102981+00:00",
+  "restored": true,
+  "read_after_restore": [
+    {
+      "id": "in_1UamitE19wsOrukR7goJaSyd",
+      "status": "draft",
+      "livemode": false,
+      "metadata": {
+        "hubspot_deal_id": "539978132699",
+        "sfs_fixture": "hubspot_reconciliation_20261112"
+      },
+      "total": 100000,
+      "currency": "usd",
+      "auto_advance": false,
+      "amount_paid": 0,
+      "attempted": false,
+      "status_transitions": {
+        "finalized_at": null,
+        "marked_uncollectible_at": null,
+        "paid_at": null,
+        "voided_at": null
+      },
+      "subtotal": 100000,
+      "total_taxes": []
+    },
+    {
+      "id": "in_1UamioE19wsOrukRDWKzG9Qn",
+      "status": "draft",
+      "livemode": false,
+      "metadata": {
+        "hubspot_deal_id": "539935357174",
+        "sfs_fixture": "hubspot_reconciliation_20261112"
+      },
+      "total": 190000,
+      "currency": "usd",
+      "auto_advance": false,
+      "amount_paid": 0,
+      "attempted": false,
+      "status_transitions": {
+        "finalized_at": null,
+        "marked_uncollectible_at": null,
+        "paid_at": null,
+        "voided_at": null
+      },
+      "subtotal": 190000,
+      "total_taxes": []
+    }
+  ],
+  "failures": []
+}

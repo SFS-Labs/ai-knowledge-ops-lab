@@ -1,0 +1,11 @@
+{
+  "source": "Explicit synthetic test input; not a HubSpot payment plan",
+  "deal_id": "539935357174",
+  "as_of": "2026-11-12",
+  "amount_basis": "Invoice total including modeled tax; modeled tax is zero USD minor units",
+  "modeled_tax_minor": 0,
+  "installments": [
+    {"obligation_id": "1", "amount_minor": 100000, "issue_due": "2026-11-12", "pay_due": "2026-11-26", "invoice_id": "in_1UamitE19wsOrukR7goJaSyd", "expected_actual_minor": 100000},
+    {"obligation_id": "2", "amount_minor": 100000, "issue_due": "2026-11-12", "pay_due": "2026-11-26", "invoice_id": "in_1UamioE19wsOrukRDWKzG9Qn", "expected_actual_minor": 190000}
+  ]
+}

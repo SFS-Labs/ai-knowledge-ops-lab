@@ -1,0 +1,40 @@
+{
+  "generated_at_utc": "2026-11-12T07:44:16.873779+00:00",
+  "python": "3.12.14",
+  "command": "python3 run_study.py --write",
+  "comparison_excludes": [
+    "median_local_core_ms"
+  ],
+  "sha256": {
+    "EVIDENCE_NOTES.md": "22e978ba99a2fd2efc52151c0772d29a0cb8f02b9b6a759fe527c929d0bc75ff",
+    "README.md": "dcabef9c9c097a3fcd3aeed41718bea846374ec61bfed00a8b80220af3e0cf45",
+    "RESULTS.md": "8bb6c1af1f2e303c7f9e7e110f71a4ea5ea0193c26f3d21ceb24eabdf657dd96",
+    "evaluate.py": "714942c8cbed0cc562ca08cf6058b2ec851a289d9a42e1f14e06e836e24dd0cf",
+    "evidence/derived/hubspot-closed-won.csv": "22882dee5763fe44218a68ef03a76f06be7030d919a44761c33752df4f5f0611",
+    "evidence/derived/obligations.csv": "800cb6a15ebc88a7094b7600d7d50cc3643860b424824496416fb9d57431e6a5",
+    "evidence/derived/transformation.json": "eafa889dfcb32a873bdbb693e47d5293ff65ff50ace6c43bc12007dc50705001",
+    "evidence/hubspot-source.json": "dff06a8ca17fd912a15e5886f153d60a8458134a9cc85a0805cda4bf33dcd9c2",
+    "evidence/installment-plan.json": "dade16bac5b4e19dec499bc47c46c4b8cfe6fdbd43a630d6df0669ad56221093",
+    "evidence/live-43177257680/audit.json": "1bbaf8aed7f9e6a04b64609ed48ba200982ce271cdf176ed8a4061ebc18c80bf",
+    "evidence/live-43177257680/invoices-during.json": "3a86094797de32db8e86ebcdacb70f5b79083c7874da43755465c82151ddf51b",
+    "evidence/live-43177257680/metadata-backup.json": "4b5693e26b58f3cda6f140e8b109736754617a732506378c7a507bf6ded90ce2",
+    "evidence/live-43177257680/restoration.json": "6cf24c72f1e795727ce36144285b5147a682f0952b3b5550c4c13207a24da36c",
+    "evidence/live-43177257680/results.json": "64f2e23626a4308b32f2a06373314dd78e0d943c774b19f404c79c7301f75538",
+    "evidence/live-43177257680/summary.json": "53a8dfd8cf4938be7e8428d317e4d0c8b8b6907805c37f7d43840f463b0cbae7",
+    "evidence/live-43177257680/transformation.json": "eafa889dfcb32a873bdbb693e47d5293ff65ff50ace6c43bc12007dc50705001",
+    "evidence/stripe-preflight-mcp.json": "394a3343842ac1dc12001aa00fa0b8331ce86f9fb576ea71fa425529f9064d4e",
+    "fixtures/deals.csv": "c2a2a5bdeb57b8229e7e1093d86fa58fcd19b70cfe4acbc80d77d23752db3d2a",
+    "fixtures/invoices.json": "c7ec5702cae07d735e291c89f9a4f9a6363fbf0d5393bd8a44661b5b2737decc",
+    "fixtures/sandbox-review.json": "9cdfdb3c161288af62b350f1fa84d8ad11d2389745c53f918c0d9228a5d3f156",
+    "prepare_sandbox_input.py": "ddc512adc98ed28101179355c0c832febd4fa0729fd60cddddc0e91079cf169f",
+    "reconcile.py": "ca49feead8a1101b7ccd9198f42a297a737b5b92990fe0e25d59b0348d57c7a8",
+    "run_study.py": "8c8f4e27817b9407fa471818421e5519c462ed632b7c66e44cd7228a27b19f99",
+    "simulate.py": "524993b02966b40b85f036d9779fbc2f91bf7ea8ab035ef8e9ca7a454189640e",
+    "study-results.jsonl": "55a7ec2175e2ea72019056ac249d4e5d876d4f339d4dce51a2140d93946f1123",
+    "test_contract.py": "714eece6560c8f6a0ec4742d7b86441abd33dae7080d2413d6951b651506dc50",
+    "test_evaluate.py": "2f21784784c6461935686b62ba605eeea2a654efa00a9f6c91b8d7463ab03a7b",
+    "test_sandbox_evidence.py": "f83f86a1a1358524c4bd9941863971cd231912ae9fcbfbd666f8e4bc28f2d594",
+    "timing-template.csv": "161ac8ddcaf96aaae255910a4b3b79eaa95adbd11ecc4d45b69c36661544503a",
+    "verify_sandbox_http.py": "d05b757df9f56cf706e66925bcb7810730b7a79f8b6ef68a1305459ee14a5b43"
+  }
+}
