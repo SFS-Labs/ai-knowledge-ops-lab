@@ -40,12 +40,21 @@ class InteractiveBrowserSmoke(unittest.TestCase):
         for width, height in ((1440, 900), (390, 844)):
             with self.subTest(width=width):
                 page = self.browser.new_page(viewport={"width": width, "height": height})
-                page.route("https://unpkg.com/**", lambda route: route.abort())
+                requests = []
+                page.on("request", lambda request: requests.append(request.url) if "unpkg.com" in request.url else None)
+                page.route("https://unpkg.com/**", lambda route: route.fulfill(
+                    status=200, content_type="application/javascript", body="window.__widgetStubLoaded=true;"
+                ))
                 page.goto(HTML.as_uri(), wait_until="domcontentloaded")
                 self.assertIn("Systeme verbinden.", page.locator("h1").inner_text())
                 if self.public_ready:
-                    self.assertTrue(page.locator("#launch-agent").is_hidden())
+                    self.assertTrue(page.locator("#launch-agent").is_enabled())
+                    self.assertEqual(page.locator("elevenlabs-convai").count(), 0)
+                    self.assertEqual(requests, [], "Third-party widget loaded without visitor click")
+                    page.locator("#launch-agent").click()
                     self.assertEqual(page.locator("elevenlabs-convai").count(), 1)
+                    self.assertTrue(page.locator("#launch-agent").is_hidden())
+                    self.assertEqual(len(requests), 1, "Widget must be loaded exactly once after click")
                 else:
                     self.assertTrue(page.locator("#launch-agent").is_disabled())
                     self.assertEqual(page.locator("elevenlabs-convai").count(), 0)
@@ -62,8 +71,12 @@ class InteractiveBrowserSmoke(unittest.TestCase):
     def test_widget_call_injects_exact_allowlisted_client_tool(self):
         page = self.browser.new_page(viewport={"width": 1280, "height": 920})
         # This fixture enables the widget block only in an offline file; remote widget JS never loads.
-        page.route("https://unpkg.com/**", lambda route: route.abort())
+        page.route("https://unpkg.com/**", lambda route: route.fulfill(
+            status=200, content_type="application/javascript", body="window.__widgetStubLoaded=true;"
+        ))
         page.goto(self.fixture.as_uri(), wait_until="domcontentloaded")
+        self.assertEqual(page.locator("elevenlabs-convai").count(), 0)
+        page.locator("#launch-agent").click()
         self.assertEqual(page.locator("elevenlabs-convai").count(), 1)
         result = page.evaluate("""() => {
           const widget = document.querySelector("elevenlabs-convai");
