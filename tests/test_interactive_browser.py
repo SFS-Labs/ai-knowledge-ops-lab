@@ -25,7 +25,8 @@ class InteractiveBrowserSmoke(unittest.TestCase):
         cls.browser = cls.pw.chromium.launch(headless=True)
         cls.temp = tempfile.TemporaryDirectory(prefix="sfs-interactive-test-")
         source = HTML.read_text(encoding="utf-8")
-        assert source.count(GATE_OFF) == 1, "Public launch gate changed: revise test."
+        assert source.count(GATE_OFF) + source.count(GATE_ON) == 1, "Public launch gate invalid."
+        cls.public_ready = GATE_ON in source
         cls.fixture = Path(cls.temp.name) / "interactive-widget-probe.html"
         cls.fixture.write_text(source.replace(GATE_OFF, GATE_ON, 1), encoding="utf-8")
 
@@ -35,14 +36,19 @@ class InteractiveBrowserSmoke(unittest.TestCase):
         cls.pw.stop()
         cls.temp.cleanup()
 
-    def test_staged_page_has_usable_examples_and_disabled_public_agent(self):
+    def test_portfolio_examples_and_correct_widget_gate(self):
         for width, height in ((1440, 900), (390, 844)):
             with self.subTest(width=width):
                 page = self.browser.new_page(viewport={"width": width, "height": height})
+                page.route("https://unpkg.com/**", lambda route: route.abort())
                 page.goto(HTML.as_uri(), wait_until="domcontentloaded")
                 self.assertIn("Systeme verbinden.", page.locator("h1").inner_text())
-                self.assertTrue(page.locator("#launch-agent").is_disabled())
-                self.assertEqual(page.locator("elevenlabs-convai").count(), 0)
+                if self.public_ready:
+                    self.assertTrue(page.locator("#launch-agent").is_hidden())
+                    self.assertEqual(page.locator("elevenlabs-convai").count(), 1)
+                else:
+                    self.assertTrue(page.locator("#launch-agent").is_disabled())
+                    self.assertEqual(page.locator("elevenlabs-convai").count(), 0)
                 page.locator("[data-example=tests]").click()
                 self.assertIn("technischen Tests", page.locator("#question").inner_text())
                 self.assertIn("135", page.locator("#answer").inner_text())
