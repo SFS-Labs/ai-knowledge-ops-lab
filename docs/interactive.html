@@ -51,6 +51,7 @@ header{border-bottom:1px solid var(--line)}.nav{min-height:95px;display:flex;ali
 <button type="button" class="chip" data-example="work" aria-pressed="false">Persönlicher Beitrag</button>
 </div>
 <div id="widget-mount"></div>
+<div id="active-evidence" class="bubble evidence-selection" hidden role="status" aria-live="polite"></div>
 <button type="button" class="btn launch" id="launch-agent" disabled aria-describedby="launchinfo">Sprachgespräch – noch nicht öffentlich freigeschaltet</button>
 <p class="disclosure" id="launchinfo">Die Beispielantworten sind kuratiert. Für spätere Live-Gespräche werden Eingaben an ElevenLabs übermittelt; Sprachaufzeichnungen sind deaktiviert, Gesprächsinhalte können bis zu sieben Tage gespeichert werden. Keine vertraulichen Daten eingeben.</p>
 </section>
@@ -82,6 +83,31 @@ const PROJECT_URLS = Object.freeze({
  value_rail:"https://github.com/SFS-Labs/value-rail-mvp",
  profile:"https://sfs-labs.github.io/ai-knowledge-ops-lab/recruiter.html"
 });
+const PROJECT_LABELS = Object.freeze({
+ hubspot_stripe:"HubSpot × Stripe",
+ knowledge_ops:"AI Knowledge Ops",
+ tender_intelligence:"Tender Intelligence",
+ sfs_genomics:"SFS Genomics",
+ value_rail:"Value Rail",
+ profile:"Mathias Steinbach – Portfolio"
+});
+/** Show the allowlisted evidence link; do not navigate automatically or trigger popup blockers. */
+function showProjectEvidence(args){
+ const key=args && typeof args.project_key==="string" ? args.project_key : "";
+ if(!Object.prototype.hasOwnProperty.call(PROJECT_URLS,key))return;
+ const box=document.getElementById("active-evidence");
+ if(!box)return;
+ const heading=document.createElement("b");
+ heading.textContent="ANGEFORDERTER PROJEKTNACHWEIS";
+ const link=document.createElement("a");
+ link.textContent="↗ "+PROJECT_LABELS[key]+" – Primärquelle öffnen";
+ link.href=PROJECT_URLS[key];
+ link.target="_blank";
+ link.rel="noopener noreferrer";
+ box.replaceChildren(heading,link);
+ box.hidden=false;
+ box.scrollIntoView({behavior:window.matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth",block:"nearest"});
+}
 const EXAMPLES = Object.freeze({
  tender:{q:"Warum wurde das Tender-Intelligence-Projekt gestoppt?",a:"Vier kontrollierte Modellaufrufe lieferten keinen belegten Qualitätsvorteil: 32 von 32 richtige vorbereitete Fakten in beiden Armen, aber 26 von 32 erwartete Quellenverweise in der Baseline gegenüber 25 von 32 im erweiterten Pfad. Deshalb wurde die kommerzielle Weiterentwicklung pausiert.",url:PROJECT_URLS.tender_intelligence,label:"Decision log / Primärbeleg"},
  tests:{q:"Welche technischen Tests sind tatsächlich dokumentiert?",a:"Für AI Knowledge Ops sind 36 echte lokale Modellaufrufe, End-to-End-Abläufe mit Fehlerpfaden und 135 bestandene Python-Tests am dokumentierten Quellstand verzeichnet. Ein separater 32-Fälle-Pilot war synthetisch; dieser belegt keine Kundenzuverlässigkeit.",url:"https://github.com/SFS-Labs/ai-knowledge-ops-lab/actions/runs/42827473405/job/129868488060",label:"135 Tests / CI-Protokoll"},
@@ -104,10 +130,7 @@ if(AGENT_PUBLIC_READY){
  widget.addEventListener("elevenlabs-convai:call",function(e){
   if(!e.detail||!e.detail.config)return;
   e.detail.config.clientTools={
-   open_project:function(args){
-    var key=args&&typeof args.project_key==="string"?args.project_key:"";
-    if(Object.prototype.hasOwnProperty.call(PROJECT_URLS,key))window.open(PROJECT_URLS[key],"_blank","noopener,noreferrer");
-   }
+   open_project:showProjectEvidence
   };
  });
  document.getElementById("widget-mount").appendChild(widget);
