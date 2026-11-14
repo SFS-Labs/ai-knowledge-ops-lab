@@ -53,7 +53,7 @@ header{border-bottom:1px solid var(--line)}.nav{min-height:95px;display:flex;ali
 <div id="widget-mount"></div>
 <div id="active-evidence" class="bubble evidence-selection" hidden role="status" aria-live="polite"></div>
 <button type="button" class="btn launch" id="launch-agent" disabled aria-describedby="launchinfo">Sprachgespräch im Website-Widget starten</button>
-<p class="disclosure" id="launchinfo">Die Beispielantworten sind kuratiert. Für spätere Live-Gespräche werden Eingaben an ElevenLabs übermittelt; Sprachaufzeichnungen sind deaktiviert, Gesprächsinhalte können bis zu sieben Tage gespeichert werden. Keine vertraulichen Daten eingeben.</p>
+<p class="disclosure" id="launchinfo">Die Beispielantworten sind kuratiert. Das ElevenLabs-Widget wird erst nach Ihrem Klick geladen; anschließend werden Gespräche an ElevenLabs übermittelt. Sprachaufzeichnungen sind deaktiviert; Gesprächsinhalte können bis zu sieben Tage gespeichert werden. Keine vertraulichen Daten eingeben.</p>
 </section>
 </section>
 <section class="wrap proofs" id="nachweise" aria-labelledby="proofheading"><div class="proofhead"><h2 id="proofheading">Ausgewählte Nachweise</h2><a href="recruiter.html">Vollständige Projektübersicht ↗</a></div>
@@ -126,21 +126,38 @@ document.querySelectorAll("[data-example]").forEach(function(btn){
  });
 });
 if(AGENT_PUBLIC_READY){
- var widget=document.createElement("elevenlabs-convai");
- widget.setAttribute("agent-id",AGENT_ID);
- widget.addEventListener("elevenlabs-convai:call",function(e){
-  if(!e.detail||!e.detail.config)return;
-  e.detail.config.clientTools={
-   open_project:showProjectEvidence
+ const trigger=document.getElementById("launch-agent");
+ trigger.disabled=false;
+ trigger.textContent="Sprach- oder Textgespräch laden";
+ trigger.addEventListener("click",function(){
+  if(trigger.dataset.loaded==="1")return;
+  trigger.dataset.loaded="1";
+  trigger.disabled=true;
+  trigger.textContent="Gespräch wird vorbereitet …";
+  const widget=document.createElement("elevenlabs-convai");
+  widget.setAttribute("agent-id",AGENT_ID);
+  widget.addEventListener("elevenlabs-convai:call",function(e){
+   if(!e.detail||!e.detail.config)return;
+   e.detail.config.clientTools={open_project:showProjectEvidence};
+  });
+  document.getElementById("widget-mount").appendChild(widget);
+  const script=document.createElement("script");
+  script.src="https://unpkg.com/@elevenlabs/convai-widget-embed";
+  script.async=true;
+  script.onload=function(){
+   trigger.hidden=true;
+   document.getElementById("agentstatus").textContent="Sprach- und Textagent verfügbar";
   };
+  script.onerror=function(){
+   widget.remove();
+   script.remove();
+   trigger.dataset.loaded="0";
+   trigger.disabled=false;
+   trigger.textContent="Erneut versuchen: Sprach- oder Textgespräch laden";
+   document.getElementById("agentstatus").textContent="Widget gerade nicht erreichbar";
+  };
+  document.body.appendChild(script);
  });
- document.getElementById("widget-mount").appendChild(widget);
- var script=document.createElement("script");
- script.src="https://unpkg.com/@elevenlabs/convai-widget-embed";
- script.async=true;
- document.body.appendChild(script);
- document.getElementById("agentstatus").textContent="Sprach- und Textagent verfügbar";
- document.getElementById("launch-agent").hidden=true;
 }
 </script>
 </body>
