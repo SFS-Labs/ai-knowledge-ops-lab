@@ -4,11 +4,13 @@ on:
     branches: [feat/sfs-interactive-portfolio-mvp]
     paths:
       - 'docs/interactive.html'
+      - 'docs/recruiter.html'
       - 'tests/test_interactive_browser.py'
       - '.github/workflows/interactive-browser.yml'
   pull_request:
     paths:
       - 'docs/interactive.html'
+      - 'docs/recruiter.html'
       - 'tests/test_interactive_browser.py'
       - '.github/workflows/interactive-browser.yml'
   workflow_dispatch:
