@@ -9,7 +9,10 @@ from __future__ import annotations
 import tempfile
 import unittest
 from pathlib import Path
-from playwright.sync_api import sync_playwright
+try:
+    from playwright.sync_api import sync_playwright
+except ImportError:
+    sync_playwright = None  # Optional dependency: generic repository CI skips Chromium-specific checks.
 
 HERE = Path(__file__).resolve()
 REPO = HERE.parents[1]
@@ -18,6 +21,7 @@ GATE_OFF = "const AGENT_PUBLIC_READY = false;"
 GATE_ON = "const AGENT_PUBLIC_READY = true;"
 
 
+@unittest.skipUnless(sync_playwright is not None, "Playwright not installed in core offline CI")
 class InteractiveBrowserSmoke(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
