@@ -41,7 +41,7 @@ header{border-bottom:1px solid var(--line)}.nav{min-height:95px;display:flex;ali
 <div class="about"><div class="kicker">Was Sie hier erfahren</div><p>Welche Probleme wurden bearbeitet? Welche Entscheidungen wurden getroffen? Was ist tatsächlich nachgewiesen?</p><p class="foot">Ein KI-Portfolioguide spricht über meine Arbeit – nicht an meiner Stelle.</p></div>
 </div>
 <section class="agent" id="interaktiv" aria-labelledby="agentheading">
-<div class="agenttop"><div><div class="kicker">SFS Interactive / KI-Portfolioguide</div><h2 id="agentheading">Fragen Sie nach.</h2></div><div class="status"><b>VOICE + TEXT</b><span id="agentstatus">Agent in privater Testphase</span></div></div>
+<div class="agenttop"><div><div class="kicker">SFS Interactive / KI-Portfolioguide</div><h2 id="agentheading">Fragen Sie nach.</h2></div><div class="status"><b>VOICE + TEXT</b><span id="agentstatus">Domaingebundener Website-Agent</span></div></div>
 <div class="bubble"><b>BEISPIELFRAGE</b><p id="question">Woran erkennt man bei Ihren Projekten, ob KI tatsächlich einen Mehrwert bringt?</p></div>
 <div class="bubble" role="region" aria-live="polite" aria-label="Belegbasierte Beispielantwort"><b>KURATIERTE ANTWORT – KEINE LIVE-KI</b><p id="answer">Im Tender-Intelligence-Projekt wurde der Zusatznutzen kontrolliert verglichen. Ein Qualitätsvorteil ließ sich nicht belegen – deshalb wurde die kommerzielle Entwicklung pausiert.</p><p class="source"><a id="answerlink" href="https://github.com/SFS-Labs/tender-intelligence-case-study/blob/main/docs/DECISION-LOG.md" target="_blank" rel="noopener noreferrer">↗ Decision log / Primärbeleg</a></p></div>
 <div class="chips" role="group" aria-label="Beispielfragen">
@@ -52,7 +52,7 @@ header{border-bottom:1px solid var(--line)}.nav{min-height:95px;display:flex;ali
 </div>
 <div id="widget-mount"></div>
 <div id="active-evidence" class="bubble evidence-selection" hidden role="status" aria-live="polite"></div>
-<button type="button" class="btn launch" id="launch-agent" disabled aria-describedby="launchinfo">Sprachgespräch – noch nicht öffentlich freigeschaltet</button>
+<button type="button" class="btn launch" id="launch-agent" disabled aria-describedby="launchinfo">Sprachgespräch im Website-Widget starten</button>
 <p class="disclosure" id="launchinfo">Die Beispielantworten sind kuratiert. Für spätere Live-Gespräche werden Eingaben an ElevenLabs übermittelt; Sprachaufzeichnungen sind deaktiviert, Gesprächsinhalte können bis zu sieben Tage gespeichert werden. Keine vertraulichen Daten eingeben.</p>
 </section>
 </section>
@@ -70,10 +70,11 @@ header{border-bottom:1px solid var(--line)}.nav{min-height:95px;display:flex;ali
 <footer><div class="wrap footerrow"><span>SFS.Labs / Mathias Steinbach</span><div><a href="https://www.linkedin.com/in/mathias-steinbach/">LinkedIn</a><a href="https://github.com/SFS-Labs/SFS-Labs">GitHub</a><a href="recruiter.html">Recruiter-Profil</a></div></div></footer>
 <script>
 "use strict";
-/* REVIEW GATE: keep false while ElevenLabs agent requires signed URLs.
-   Public launch requires reviewed privacy notice, allowlisted host, disabled
-   signed-URL authentication (for static widget) and validated agent tests. */
-const AGENT_PUBLIC_READY = false;
+/* PRODUCTION BOUNDARY: this UI is only deployed after review.
+   ElevenLabs allows Origin sfs-labs.github.io only; public browser voice must
+   undergo a real after-deployment audio, text and project-link acceptance test.
+   Keep privacy notice, budgets, caps and agent allowlist under review. */
+const AGENT_PUBLIC_READY = true;
 const AGENT_ID = "agent_0701m7bscpk3ecpvjss0ttd4gvqk";
 const PROJECT_URLS = Object.freeze({
  hubspot_stripe:"https://sfs-labs.github.io/ai-knowledge-ops-lab/hubspot-stripe.html",
