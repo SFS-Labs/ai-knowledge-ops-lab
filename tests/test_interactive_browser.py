@@ -57,7 +57,7 @@ class InteractiveBrowserSmoke(unittest.TestCase):
                     self.assertEqual(requests, [], "Third-party widget loaded without visitor click")
                     page.locator("#launch-agent").click()
                     self.assertEqual(page.locator("elevenlabs-convai").count(), 1)
-                    self.assertTrue(page.locator("#launch-agent").is_hidden())
+                    page.locator("#launch-agent").wait_for(state="hidden", timeout=3000)
                     self.assertEqual(len(requests), 1, "Widget must be loaded exactly once after click")
                 else:
                     self.assertTrue(page.locator("#launch-agent").is_disabled())
