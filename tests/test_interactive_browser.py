@@ -68,6 +68,11 @@ class InteractiveBrowserSmoke(unittest.TestCase):
                 )
                 page.close()
 
+    def test_recruiter_entrypoint_links_the_interactive_page(self):
+        recruiter=(REPO / "docs" / "recruiter.html").read_text(encoding="utf-8")
+        self.assertIn('class="primary" href="interactive.html"', recruiter)
+        self.assertIn('<nav class="nav"><a href="interactive.html">SFS Interactive</a>', recruiter)
+
     def test_widget_call_injects_exact_allowlisted_client_tool(self):
         page = self.browser.new_page(viewport={"width": 1280, "height": 920})
         # This fixture enables the widget block only in an offline file; remote widget JS never loads.
