@@ -1,0 +1,33 @@
+name: SFS Interactive browser smoke
+on:
+  push:
+    branches: [feat/sfs-interactive-portfolio-mvp]
+    paths:
+      - 'docs/interactive.html'
+      - 'docs/recruiter.html'
+      - 'tests/test_interactive_browser.py'
+      - '.github/workflows/interactive-browser.yml'
+  pull_request:
+    paths:
+      - 'docs/interactive.html'
+      - 'docs/recruiter.html'
+      - 'tests/test_interactive_browser.py'
+      - '.github/workflows/interactive-browser.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  browser:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install browser test dependency
+        run: |
+          python -m pip install --disable-pip-version-check playwright==1.56.0
+          python -m playwright install --with-deps chromium
+      - name: Offline browser interaction tests
+        run: python -m unittest discover -s tests -p 'test_interactive_browser.py' -v
