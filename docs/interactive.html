@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="SFS Interactive – Mathias Steinbach. Interaktives, beleggestütztes Portfolio zu KI-Implementierung, technischen Integrationen und quantitativer Evaluation.">
+<meta name="theme-color" content="#FFFFFF">
+<title>SFS Interactive | Mathias Steinbach</title>
+<style>
+:root{--ink:#242629;--paper:#fff;--muted:#62666B;--line:#E1E2E3;--soft:#F6F6F5}
+*{box-sizing:border-box}[hidden]{display:none!important}html{scroll-behavior:smooth}body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.55 Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif}
+a{color:inherit;text-underline-offset:3px}a:focus-visible,button:focus-visible{outline:3px solid #62666B;outline-offset:3px}button{font:inherit;cursor:pointer}.wrap{max-width:1320px;margin:0 auto;padding:0 30px}
+header{border-bottom:1px solid var(--line)}.nav{min-height:95px;display:flex;align-items:center;justify-content:space-between;gap:24px}.logo{font-weight:780;font-size:21px;letter-spacing:-.04em}.subbrand{font-size:11px;color:var(--muted)}.navlinks{display:flex;align-items:center;gap:30px}.navlinks a{font-size:12px;font-weight:650;text-decoration:none;letter-spacing:.045em}
+.btn{display:inline-block;text-align:center;text-decoration:none;background:var(--ink);color:#fff;border:1px solid var(--ink);border-radius:5px;padding:12px 18px;font-size:13px;font-weight:700}.btn.alt{background:transparent;color:var(--ink);border-color:var(--line)}.btn:disabled{opacity:.55;cursor:not-allowed}
+.hero{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);gap:6%;padding-top:65px;padding-bottom:32px}
+.kicker{font-size:11px;letter-spacing:.15em;font-weight:800;color:var(--muted);text-transform:uppercase}h1{font-size:clamp(34px,4.3vw,55px);letter-spacing:-.042em;line-height:1.13;margin:24px 0 28px;font-weight:720}h2{font-size:clamp(24px,2.5vw,34px);line-height:1.2;letter-spacing:-.03em}
+.lead{font-size:18px;line-height:1.52;color:#4B5055;max-width:575px}.actions{display:flex;flex-wrap:wrap;gap:12px;margin:25px 0 55px}
+.about{background:var(--soft);padding:23px 24px;max-width:545px}.about p{margin:12px 0;font-size:14px}.about .foot{font-size:12px;color:var(--muted);margin-bottom:0}
+.agent{background:var(--soft);border:1px solid var(--line);border-radius:6px;padding:26px;min-width:0;align-self:start}.agent h2{margin:12px 0 20px}.agenttop{display:flex;justify-content:space-between;gap:16px;align-items:start}.status{background:#fff;border:1px solid var(--line);border-radius:4px;padding:9px 12px;font-size:11px;color:var(--muted);min-width:145px}.status b{display:block;color:var(--ink);font-size:11px;letter-spacing:.09em}
+.bubble{border:1px solid var(--line);border-radius:8px;background:#fff;padding:17px;margin-top:14px}.bubble b{display:block;font-size:11px;letter-spacing:.11em;color:var(--muted);margin-bottom:17px}.bubble p{margin:0 0 12px;font-size:15px;line-height:1.5}.bubble .source{font-size:12px;font-weight:650;color:var(--muted);margin-bottom:0}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin:17px 0}.chip{border:1px solid var(--line);border-radius:4px;background:#fff;font-size:12px;font-weight:650;padding:10px 13px;color:var(--ink);text-align:left}.chip[aria-pressed=true]{background:var(--ink);color:#fff}.launch{width:100%;text-align:left}.disclosure{font-size:11px;line-height:1.5;color:var(--muted);margin:13px 0 0}
+.proofs{padding-top:28px;padding-bottom:58px}.proofhead{display:flex;align-items:center;justify-content:space-between;gap:20px}.proofgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;margin-top:18px}.proof{border:1px solid var(--line);padding:24px;min-width:0;border-radius:5px}.proof .kicker{font-size:10px}.proof h3{margin:13px 0 14px;font-size:20px}.proof p{font-size:13px;color:var(--muted);margin:0 0 17px;line-height:1.55}.proof a{font-size:12px;font-weight:700}
+.method{border-top:1px solid var(--line);padding:30px 0}.method p{font-size:13px;color:var(--muted)}footer{border-top:1px solid var(--line);padding:28px 0;color:var(--muted);font-size:12px}.footerrow{display:flex;justify-content:space-between;align-items:center;gap:20px}.footerrow a{margin-left:16px}
+#widget-mount{margin-top:10px}.visually-hidden{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+@media(max-width:940px){.hero{grid-template-columns:1fr;gap:30px;padding-top:38px}.actions{margin-bottom:26px}.agent{max-width:760px}.proofgrid{grid-template-columns:1fr 1fr}.navlinks{gap:15px}}
+@media(max-width:640px){.wrap{padding:0 20px}.nav{min-height:72px}.navlinks a:not(.btn){display:none}.navlinks .btn{padding:10px 12px}h1{margin:22px 0;font-size:35px}.lead{font-size:15px}.actions{display:grid;grid-template-columns:1fr}.agent{padding:16px}.agenttop{display:block}.status{display:inline-block;margin-top:10px}.proofgrid{grid-template-columns:1fr}.proofhead{display:block}.footerrow{display:block}.footerrow a{margin:0 12px 0 0;display:inline-block}.chips{display:grid;grid-template-columns:1fr 1fr}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<header><div class="wrap nav">
+<div><a class="logo" href="recruiter.html" style="text-decoration:none">SFS.Labs</a><div class="subbrand">Applied AI · Automation · Technical Research</div></div>
+<nav class="navlinks" aria-label="Hauptnavigation"><a href="#nachweise">NACHWEISE</a><a href="#ueber-mich">ÜBER MATHIAS</a><a class="btn" href="#interaktiv">PORTFOLIO ERKUNDEN</a></nav>
+</div></header>
+<main>
+<section class="wrap hero">
+<div id="ueber-mich"><div class="kicker">Mathias Steinbach / AI & Automation Solutions</div>
+<h1>Systeme verbinden.<br>Technische Probleme lösen.<br>Ergebnisse prüfen.</h1>
+<p class="lead">Ich analysiere technische und betriebliche Fragestellungen, verbinde Software- und Datenschnittstellen und prüfe Ergebnisse gegen nachvollziehbare Kriterien.</p>
+<div class="actions"><a class="btn" href="#interaktiv">Mit dem Portfolio interagieren</a><a class="btn alt" href="#nachweise">Projektbelege ansehen</a></div>
+<div class="about"><div class="kicker">Was Sie hier erfahren</div><p>Welche Probleme wurden bearbeitet? Welche Entscheidungen wurden getroffen? Was ist tatsächlich nachgewiesen?</p><p class="foot">Ein KI-Portfolioguide spricht über meine Arbeit – nicht an meiner Stelle.</p></div>
+</div>
+<section class="agent" id="interaktiv" aria-labelledby="agentheading">
+<div class="agenttop"><div><div class="kicker">SFS Interactive / KI-Portfolioguide</div><h2 id="agentheading">Fragen Sie nach.</h2></div><div class="status"><b>VOICE + TEXT</b><span id="agentstatus">Domaingebundener Website-Agent</span></div></div>
+<div class="bubble"><b>BEISPIELFRAGE</b><p id="question">Woran erkennt man bei Ihren Projekten, ob KI tatsächlich einen Mehrwert bringt?</p></div>
+<div class="bubble" role="region" aria-live="polite" aria-label="Belegbasierte Beispielantwort"><b>KURATIERTE ANTWORT – KEINE LIVE-KI</b><p id="answer">Im Tender-Intelligence-Projekt wurde der Zusatznutzen kontrolliert verglichen. Ein Qualitätsvorteil ließ sich nicht belegen – deshalb wurde die kommerzielle Entwicklung pausiert.</p><p class="source"><a id="answerlink" href="https://github.com/SFS-Labs/tender-intelligence-case-study/blob/main/docs/DECISION-LOG.md" target="_blank" rel="noopener noreferrer">↗ Decision log / Primärbeleg</a></p></div>
+<div class="chips" role="group" aria-label="Beispielfragen">
+<button type="button" class="chip" data-example="tests" aria-pressed="false">Technische Tests</button>
+<button type="button" class="chip" data-example="tender" aria-pressed="true">Warum gestoppt?</button>
+<button type="button" class="chip" data-example="billing" aria-pressed="false">HubSpot–Stripe</button>
+<button type="button" class="chip" data-example="work" aria-pressed="false">Persönlicher Beitrag</button>
+</div>
+<div id="widget-mount"></div>
+<div id="active-evidence" class="bubble evidence-selection" hidden role="status" aria-live="polite"></div>
+<button type="button" class="btn launch" id="launch-agent" disabled aria-describedby="launchinfo">Sprachgespräch im Website-Widget starten</button>
+<p class="disclosure" id="launchinfo">Die Beispielantworten sind kuratiert. Das ElevenLabs-Widget wird erst nach Ihrem Klick geladen; anschließend werden Gespräche an ElevenLabs übermittelt. Sprachaufzeichnungen sind deaktiviert; Gesprächsinhalte können bis zu sieben Tage gespeichert werden. Keine vertraulichen Daten eingeben.</p>
+</section>
+</section>
+<section class="wrap proofs" id="nachweise" aria-labelledby="proofheading"><div class="proofhead"><h2 id="proofheading">Ausgewählte Nachweise</h2><a href="recruiter.html">Vollständige Projektübersicht ↗</a></div>
+<div class="proofgrid">
+<article class="proof"><div class="kicker">Integration / Kostenmodell</div><h3>HubSpot × Stripe</h3><p>Lesender Rechnungsabgleich; 14 Std. 27 Min. weniger modellierter Prüfaufwand je 100 Geschäftstage in einem simulierten Szenario – kein gemessener Kundeneffekt.</p><a href="hubspot-stripe.html">Fallstudie und Modellannahmen ↗</a></article>
+<article class="proof"><div class="kicker">Workflow / Evaluation</div><h3>AI Knowledge Ops</h3><p>Qwen → n8n → Python → SQLite. Historischer Testnachweis mit 135 Python-Tests. In einem separaten synthetischen Pilot wurden 5/9 dringliche Fälle verfehlt.</p><a href="https://github.com/SFS-Labs/ai-knowledge-ops-lab/blob/main/showcases/internal-service-intake/DECISION_EVIDENCE_BRIEF.md">Entscheidung und Grenzen ↗</a></article>
+<article class="proof"><div class="kicker">Produktthese / Stop-Entscheidung</div><h3>Tender Intelligence</h3><p>Vier kontrollierte Modellaufrufe. Kein belegbarer Qualitätsvorteil der erweiterten Verarbeitung; weitere kommerzielle Entwicklung pausiert.</p><a href="https://github.com/SFS-Labs/tender-intelligence-case-study/blob/main/docs/DECISION-LOG.md">Vergleich und Decision log ↗</a></article>
+<article class="proof"><div class="kicker">Mobile Integration / Authentifizierung</div><h3>SFS Genomics</h3><p>607.051 akzeptierte SNP-Calls über 256 EU-D1-Partitionen abgeglichen. Engineering-Nachweis, keine klinische Validierung.</p><a href="https://github.com/SFS-Labs/sfs-genomics/blob/main/genomics/PORTFOLIO.md">Engineering-Protokoll ↗</a></article>
+<article class="proof"><div class="kicker">Monitoring / Quellenkontrolle</div><h3>Value Rail</h3><p>Bestands- und Signalsystem mit 326 historischen Offline-Tests. Kein Nachweis für wirtschaftlich ausführbare Transaktionen.</p><a href="https://github.com/SFS-Labs/value-rail-mvp">Repository und Tests ↗</a></article>
+<article class="proof"><div class="kicker">Arbeitsstil / Attribution</div><h3>Discover → Evaluate</h3><p>Problemrahmen, Anforderungen, technische Entscheidungen, Testkriterien und Bewertung. Implementierung und Teile der Analyse sind AI-assisted.</p><a href="https://github.com/SFS-Labs/SFS-Labs/blob/main/README.md">Persönliche Positionierung ↗</a></article>
+</div></section>
+<section class="method"><div class="wrap"><div class="kicker">Methodik</div><h2>Discover → Translate → Design → Deliver → Evaluate</h2><p>Die Projekte sind dokumentierte Entwicklungs- und Evaluationsarbeiten mit unterschiedlichen Belegständen. Nicht jeder funktionierende Prototyp ist ein betrieblicher Wirkungsnachweis. Die verlinkten Quellen nennen den jeweiligen Prüfstand und seine Grenzen.</p></div></section>
+</main>
+<footer><div class="wrap footerrow"><span>SFS.Labs / Mathias Steinbach</span><div><a href="https://www.linkedin.com/in/mathias-steinbach/">LinkedIn</a><a href="https://github.com/SFS-Labs/SFS-Labs">GitHub</a><a href="recruiter.html">Recruiter-Profil</a></div></div></footer>
+<script>
+"use strict";
+/* PRODUCTION BOUNDARY: this UI is only deployed after review.
+   ElevenLabs allows Origin sfs-labs.github.io only; public browser voice must
+   undergo a real after-deployment audio, text and project-link acceptance test.
+   Keep privacy notice, budgets, caps and agent allowlist under review. */
+const AGENT_PUBLIC_READY = true;
+const AGENT_ID = "agent_0701m7bscpk3ecpvjss0ttd4gvqk";
+const PROJECT_URLS = Object.freeze({
+ hubspot_stripe:"https://sfs-labs.github.io/ai-knowledge-ops-lab/hubspot-stripe.html",
+ knowledge_ops:"https://github.com/SFS-Labs/ai-knowledge-ops-lab/blob/main/showcases/internal-service-intake/DECISION_EVIDENCE_BRIEF.md",
+ tender_intelligence:"https://github.com/SFS-Labs/tender-intelligence-case-study/blob/main/docs/DECISION-LOG.md",
+ sfs_genomics:"https://github.com/SFS-Labs/sfs-genomics/blob/main/genomics/PORTFOLIO.md",
+ value_rail:"https://github.com/SFS-Labs/value-rail-mvp",
+ profile:"https://sfs-labs.github.io/ai-knowledge-ops-lab/recruiter.html"
+});
+const PROJECT_LABELS = Object.freeze({
+ hubspot_stripe:"HubSpot × Stripe",
+ knowledge_ops:"AI Knowledge Ops",
+ tender_intelligence:"Tender Intelligence",
+ sfs_genomics:"SFS Genomics",
+ value_rail:"Value Rail",
+ profile:"Mathias Steinbach – Portfolio"
+});
+/** Show the allowlisted evidence link; do not navigate automatically or trigger popup blockers. */
+function showProjectEvidence(args){
+ const key=args && typeof args.project_key==="string" ? args.project_key : "";
+ if(!Object.prototype.hasOwnProperty.call(PROJECT_URLS,key))return;
+ const box=document.getElementById("active-evidence");
+ if(!box)return;
+ const heading=document.createElement("b");
+ heading.textContent="ANGEFORDERTER PROJEKTNACHWEIS";
+ const link=document.createElement("a");
+ link.textContent="↗ "+PROJECT_LABELS[key]+" – Primärquelle öffnen";
+ link.href=PROJECT_URLS[key];
+ link.target="_blank";
+ link.rel="noopener noreferrer";
+ box.replaceChildren(heading,link);
+ box.hidden=false;
+ box.scrollIntoView({behavior:window.matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth",block:"nearest"});
+}
+const EXAMPLES = Object.freeze({
+ tender:{q:"Warum wurde das Tender-Intelligence-Projekt gestoppt?",a:"Vier kontrollierte Modellaufrufe lieferten keinen belegten Qualitätsvorteil: 32 von 32 richtige vorbereitete Fakten in beiden Armen, aber 26 von 32 erwartete Quellenverweise in der Baseline gegenüber 25 von 32 im erweiterten Pfad. Deshalb wurde die kommerzielle Weiterentwicklung pausiert.",url:PROJECT_URLS.tender_intelligence,label:"Decision log / Primärbeleg"},
+ tests:{q:"Welche technischen Tests sind tatsächlich dokumentiert?",a:"Für AI Knowledge Ops sind 36 echte lokale Modellaufrufe, End-to-End-Abläufe mit Fehlerpfaden und 135 bestandene Python-Tests am dokumentierten Quellstand verzeichnet. Ein separater 32-Fälle-Pilot war synthetisch; dieser belegt keine Kundenzuverlässigkeit.",url:"https://github.com/SFS-Labs/ai-knowledge-ops-lab/actions/runs/42827473405/job/129868488060",label:"135 Tests / CI-Protokoll"},
+ billing:{q:"Hat die HubSpot–Stripe-Integration bei Kunden Geld gespart?",a:"Das ist nicht nachgewiesen. Im Modell mit sechs Deals pro Tag und fünf Prozent simulierten Abweichungen ergaben sich 14 Stunden 27 Minuten weniger Prüfaufwand und 225,22 Euro Nettowert je 100 Geschäftstage. Bei höheren Abweichungsraten kippt die Wirtschaftlichkeit.",url:PROJECT_URLS.hubspot_stripe,label:"Fallstudie / Modellannahmen"},
+ work:{q:"Was ist Mathias' eigener Beitrag bei AI-assisted Projekten?",a:"Seine dokumentierten Beiträge liegen in der Problem- und Anforderungsanalyse, in Prüfkriterien, Architektur- und Bewertungsentscheidungen sowie der Prüfung der Ergebnisse. Die Implementierung und Teile der Analyse wurden AI-assisted durchgeführt.",url:"https://github.com/SFS-Labs/SFS-Labs/blob/main/README.md",label:"Positionierung / Attribution"}
+});
+document.querySelectorAll("[data-example]").forEach(function(btn){
+ btn.addEventListener("click",function(){
+  var key=btn.getAttribute("data-example"),x=EXAMPLES[key];
+  if(!x)return;
+  document.getElementById("question").textContent=x.q;
+  document.getElementById("answer").textContent=x.a;
+  var l=document.getElementById("answerlink");l.href=x.url;l.textContent="↗ "+x.label;
+  document.querySelectorAll("[data-example]").forEach(function(chip){chip.setAttribute("aria-pressed",String(chip===btn));});
+ });
+});
+if(AGENT_PUBLIC_READY){
+ const trigger=document.getElementById("launch-agent");
+ trigger.disabled=false;
+ trigger.textContent="Sprach- oder Textgespräch laden";
+ trigger.addEventListener("click",function(){
+  if(trigger.dataset.loaded==="1")return;
+  trigger.dataset.loaded="1";
+  trigger.disabled=true;
+  trigger.textContent="Gespräch wird vorbereitet …";
+  const widget=document.createElement("elevenlabs-convai");
+  widget.setAttribute("agent-id",AGENT_ID);
+  widget.addEventListener("elevenlabs-convai:call",function(e){
+   if(!e.detail||!e.detail.config)return;
+   e.detail.config.clientTools={open_project:showProjectEvidence};
+  });
+  document.getElementById("widget-mount").appendChild(widget);
+  const script=document.createElement("script");
+  script.src="https://unpkg.com/@elevenlabs/convai-widget-embed";
+  script.async=true;
+  script.onload=function(){
+   trigger.hidden=true;
+   document.getElementById("agentstatus").textContent="Sprach- und Textagent verfügbar";
+  };
+  script.onerror=function(){
+   widget.remove();
+   script.remove();
+   trigger.dataset.loaded="0";
+   trigger.disabled=false;
+   trigger.textContent="Erneut versuchen: Sprach- oder Textgespräch laden";
+   document.getElementById("agentstatus").textContent="Widget gerade nicht erreichbar";
+  };
+  document.body.appendChild(script);
+ });
+}
+</script>
+</body>
+</html>
