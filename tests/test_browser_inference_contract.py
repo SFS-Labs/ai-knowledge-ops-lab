@@ -29,15 +29,16 @@ class BrowserInferenceContractTests(unittest.TestCase):
         self.assertIn('href="./live.html"',
                       (ROOT / "docs/index.html").read_text(encoding="utf-8"))
 
-    def test_exact_development_selected_prompt(self):
+    def test_exact_experimental_prompt(self):
         sys.path.insert(0, str(ROOT / "showcases/internal-service-intake/evaluation"))
-        from nlbse_llm_retest import V2_SYSTEM_PROMPT, V2_PROMPT_VERSION
+        from nlbse_questionmark_ab import QUESTIONMARK_PROMPT, PROMPT_VERSION
         lines = [s for s in JS.splitlines() if s.startswith("const SYSTEM_PROMPT = ")]
         self.assertEqual(1, len(lines))
         self.assertTrue(lines[0].endswith(";"))
         encoded = lines[0][len("const SYSTEM_PROMPT = "):-1]
-        self.assertEqual(json.loads(encoded), V2_SYSTEM_PROMPT)
-        self.assertIn(V2_PROMPT_VERSION, JS)
+        self.assertEqual(json.loads(encoded), QUESTIONMARK_PROMPT)
+        self.assertIn(PROMPT_VERSION, JS)
+        self.assertIn("bisherigen englischen Prompt v2", HTML)
         for term in ("54/96", "46/96", "6/24", "Quantisierung"):
             self.assertIn(term, HTML)
 
