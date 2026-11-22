@@ -1,0 +1,30 @@
+name: HubSpot Stripe study
+
+'on':
+  workflow_dispatch:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'showcases/hubspot-stripe-reconciliation/**'
+      - '.github/workflows/reconciliation-study.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  reproduce:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608
+        with:
+          persist-credentials: false
+      - name: Python
+        uses: actions/setup-python@82c7e631bb3cdc910f68e0081d67478d79c6982d
+        with:
+          python-version: '3.12'
+      - name: Existing repository regression tests
+        run: python -m unittest discover -s tests -v
+      - name: Reproduce study and verify committed evidence
+        run: python showcases/hubspot-stripe-reconciliation/run_study.py

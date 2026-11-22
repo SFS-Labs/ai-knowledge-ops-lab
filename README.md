@@ -16,6 +16,13 @@ Im weiteren Repository ist der ältere SEC-/Knowledge-Ops-Strang getrennt dokume
 
 ## Start here
 
+**HubSpot–Stripe billing reconciliation:** [Study protocol](showcases/hubspot-stripe-reconciliation/README.md),
+[reproduced results](showcases/hubspot-stripe-reconciliation/RESULTS.md) and
+[sandbox evidence](showcases/hubspot-stripe-reconciliation/EVIDENCE_NOTES.md).
+The read-only workflow and executable table baseline are compared on 36 paired synthetic runs,
+with explicit operating break-even assumptions. Reproduce offline with
+`python showcases/hubspot-stripe-reconciliation/run_study.py`.
+
 1. Read the [architecture](docs/architecture.md) and [evaluation limits](docs/evaluation.md).
 2. Run the offline regression suite with Python 3.12+: `python -m unittest discover -s tests -v`. No third-party package or API key is needed.
 3. Preview the committed replay: `python -m http.server 8000 --directory demo`, then open `http://localhost:8000`. Select the 15-source rules run or the separate three-source AI-assisted run. This serves recorded artifacts; it performs no model inference.

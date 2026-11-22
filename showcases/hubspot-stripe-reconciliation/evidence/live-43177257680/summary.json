@@ -1,0 +1,26 @@
+{
+  "completed_at_utc": "2026-11-12T07:42:49.103213+00:00",
+  "passed": true,
+  "stripe_account": "acct_1Uaj2tE19wsOrukR",
+  "livemode": false,
+  "source_rows": 1,
+  "obligation_rows": 2,
+  "github_sha": "b5b6c19aa7ab30d6e452286ef9300944bee10feb",
+  "github_run_id": "43177257680",
+  "reconcile_code_sha256": "ca49feead8a1101b7ccd9198f42a297a737b5b92990fe0e25d59b0348d57c7a8",
+  "as_of": "2026-11-12",
+  "metadata_restored_and_read_back": true,
+  "pagination_completed": true,
+  "atomic_snapshot_isolation": false,
+  "data_path": "captured HubSpot MCP selection -> CSV transformation -> direct Stripe HTTP CLI",
+  "sha256": {
+    "audit.json": "1bbaf8aed7f9e6a04b64609ed48ba200982ce271cdf176ed8a4061ebc18c80bf",
+    "hubspot-closed-won.csv": "22882dee5763fe44218a68ef03a76f06be7030d919a44761c33752df4f5f0611",
+    "invoices-during.json": "3a86094797de32db8e86ebcdacb70f5b79083c7874da43755465c82151ddf51b",
+    "metadata-backup.json": "4b5693e26b58f3cda6f140e8b109736754617a732506378c7a507bf6ded90ce2",
+    "obligations.csv": "800cb6a15ebc88a7094b7600d7d50cc3643860b424824496416fb9d57431e6a5",
+    "restoration.json": "6cf24c72f1e795727ce36144285b5147a682f0952b3b5550c4c13207a24da36c",
+    "results.json": "64f2e23626a4308b32f2a06373314dd78e0d943c774b19f404c79c7301f75538",
+    "transformation.json": "eafa889dfcb32a873bdbb693e47d5293ff65ff50ace6c43bc12007dc50705001"
+  }
+}

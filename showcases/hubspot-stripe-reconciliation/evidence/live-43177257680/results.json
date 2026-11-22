@@ -1,0 +1,25 @@
+[
+  {
+    "deal_id": "539935357174",
+    "status": "invoice_draft",
+    "alerts": [
+      "missing_invoice"
+    ],
+    "invoice_ids": [
+      "in_1UamitE19wsOrukR7goJaSyd"
+    ],
+    "obligation_id": "1"
+  },
+  {
+    "deal_id": "539935357174",
+    "status": "amount_mismatch",
+    "alerts": [
+      "amount_mismatch",
+      "missing_invoice"
+    ],
+    "invoice_ids": [
+      "in_1UamioE19wsOrukRDWKzG9Qn"
+    ],
+    "obligation_id": "2"
+  }
+]

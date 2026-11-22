@@ -1,0 +1,40 @@
+{
+  "account": "SFS sandbox",
+  "account_id": "acct_1Uaj2tE19wsOrukR",
+  "hubspot_portal": 149743226,
+  "deal_id": "539935357174",
+  "deal_amount_minor": 200000,
+  "currency": "usd",
+  "source": "Stripe MCP GET /v1/invoices",
+  "first_has_more": true,
+  "injected_error": {
+    "error_code": "INVALID_ARGUMENT"
+  },
+  "final_has_more": false,
+  "invoices": [
+    {
+      "id": "in_1UamitE19wsOrukR7goJaSyd",
+      "livemode": false,
+      "metadata": {
+        "hubspot_deal_id": "539935357174",
+        "obligation_id": "1",
+        "sfs_fixture": "hubspot_reconciliation_20261112"
+      },
+      "status": "draft",
+      "currency": "usd",
+      "total": 100000
+    },
+    {
+      "id": "in_1UamioE19wsOrukRDWKzG9Qn",
+      "livemode": false,
+      "metadata": {
+        "hubspot_deal_id": "539935357174",
+        "obligation_id": "2",
+        "sfs_fixture": "hubspot_reconciliation_20261112"
+      },
+      "status": "draft",
+      "currency": "usd",
+      "total": 190000
+    }
+  ]
+}
