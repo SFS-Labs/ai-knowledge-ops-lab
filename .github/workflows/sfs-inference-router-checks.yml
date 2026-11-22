@@ -1,0 +1,25 @@
+name: Zero-Spend Model Router checks
+on:
+  push:
+    branches: [feat/sfs-salesforce-remote-mcp]
+    paths:
+      - "sfs-inference-router/**"
+      - ".github/workflows/sfs-inference-router-checks.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Run offline mocked routing tests
+        run: node --test sfs-inference-router/worker.test.mjs
+      - name: Validate syntax
+        run: node --check sfs-inference-router/worker.mjs
