@@ -83,6 +83,9 @@ class InteractiveBrowserSmoke(unittest.TestCase):
              "html_url": "https://github.com/SFS-Labs/ctf-skills", "pushed_at": "2026-11-23T12:00:00Z"},
             {"name": "agent-toolkit", "owner": {"login": "SFS-Labs"}, "private": False,
              "html_url": "https://github.com/SFS-Labs/agent-toolkit", "pushed_at": "2026-11-22T12:00:00Z"},
+            {"name": "new-public-ai-integration-repo", "owner": {"login": "SFS-Labs"}, "private": False,
+             "html_url": "https://github.com/SFS-Labs/new-public-ai-integration-repo",
+             "pushed_at": "2026-11-23T13:00:00Z"},
             {"name": "private-repo-fixture", "owner": {"login": "SFS-Labs"}, "private": True,
              "html_url": "https://github.com/SFS-Labs/private-repo-fixture", "pushed_at": "2026-11-23T12:00:00Z"},
             {"name": "fake-upstream", "owner": {"login": "Elsewhere"}, "private": False,
@@ -102,29 +105,31 @@ class InteractiveBrowserSmoke(unittest.TestCase):
             page.locator("#refresh-public-repositories").click()
             page.locator("#public-repository-list li").first.wait_for(timeout=5000)
             self.assertEqual(hits, [url], "One public account API call per explicit inventory click")
-            self.assertEqual(page.locator("#public-repository-list li").count(), 2)
+            self.assertEqual(page.locator("#public-repository-list li").count(), 3)
             rendered = page.locator("#public-repository-list").inner_text()
             self.assertIn("ctf-skills", rendered)
-            self.assertIn("Atlan-Upstream, kein SFS-Produkt", rendered)
+            self.assertIn("Atlan-Agent-Toolkit im SFS-Labs-Portfolio", rendered)
+            self.assertIn("new-public-ai-integration-repo", rendered)
+            self.assertIn("Weiteres öffentliches SFS-Labs-Portfolio-Repository", rendered)
             self.assertNotIn("private-repo-fixture", rendered)
             self.assertNotIn("fake-upstream", rendered)
-            self.assertIn("2 öffentliche Repositories", page.locator("#public-repository-status").inner_text())
+            self.assertIn("3 öffentliche Repositories", page.locator("#public-repository-status").inner_text())
         finally:
             page.close()
 
-    def test_live_preview_widget_bootstrap(self):
-        """Opt-in external smoke: real Cloudflare preview and real ElevenLabs widget JS.
+    def test_live_production_widget_bootstrap(self):
+        """Opt-in external smoke: real production GitHub Pages and real ElevenLabs widget JS.
 
         Does not initiate a conversation, request microphone access, or spend inference credits.
         """
-        url = os.environ.get("SFS_INTERACTIVE_PREVIEW_URL")
+        url = os.environ.get("SFS_INTERACTIVE_PRODUCTION_URL")
         if not url:
-            self.skipTest("External preview URL not configured")
+            self.skipTest("External production GitHub Pages URL not configured")
         page = self.browser.new_page(viewport={"width": 1280, "height": 860})
         try:
             page.goto(url, wait_until="domcontentloaded", timeout=25000)
             button = page.locator("#launch-agent")
-            self.assertTrue(button.is_enabled(), "Preview gate must be active")
+            self.assertTrue(button.is_enabled(), "Production gate must be active")
             self.assertEqual(page.locator("elevenlabs-convai").count(), 0)
             button.click()
             page.locator("elevenlabs-convai").wait_for(state="attached", timeout=10000)
@@ -138,6 +143,51 @@ class InteractiveBrowserSmoke(unittest.TestCase):
             )
             page.locator("#launch-agent").wait_for(state="hidden", timeout=6000)
             self.assertIn("Widget bereit", page.locator("#agentstatus").inner_text())
+        finally:
+            page.close()
+
+    def test_production_pages_and_project_navigation(self):
+        """Every published new page should be HTTP 200 and reachable from the actual work index.
+
+        This is a real external HTTP/browser check; it does not invoke a paid agent call.
+        """
+        interactive = os.environ.get("SFS_INTERACTIVE_PRODUCTION_URL")
+        if not interactive:
+            self.skipTest("External production GitHub Pages URL not configured")
+        self.assertTrue(
+            interactive.startswith("https://sfs-labs.github.io/ai-knowledge-ops-lab/"),
+            "Do not silently test Cloudflare preview instead of published production"
+        )
+        base = interactive.rsplit("/", 1)[0] + "/"
+        page = self.browser.new_page(viewport={"width": 1280, "height": 850})
+        expected = {
+            "interactive.html": "SFS Interactive",
+            "work.html": "Ausgewählte Arbeiten",
+            "security-engineering.html": "Cybersecurity",
+            "adversarial-evaluation.html": "Adversarial Evaluation",
+            "agent-systems.html": "Agent Systems",
+            "recruiter.html": "Mathias Steinbach",
+            "hubspot-stripe.html": "HubSpot",
+        }
+        try:
+            for filename, title in expected.items():
+                with self.subTest(filename=filename):
+                    response = page.goto(base + filename, wait_until="domcontentloaded", timeout=25000)
+                    self.assertIsNotNone(response, filename)
+                    self.assertEqual(response.status, 200, filename)
+                    self.assertIn(title, page.title())
+                    self.assertGreater(page.locator("a[href]").count(), 0)
+            response = page.goto(base + "work.html", wait_until="domcontentloaded")
+            self.assertEqual(response.status, 200)
+            for filename in ("interactive.html", "security-engineering.html",
+                             "adversarial-evaluation.html", "agent-systems.html"):
+                self.assertGreater(
+                    page.locator('a[href="' + filename + '"]').count(), 0,
+                    "Portfolio index lacks public navigation to " + filename
+                )
+            page.locator('a[href="security-engineering.html"]').first.click()
+            page.wait_for_url(base + "security-engineering.html")
+            self.assertIn("Cybersecurity", page.title())
         finally:
             page.close()
 
