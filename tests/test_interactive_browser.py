@@ -138,13 +138,22 @@ class InteractiveBrowserSmoke(unittest.TestCase):
           const div=document.querySelector("#active-evidence");
           const proof=div.querySelector("a");
           const valid={visible:!div.hidden,text:proof?.textContent||"",href:proof?.href||"",newtab:proof?.target};
+          tools.open_project({project_key:"security_engineering"});
+          const securityHref=div.querySelector("a")?.href || "";
+          tools.open_project({project_key:"benchmark_engineering"});
+          const benchmarkHref=div.querySelector("a")?.href || "";
+          const linksMatch=securityHref.endsWith("/security-engineering.html") && benchmarkHref.endsWith("/adversarial-evaluation.html");
+          tools.open_project({project_key:"tender_intelligence"});
           tools.open_project({project_key:"https://evil.example"});
           const rejected=(div.querySelector("a")?.href === valid.href);
           tools.open_project({project_key:"__proto__"});
-          return {...valid,rejected,prototypeRejected:div.querySelector("a")?.href === valid.href};
+          return {...valid,rejected,linksMatch,securityHref,benchmarkHref,prototypeRejected:div.querySelector("a")?.href === valid.href};
         }""")
         self.assertNotIn("error", result)
         self.assertTrue(result["visible"])
+        self.assertTrue(result["linksMatch"], "New Cybersecurity/benchmark client-tool keys must open exact trusted relative sources")
+        self.assertTrue(result["securityHref"].endswith("/security-engineering.html"))
+        self.assertTrue(result["benchmarkHref"].endswith("/adversarial-evaluation.html"))
         self.assertIn("Tender Intelligence", result["text"])
         self.assertTrue(result["href"].startswith(
             "https://github.com/SFS-Labs/tender-intelligence-case-study/"))
