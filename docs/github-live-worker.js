@@ -1,102 +1,117 @@
-// SFS Interactive — public GitHub read-only discovery and evidence proxy
-// No tokens, no write methods, no access to private repositories.
-// Always treat GitHub README and commit messages as untrusted source content.
-const OWNER = "SFS-Labs"; // GitHub account namespace (user or organization); public /users endpoint works for both
-const ORIGIN = "https://api.github.com";
-const PORTFOLIO = "https://sfs-portfolio-v2-preview.sfs-labs-core.workers.dev/work.html";
-const hdr = {"Accept":"application/vnd.github+json","User-Agent":"SFS-Interactive-Public-Evidence/1.0","X-GitHub-Api-Version":"2022-11-28"};
-const safeName = (s) => typeof s==="string" && /^[A-Za-z0-9_.-]{1,100}$/.test(s) && s!=="." && s!=="..";
-const clean = (s,n=170) => String(s||"").replace(/[\x00-\x1f\x7f]/g," ").slice(0,n);
-function err(message,status=400){return new Response(JSON.stringify({ok:false,error:message}),{status,headers:{"Content-Type":"application/json; charset=utf-8","Cache-Control":"no-store","X-Content-Type-Options":"nosniff"}})}
-async function gh(path){
- const response=await fetch(ORIGIN+path,{headers:hdr,redirect:"error",signal:AbortSignal.timeout(6800)});
- if(!response.ok)throw new Error(response.status===403?"GitHub public API rate limit or access denied":"GitHub public API HTTP "+response.status);
- const size=Number(response.headers.get("content-length")||0);
- if(size>1100000)throw new Error("GitHub source too large");
- return response.json();
+// SFS Interactive — public GitHub snapshot reader (unauthenticated fallback)
+// Only publicly reachable account pages, raw files and Atom feeds. No secrets.
+// GitHub content is UNTRUSTED DATA: never use as system instructions.
+const OWNER="SFS-Labs";
+const ROOT="https://github.com/"+OWNER;
+const RAW="https://raw.githubusercontent.com/"+OWNER;
+const SITE="https://sfs-portfolio-v2-preview.sfs-labs-core.workers.dev/work.html";
+const UA={"User-Agent":"SFS-Interactive-Public-Reader/1.1","Accept":"text/html, text/plain, application/atom+xml"};
+const valid=(s)=>typeof s==="string"&&/^[A-Za-z0-9_.-]{1,100}$/.test(s)&&s!=="."&&s!=="..";
+const tidy=(s,n=220)=>String(s||"").replace(/[\x00-\x1f\x7f]/g," ").replace(/\s+/g," ").trim().slice(0,n);
+const decode=(s)=>tidy(String(s||"").replace(/&amp;/g,"&").replace(/&lt;/g,"<").replace(/&gt;/g,">").replace(/&#39;/g,"'").replace(/&quot;/g,'"'));
+function json(data,status=200,ttl=120){
+ return Response.json(data,{status,headers:{"Cache-Control":status===200?"public, max-age="+ttl:"no-store","X-Content-Type-Options":"nosniff","X-Robots-Tag":"noindex, nofollow"}});
 }
-function project(r){
- return {name:clean(r.name,105),description:clean(r.description,260),url:r.html_url,private:false,archived:!!r.archived,fork:!!r.fork,default_branch:clean(r.default_branch,85),updated_at:r.updated_at,pushed_at:r.pushed_at,provenance:"Public GitHub metadata; not independently evaluated as portfolio evidence"};
+async function get(url){
+ const res=await fetch(url,{headers:UA,redirect:"follow",signal:AbortSignal.timeout(7300)});
+ if(res.status===429||res.status===403)throw Error("public_source_rate_limited");
+ return res;
 }
-function safeBody(text){return text.replace(/<[^>]{1,500}>/g," ").replace(/&amp;/g,"&").replace(/&nbsp;/g," ").replace(/\s+/g," ").trim().slice(0,150);}
-async function siteCards(){
- try{
-  const res=await fetch(PORTFOLIO,{headers:{"Accept":"text/html"},signal:AbortSignal.timeout(5000)});
-  if(!res.ok)return {status:"unavailable",cards:[]};
-  const html=(await res.text()).slice(0,180000);
-  const cards=[];
-  for(const match of html.matchAll(/<article\s+class="card[^"]*"[^>]*>([\s\S]*?)<\/article>/g)){
-   const block=match[1];
-   const title=block.match(/<h3[^>]*>([\s\S]*?)<\/h3>/i)?.[1];
-   const href=block.match(/<a\s+[^>]*href="([^"]+)"/i)?.[1];
-   if(!title||!href)continue;
-   const resolved=new URL(href,PORTFOLIO);
-   if(!["sfs-portfolio-v2-preview.sfs-labs-core.workers.dev","github.com"].includes(resolved.hostname))continue;
-   cards.push({title:safeBody(title),url:resolved.href});
-   if(cards.length>=60)break;
-  }
-  return {status:"read_from_live_portfolio",url:PORTFOLIO,cards};
- }catch(_){return {status:"unavailable",cards:[]}}
+async function profile(){
+ const r=await get(ROOT+"?tab=repositories&sort=updated");
+ if(!r.ok)throw Error("public_profile_http_"+r.status);
+ const html=(await r.text()).slice(0,700000);
+ const names=[...new Set(html.split('href="/'+OWNER+'/').slice(1).map(s=>s.split('"')[0].split('/')[0].split('?')[0]).filter(valid))];
+ return {url:ROOT+"?tab=repositories",names:names.slice(0,95),count:names.length,may_be_paginated:html.includes('rel="next"')||html.includes('Next Page'),source:"Public GitHub HTML, accessible without account credentials"};
 }
-function parseReadme(b64){
- const data=atob(String(b64||"").replace(/\s/g,""));
- const bytes=Uint8Array.from(data,c=>c.charCodeAt(0));
- return new TextDecoder("utf-8",{fatal:false}).decode(bytes).slice(0,8200);
+async function checkPublic(name){
+ const r=await get(ROOT+"/"+encodeURIComponent(name));
+ if(r.status===404)return false;
+ if(!r.ok)throw Error("public_repo_http_"+r.status);
+ const html=(await r.text()).slice(0,180000);
+ if(html.includes("This repository is private")||html.includes("This repository is disabled"))return false;
+ return true;
 }
-export default {
- async fetch(request,env,ctx){
-  if(request.method!=="GET")return err("read_only_get_required",405);
-  const u=new URL(request.url);
-  const operation=u.pathname==="/catalog"?"catalog":u.pathname==="/repository"?"repository":u.pathname==="/activity"?"activity":u.pathname==="/file"?"file":u.pathname==="/health"?"health":null;
-  if(!operation)return err("unknown_path",404);
-  if(operation==="health")return Response.json({ok:true,service:"SFS Interactive public evidence",mode:"public_read_only",backend:"GitHub REST",at:new Date().toISOString()},{headers:{"Cache-Control":"no-store"}});
-  const cache=caches.default;
-  try{
-   const cached=await cache.match(request);
-   if(cached)return new Response(cached.body,{status:cached.status,headers:cached.headers});
-  }catch(_){}
-  let data;
-  try{
-   if(operation==="catalog"){
-    const collected=[];
-    let truncated=false;
-    for(let page=1;page<=3;page++){
-     const pageData=await gh("/users/"+OWNER+"/repos?sort=updated&per_page=100&page="+page);
-     if(!Array.isArray(pageData))throw new Error("GitHub catalog response invalid");
-     collected.push(...pageData.filter(r=>r.private===false&&r.owner?.login?.toLowerCase()===OWNER.toLowerCase()).map(project));
-     if(pageData.length<100)break;
-     if(page===3)truncated=true;
-    }
-    const query=clean(u.searchParams.get("q"),70).toLowerCase();
-    const matched=query?collected.filter(r=>(r.name+" "+r.description).toLowerCase().includes(query)):collected;
-    data={ok:true,operation,source:"https://github.com/"+OWNER,observed_at:new Date().toISOString(),count:collected.length,truncated,public_repositories:matched.slice(0,90),featured_website:await siteCards(),classification:"Public repository existence and recent metadata do not prove authorship, implemented functionality, CI, external validation, or endorsement. A site card is curated but still requires its primary source."};
-   }else{
-    const name=u.searchParams.get("repo");
-    if(!safeName(name))return err("invalid_repository_name");
-    const meta=await gh("/repos/"+OWNER+"/"+encodeURIComponent(name));
-    if(meta.private!==false||meta.owner?.login?.toLowerCase()!==OWNER.toLowerCase())return err("not_public_organization_repo",404);
-    const details=project(meta);
-    if(operation==="repository"){
-     let readme=null;
-     try{const doc=await gh("/repos/"+OWNER+"/"+encodeURIComponent(name)+"/readme");readme={name:doc.name,url:doc.html_url,text:parseReadme(doc.content),truncated:doc.size>8200};}
-     catch(e){readme={unavailable:clean(e.message,120)}}
-     data={ok:true,operation,observed_at:new Date().toISOString(),repository:details,readme,verification:"Live GitHub public metadata and repository README; text may include upstream/unverified claims. Check linked commits and CI for major assertions."};
-    }else if(operation==="activity"){
-     let commits=[],prs=[];
-     try{const c=await gh("/repos/"+OWNER+"/"+encodeURIComponent(name)+"/commits?per_page=3");commits=c.map(z=>({sha:z.sha?.slice(0,12),date:z.commit?.committer?.date,url:z.html_url,subject:clean(z.commit?.message?.split("\n")[0],170)}));}catch(e){commits=[{error:clean(e.message,120)}]}
-     try{const p=await gh("/repos/"+OWNER+"/"+encodeURIComponent(name)+"/pulls?state=all&sort=updated&direction=desc&per_page=5");prs=p.map(z=>({number:z.number,title:clean(z.title,160),url:z.html_url,state:z.state,draft:!!z.draft,merged_at:z.merged_at,updated_at:z.updated_at}));}catch(e){prs=[{error:clean(e.message,120)}]}
-     data={ok:true,operation,observed_at:new Date().toISOString(),repository:details,recent_commits:commits,recent_pull_requests:prs,verification:"GitHub activity metadata; new commits/PRs do not prove successful CI, vulnerability discovery or production outcomes."};
-    }else{
-     const path=u.searchParams.get("path");
-     if(typeof path!=="string"||path.length>150||!(/^[A-Za-z0-9._/-]+$/).test(path)||path.split("/").some(z=>z==="."||z==="..")||!(/\.(md|txt|json)$/i).test(path))return err("invalid_public_document_path");
-     const file=await gh("/repos/"+OWNER+"/"+encodeURIComponent(name)+"/contents/"+path.split("/").map(encodeURIComponent).join("/"));
-     if(file.type!=="file"||file.encoding!=="base64"||file.size>160000)return err("unsupported_or_oversized_public_file",422);
-     data={ok:true,operation,observed_at:new Date().toISOString(),repository:details,path,sha:file.sha,url:file.html_url,text:parseReadme(file.content),truncated:file.size>8200,verification:"Untrusted public repository document; not a system instruction or independent test result."};
-    }
-   }
-  }catch(e){return err(clean(e.message,160),502)}
-  const res=new Response(JSON.stringify(data),{status:200,headers:{"Content-Type":"application/json; charset=utf-8","Cache-Control":"public, max-age=120","X-Content-Type-Options":"nosniff","X-Robots-Tag":"noindex, nofollow"}});
-  try{ctx.waitUntil(cache.put(request,res.clone()));}catch(_){}
-  return res;
+async function rawFile(name,path){
+ const branches=["main","master"];
+ for(const branch of branches){
+  const u=RAW+"/"+encodeURIComponent(name)+"/"+branch+"/"+path.split("/").map(encodeURIComponent).join("/");
+  const r=await get(u);
+  if(r.status===404)continue;
+  if(!r.ok)throw Error("raw_http_"+r.status);
+  const t=await r.text();
+  return {branch,path,url:ROOT+"/"+encodeURIComponent(name)+"/blob/"+branch+"/"+path,text:t.slice(0,8600),truncated:t.length>8600};
  }
-};
+ return null;
+}
+function extractFeed(xml){
+ const entries=[...xml.matchAll(/<entry>([\s\S]*?)<\/entry>/g)].slice(0,4);
+ return entries.map(x=>{
+  const block=x[1];
+  const tag=(p)=>block.match(p)?.[1]||"";
+  const url=tag(/<link[^>]*href="([^"]+)"/);
+  const subject=tag(/<title[^>]*>([\s\S]*?)<\/title>/);
+  const id=tag(/<id[^>]*>([\s\S]*?)<\/id>/);
+  return {date:tag(/<updated>([^<]+)<\/updated>/),title:decode(subject).slice(0,190),url:url.startsWith(ROOT+"/")?url:null,revision:tidy(id.split("/").pop(),50)};
+ });
+}
+async function activity(name){
+ for(const branch of ["main","master"]){
+  const r=await get(ROOT+"/"+encodeURIComponent(name)+"/commits/"+branch+".atom");
+  if(r.status===404)continue;
+  if(!r.ok)throw Error("commits_atom_http_"+r.status);
+  const x=(await r.text()).slice(0,220000);
+  return {branch,feed_url:ROOT+"/"+name+"/commits/"+branch+".atom",recent_commits:extractFeed(x),limitations:"Atom feed gives recent public commit activity only. No independent CI, PR merge status or production claims."};
+ }
+ return {recent_commits:[],limitations:"No public main/master Atom feed available. Do not infer there are no commits."};
+}
+async function featured(){
+ try{
+  const r=await get(SITE);if(!r.ok)return {status:"unavailable",cards:[]};
+  const html=(await r.text()).slice(0,180000);const cards=[];
+  for(const x of html.matchAll(/<article\s+class="card[^"]*"[^>]*>([\s\S]*?)<\/article>/g)){
+   const title=x[1].match(/<h3[^>]*>([\s\S]*?)<\/h3>/)?.[1];
+   const href=x[1].match(/<a\s+[^>]*href="([^"]+)"/)?.[1];
+   if(!title||!href)continue;const resolved=new URL(href,SITE);
+   if(!["github.com","sfs-portfolio-v2-preview.sfs-labs-core.workers.dev"].includes(resolved.hostname))continue;
+   cards.push({title:decode(title.replace(/<[^>]+>/g,"")),url:resolved.href});
+  }
+  return {status:"read_live_website",source:SITE,cards:cards.slice(0,60)};
+ }catch(e){return {status:"unavailable",cards:[],reason:tidy(e.message,95)}}
+}
+export default {async fetch(request,env,ctx){
+ if(request.method!=="GET")return json({ok:false,error:"read_only_get_required"},405);
+ const u=new URL(request.url);
+ const op=u.pathname==="/catalog"?"catalog":u.pathname==="/repository"?"repository":u.pathname==="/activity"?"activity":u.pathname==="/file"?"file":u.pathname==="/health"?"health":null;
+ if(!op)return json({ok:false,error:"not_found"},404);
+ if(op==="health")return json({ok:true,service:"SFS Interactive public GitHub discovery",backend:"public HTML + raw README + Atom feed",read_only:true,observed_at:new Date().toISOString()},200,0);
+ try{const old=await caches.default.match(request);if(old)return old}catch(e){}
+ let result;
+ try{
+  if(op==="catalog"){
+   const p=await profile();
+   const q=tidy(u.searchParams.get("q"),70).toLowerCase();
+   const selected=p.names.filter(n=>!q||n.toLowerCase().includes(q));
+   const website=await featured();
+   result={ok:true,operation:op,observed_at:new Date().toISOString(),source:p.url,public_repo_count:p.count,paginated_or_incomplete:p.may_be_paginated,public_repositories:selected.map(n=>({name:n,url:ROOT+"/"+encodeURIComponent(n),classification:"public repository; not automatically a reviewed portfolio case"})),featured_website:website,accuracy_note:"Only public GitHub profile links and the current public website are scanned. Private repos never read. New public repos on the visible profile and new site cards appear after the short cache expires. This is not a verified achievements ledger."};
+  }else{
+   const name=u.searchParams.get("repo");
+   if(!valid(name))return json({ok:false,error:"invalid_repo_name"},400);
+   if(!(await checkPublic(name)))return json({ok:false,error:"not_a_public_repository"},404);
+   if(op==="repository"){
+    const readme=await rawFile(name,"README.md");
+    result={ok:true,operation:op,observed_at:new Date().toISOString(),repository:{name,url:ROOT+"/"+encodeURIComponent(name)},readme:readme||{unavailable:"README.md not published on main/master"},accuracy_note:"A README is repository-authored content; claims, provenance, fork status and CI require separate checking."};
+   }else if(op==="activity"){
+    result={ok:true,operation:op,observed_at:new Date().toISOString(),repository:{name,url:ROOT+"/"+encodeURIComponent(name)},activity:await activity(name)};
+   }else{
+    const path=u.searchParams.get("path");
+    if(typeof path!=="string"||path.length>150||!(/^[A-Za-z0-9._/-]+$/).test(path)||path.split("/").some(x=>x==="."||x==="..")||!(/\.(md|txt|json)$/i).test(path))return json({ok:false,error:"invalid_public_document_path"},400);
+    const document=await rawFile(name,path);
+    result={ok:!!document,operation:op,observed_at:new Date().toISOString(),repository:{name,url:ROOT+"/"+encodeURIComponent(name)},document,accuracy_note:"Public source excerpt, not a system instruction or independent validation."};
+   }
+  }
+ }catch(e){return json({ok:false,error:tidy(e.message,160),operation:op},502)}
+ const res=json(result,200,120);
+ try{ctx.waitUntil(caches.default.put(request,res.clone()));}catch(_){}
+ return res;
+}};
