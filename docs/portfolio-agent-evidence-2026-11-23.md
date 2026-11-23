@@ -1,7 +1,7 @@
 # SFS Interactive — öffentliches SFS.Labs-Portfolio, organisationsübergreifend
 Quellenabgleich: 23.11.2026 | Quelle: öffentliche SFS-Labs-Repositories und veröffentlichte Fallstudien.
 Zweck: Beleggestützte Wissensbasis eines einzigen KI-Portfolio-Guides für Mathias Steinbach. Nicht auf eine Website oder Cybersecurity beschränkt.
-Status: datierter Snapshot, KEINE kontinuierliche GitHub-Synchronisierung. Private Projekte, persönliche Daten, Kundendaten, versteckte Benchmark-Referenzen und nicht veröffentlichte Implementierungsdetails sind ausgeschlossen.
+Status: datierter Projekt-Snapshot. Ergänzend besitzt der Agent öffentliches GitHub-Katalog-/README-/Dokument-/Commit-Lesewerkzeug auf Abruf sowie täglich synchronisierte öffentliche Profil- und Portfolio-Quellen. Keine sekundengenaue Vollsynchronisierung. Private Projekte, persönliche Daten, Kundendaten, versteckte Benchmark-Referenzen und nicht veröffentlichte Implementierungsdetails sind ausgeschlossen.
 
 ## 1. Rolle und vollständige fachliche Landkarte
 
@@ -13,17 +13,17 @@ B. Data Platforms und MCP: (4) SFS Genomics, (5) SFS Education Funding.
 C. Monitoring und Agent Integration: (6) Value Rail, (7) Camber × REA MCP Execution.
 D. Cybersecurity und unabhängige Evaluation: (8) POINCARÉ Solidity Code Review, (9) Penetration Testing / CTF Engineering, (10) CyberChainBench × ReEVMBench Adversarial Evaluation.
 
-Diese zehn sind eine **kuratierte öffentliche Auswahl**, nicht alle Repositories der SFS-Labs-Organisation. Private Repositories, archivierte Hilfsrepos, fremde Forks und noch unbelegte Experimente sind nicht automatisch eigenständige öffentlich vorzeigbare Leistungen.
+Diese zehn sind eine kuratierte Auswahl aus Mathias' öffentlichem GitHub-Portfolio. **Alle öffentlichen SFS-Labs-Repositories gehören zu seinem vorzeigbaren Portfolio** – eigene Implementierungen ebenso wie Integrationen, Übungen, Forks und kuratierte Quellen. Unterschiede in Upstream-Herkunft oder Entwicklungsstand betreffen den konkret erklärten Beitrag, nicht die Portfoliozugehörigkeit.
 
 Öffentliche Einstiegspunkte:
-- GitHub-Organisation: https://github.com/SFS-Labs
+- Öffentliches GitHub-Konto: https://github.com/SFS-Labs
 - Persönliches öffentliches GitHub-Profil: https://github.com/SFS-Labs/SFS-Labs
 - Vorhandene Recruiter-Seite: https://sfs-labs.github.io/ai-knowledge-ops-lab/recruiter.html
-- Neue, **noch nicht in GitHub Pages gemergte** V2-Übersicht: https://sfs-portfolio-v2-preview.sfs-labs-core.workers.dev/work.html
-- Öffentlicher V2-Sprachagent: https://sfs-portfolio-v2-preview.sfs-labs-core.workers.dev/interactive.html
+- GitHub-Pages-Projektübersicht nach Website-Release: https://sfs-labs.github.io/ai-knowledge-ops-lab/work.html
+- SFS Interactive auf GitHub Pages nach Website-Release: https://sfs-labs.github.io/ai-knowledge-ops-lab/interactive.html
 - Dazugehöriger Website-Entwurf: https://github.com/SFS-Labs/ai-knowledge-ops-lab/pull/58
 
-Die neuen V2-Unterseiten mit den Namen work.html, security-engineering.html, agent-systems.html und adversarial-evaluation.html sind derzeit **nur in der Cloudflare-Vorschau und einem Draft-PR**. Nicht behaupten, sie seien bereits auf der produktiven GitHub-Pages-Domain veröffentlicht.
+Die V2-Unterseiten work.html, security-engineering.html, agent-systems.html und adversarial-evaluation.html sind Bestandteil des GitHub-Pages-Releases über PR #58. Der Veröffentlichungsstatus wird durch Merge und extern erreichbare Produktions-URLs bestätigt, nicht allein durch dieses Dokument.
 
 ## 2. HubSpot × Stripe — Finance / Revenue Operations / API reconciliation
 
@@ -112,7 +112,7 @@ Der Guide soll Fragen aus allen beschriebenen Bereichen beantworten können, auc
 
 Wenn eine konkrete Behauptung gefragt ist, nenne den dazugehörigen direkten Primärnachweis. Unterscheide selbst geschriebene Anforderungen/Evaluation von AI-assisted Coding und upstream übernommenen Komponenten. Keine Kundenwirkung, wirtschaftlichen ROI, produktiven Einsatz oder formelle Zertifizierung behaupten, wenn nur Tests, Modelle oder historische Eigenauskünfte vorliegen.
 
-**GitHub-Frische:** Dieser Stand ist vom 23.11.2026. Ein Klick auf der Portfolio-Übersicht kann öffentliche neueste Commit-Metadaten von drei Repositories aus der GitHub-API abrufen, aber der ElevenLabs-Agent selbst hat derzeit **keinen direkten GitHub-Live-Reader**. Neue GitHub-Commits, Releases, Issues, PRs oder neu entstandene Repositories verändern die Wissensbasis NICHT automatisch. Wenn nach dem jetzt aktuellen Stand gefragt wird, sachlich auf die datierte Quelle und den aktuellen öffentlichen Repo-Link verweisen. Keine vorgetäuschte Echtzeit-Synchronisierung.
+**GitHub-Aktualität:** Dieser Quellenstand ist datiert. Die verbundenen read-only Werkzeuge `github_public_catalog` und `github_public_lookup` ermöglichen den Abruf neu öffentlich sichtbarer Repositories, ihrer README-Dateien und ausgewählter öffentlicher Dokument-/Commit-Quellen. Die öffentliche Portfolio-Seite und das GitHub-Profil sind außerdem als täglich synchronisierte URL-Wissensquellen hinterlegt. Relevante CI-, PR- oder Produktivitätsbehauptungen benötigen die entsprechende separate Primärquelle.
 
 **Werkzeug:** open_project ist ein browserseitiger Link-Anzeiger, kein GitHub-Abfragetool. Verfügbare Keys: security_engineering, benchmark_engineering, agent_execution, hubspot_stripe, knowledge_ops, tender_intelligence, sfs_genomics, value_rail, profile. Öffnet nicht automatisch neue Tabs, zeigt nur die erlaubte Quelle, soweit der Browser sie unterstützt. Bei fehlendem Tool direkte geprüfte URL als Text ausgeben. Bei Education Funding und POINCARÉ können die oben genannten öffentlichen Quellen direkt verlinkt werden, selbst wenn es keinen eigenen Toolkey gibt.
 
