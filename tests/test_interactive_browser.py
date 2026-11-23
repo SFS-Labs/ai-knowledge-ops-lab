@@ -47,7 +47,7 @@ class InteractiveBrowserSmoke(unittest.TestCase):
                 requests = []
                 page.on("request", lambda request: requests.append(request.url) if "unpkg.com" in request.url else None)
                 page.route("https://unpkg.com/**", lambda route: route.fulfill(
-                    status=200, content_type="application/javascript", body="window.__widgetStubLoaded=true;"
+                    status=200, content_type="application/javascript", body="window.__widgetStubLoaded=true;customElements.define(\'elevenlabs-convai\',class extends HTMLElement {});"
                 ))
                 page.goto(HTML.as_uri(), wait_until="domcontentloaded")
                 self.assertIn("Systeme verbinden.", page.locator("h1").inner_text())
@@ -57,6 +57,7 @@ class InteractiveBrowserSmoke(unittest.TestCase):
                     self.assertEqual(requests, [], "Third-party widget loaded without visitor click")
                     page.locator("#launch-agent").click()
                     self.assertEqual(page.locator("elevenlabs-convai").count(), 1)
+                    self.assertEqual(page.locator("elevenlabs-convai").get_attribute("agent-id"), "agent_7701m848yn67eqsbb1tyxshf3h13")
                     page.locator("#launch-agent").wait_for(state="hidden", timeout=3000)
                     self.assertEqual(len(requests), 1, "Widget must be loaded exactly once after click")
                 else:
@@ -72,6 +73,14 @@ class InteractiveBrowserSmoke(unittest.TestCase):
                 )
                 page.close()
 
+    def test_new_cybersecurity_sources_and_widget_target(self):
+        source = HTML.read_text(encoding="utf-8")
+        self.assertIn("const AGENT_PUBLIC_READY = true;", source)
+        self.assertIn("agent_7701m848yn67eqsbb1tyxshf3h13", source)
+        self.assertIn('href="adversarial-evaluation.html"', source)
+        self.assertNotIn("Freebuff", source)
+        self.assertIn("benchmark_engineering", source)
+
     def test_recruiter_entrypoint_links_the_interactive_page(self):
         recruiter=(REPO / "docs" / "recruiter.html").read_text(encoding="utf-8")
         self.assertIn('class="primary" href="interactive.html"', recruiter)
@@ -83,7 +92,7 @@ class InteractiveBrowserSmoke(unittest.TestCase):
         page = self.browser.new_page(viewport={"width": 1280, "height": 920})
         # This fixture enables the widget block only in an offline file; remote widget JS never loads.
         page.route("https://unpkg.com/**", lambda route: route.fulfill(
-            status=200, content_type="application/javascript", body="window.__widgetStubLoaded=true;"
+            status=200, content_type="application/javascript", body="window.__widgetStubLoaded=true;customElements.define(\'elevenlabs-convai\',class extends HTMLElement {});"
         ))
         page.goto(self.fixture.as_uri(), wait_until="domcontentloaded")
         self.assertEqual(page.locator("elevenlabs-convai").count(), 0)
