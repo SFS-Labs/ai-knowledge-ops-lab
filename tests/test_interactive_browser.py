@@ -218,6 +218,69 @@ class InteractiveBrowserSmoke(unittest.TestCase):
         finally:
             page.close()
 
+    def test_widget_bootstrap_local_timing_and_keyboard_focus(self):
+        page = self.browser.new_page(viewport={"width": 390, "height": 844})
+        page.route("https://unpkg.com/**", lambda route: route.fulfill(
+            status=200, content_type="application/javascript",
+            body="customElements.define('elevenlabs-convai',class extends HTMLElement {});"
+        ))
+        try:
+            page.goto(self.fixture.as_uri(), wait_until="domcontentloaded")
+            self.assertEqual(page.evaluate("performance.getEntriesByName('sfs:widget-bootstrap').length"), 0)
+            page.locator("#launch-agent").focus()
+            page.keyboard.press("Enter")
+            page.locator("#launch-agent").wait_for(state="hidden")
+            self.assertEqual(page.evaluate("document.activeElement.id"), "agentstatus")
+            self.assertEqual(page.evaluate("performance.getEntriesByName('sfs:widget-bootstrap').length"), 1)
+            self.assertGreaterEqual(page.evaluate("performance.getEntriesByName('sfs:widget-bootstrap')[0].duration"), 0)
+            self.assertEqual(page.locator("elevenlabs-convai").count(), 1)
+        finally:
+            page.close()
+
+    def test_failed_widget_load_can_retry_and_does_not_duplicate(self):
+        page = self.browser.new_page(viewport={"width": 390, "height": 844})
+        attempts = []
+        def route_widget(route):
+            attempts.append(route.request.url)
+            if len(attempts) == 1:
+                route.abort()
+            else:
+                route.fulfill(status=200, content_type="application/javascript",
+                              body="customElements.define('elevenlabs-convai',class extends HTMLElement {});")
+        page.route("https://unpkg.com/**", route_widget)
+        try:
+            page.goto(self.fixture.as_uri(), wait_until="domcontentloaded")
+            trigger = page.locator("#launch-agent")
+            trigger.focus()
+            page.keyboard.press("Enter")
+            page.wait_for_function("() => document.querySelector('#launch-agent').textContent.includes('Erneut versuchen')")
+            self.assertEqual(page.evaluate("document.activeElement.id"), "launch-agent")
+            self.assertEqual(page.locator("elevenlabs-convai").count(), 0)
+            self.assertEqual(page.evaluate("performance.getEntriesByName('sfs:widget-error').length"), 1)
+            trigger.click()
+            trigger.wait_for(state="hidden")
+            self.assertEqual(len(attempts), 2)
+            self.assertEqual(page.locator("elevenlabs-convai").count(), 1)
+            self.assertEqual(page.evaluate("performance.getEntriesByName('sfs:widget-error').length"), 0)
+            self.assertEqual(page.evaluate("performance.getEntriesByName('sfs:widget-bootstrap').length"), 1)
+        finally:
+            page.close()
+
+    def test_mobile_recruiter_navigation_no_page_overflow(self):
+        for width in (320, 375, 390, 430):
+            with self.subTest(width=width):
+                page = self.browser.new_page(viewport={"width": width, "height": 844})
+                try:
+                    page.goto((REPO / "docs" / "recruiter.html").as_uri(), wait_until="domcontentloaded")
+                    self.assertLessEqual(page.evaluate("document.documentElement.scrollWidth - innerWidth"), 1)
+                    nav = page.locator("header nav")
+                    self.assertEqual(nav.evaluate("(el) => getComputedStyle(el).flexWrap"), "nowrap")
+                    self.assertEqual(nav.locator("a").count(), 6)
+                    nav.locator("a").last.focus()
+                    self.assertEqual(page.evaluate("document.activeElement.textContent"), "GitHub")
+                finally:
+                    page.close()
+
     def test_recruiter_entrypoint_links_the_interactive_page(self):
         recruiter=(REPO / "docs" / "recruiter.html").read_text(encoding="utf-8")
         self.assertIn('class="primary" href="interactive.html#launch-agent"', recruiter)
@@ -257,6 +320,16 @@ class InteractiveBrowserSmoke(unittest.TestCase):
           return {...valid,rejected,linksMatch,securityHref,benchmarkHref,prototypeRejected:div.querySelector("a")?.href === valid.href};
         }""")
         self.assertNotIn("error", result)
+        # Exercise the text-mode handler separately. Mocked event contract, not live vendor verification.
+        self.assertTrue(page.evaluate("""() => {
+          const widget = document.querySelector("elevenlabs-convai");
+          const event = new CustomEvent("elevenlabs-convai:message", {detail:{config:{}}});
+          widget.dispatchEvent(event);
+          const tools = event.detail.config.clientTools;
+          if (!tools || typeof tools.open_project !== "function") return false;
+          tools.open_project({project_key:"tender_intelligence"});
+          return document.querySelector("#active-evidence a").href.includes("tender-intelligence-case-study");
+        }"""))
         self.assertTrue(result["visible"])
         self.assertTrue(result["linksMatch"], "New Cybersecurity/benchmark client-tool keys must open exact trusted relative sources")
         self.assertTrue(result["securityHref"].endswith("/security-engineering.html"))
