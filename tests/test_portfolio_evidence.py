@@ -9,7 +9,7 @@ from urllib.parse import urlparse
 
 ROOT = Path(__file__).resolve().parents[1]
 DOCS = ROOT / "docs"
-NEW_PAGES = ("work.html", "security-engineering.html", "agent-systems.html")
+NEW_PAGES = ("work.html", "security-engineering.html", "agent-systems.html", "adversarial-evaluation.html")
 EXISTING_PAGES = ("interactive.html", "recruiter.html")
 AGENT_SOURCE = DOCS / "portfolio-agent-evidence-2026-11-23.md"
 
@@ -62,7 +62,7 @@ class PortfolioEvidence(unittest.TestCase):
         work = (DOCS / "work.html").read_text(encoding="utf-8")
         self.assertIn('href="work.html"', recruiter)
         self.assertIn('href="work.html"', interactive)
-        for path in ("security-engineering.html", "agent-systems.html"):
+        for path in ("security-engineering.html", "agent-systems.html", "adversarial-evaluation.html"):
             self.assertIn(f'href="{path}"', work)
             self.assertIn(f'href="{path}"', interactive)
             self.assertIn(f'href="{path}"', recruiter)
@@ -72,6 +72,8 @@ class PortfolioEvidence(unittest.TestCase):
         sec = (DOCS / "security-engineering.html").read_text(encoding="utf-8")
         agents = (DOCS / "agent-systems.html").read_text(encoding="utf-8")
         self.assertIn("133", sec)
+        self.assertNotIn("Freebuff", sec)
+        self.assertNotIn("Freebuff", work)
         self.assertIn("Blindtest", sec)
         self.assertIn("NICHT", sec.upper())
         self.assertIn("keine", agents.lower())
