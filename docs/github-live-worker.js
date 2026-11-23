@@ -91,6 +91,26 @@ async function featured(){
  return {status:"unavailable",cards:[],failures:failures.slice(0,3)};
 }
 export default {async fetch(request,env,ctx){
+ // POST on /lookup is a read-only *query envelope* for the ElevenLabs server tool.
+ // It cannot mutate GitHub or Cloudflare and is immediately normalized to safe GET.
+ if(request.method==="POST" && new URL(request.url).pathname==="/lookup"){
+  const declaredSize=Number(request.headers.get("content-length")||0);
+  if(declaredSize>1400)return json({ok:false,error:"request_too_large"},413);
+  let data;
+  try{data=await request.json()}catch(_){return json({ok:false,error:"invalid_json"},400)}
+  if(!data || !valid(data.repo))return json({ok:false,error:"invalid_repo_name"},400);
+  const action=data.action;
+  if(!["repository","activity","file"].includes(action))return json({ok:false,error:"invalid_action"},400);
+  const target=new URL(request.url);
+  target.pathname="/"+action;
+  target.search="";
+  target.searchParams.set("repo",data.repo);
+  if(action==="file"){
+   if(typeof data.path!=="string"||data.path.length>150||!(/^[A-Za-z0-9._/-]+$/).test(data.path)||data.path.split("/").some(x=>x==="."||x==="..")||!(/\.(md|txt|json)$/i).test(data.path))return json({ok:false,error:"invalid_public_document_path"},400);
+   target.searchParams.set("path",data.path);
+  }
+  return this.fetch(new Request(target,{method:"GET"}),env,ctx);
+ }
  if(request.method!=="GET")return json({ok:false,error:"read_only_get_required"},405);
  const u=new URL(request.url);
  const op=u.pathname==="/catalog"?"catalog":u.pathname==="/repository"?"repository":u.pathname==="/activity"?"activity":u.pathname==="/file"?"file":u.pathname==="/health"?"health":null;
