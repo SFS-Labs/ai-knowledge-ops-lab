@@ -162,19 +162,34 @@ if(AGENT_PUBLIC_READY){
   const script=document.createElement("script");
   script.src="https://unpkg.com/@elevenlabs/convai-widget-embed";
   script.async=true;
-  script.onload=function(){
-   customElements.whenDefined("elevenlabs-convai").then(function(){
-    trigger.hidden=true;
-    document.getElementById("agentstatus").textContent="Widget bereit · unten rechts Gespräch beginnen";
-   });
-  };
-  script.onerror=function(){
+  let hasFailed=false;
+  let initTimer=null;
+  function showWidgetError(message){
+   if(hasFailed)return;
+   hasFailed=true;
+   if(initTimer!==null)window.clearTimeout(initTimer);
    widget.remove();
    script.remove();
    trigger.dataset.loaded="0";
    trigger.disabled=false;
    trigger.textContent="Erneut versuchen: Sprach- oder Textgespräch laden";
-   document.getElementById("agentstatus").textContent="Widget gerade nicht erreichbar";
+   document.getElementById("agentstatus").textContent=message;
+  }
+  // A script can load successfully without defining its custom element.
+  // Never strand a visitor behind a permanently disabled loading button.
+  initTimer=window.setTimeout(function(){
+   showWidgetError("Widget antwortet nicht · erneut laden");
+  },10000);
+  script.onload=function(){
+   customElements.whenDefined("elevenlabs-convai").then(function(){
+    if(hasFailed)return;
+    window.clearTimeout(initTimer);
+    trigger.hidden=true;
+    document.getElementById("agentstatus").textContent="Widget bereit · unten rechts Gespräch beginnen";
+   });
+  };
+  script.onerror=function(){
+   showWidgetError("Widget gerade nicht erreichbar");
   };
   document.body.appendChild(script);
  });
