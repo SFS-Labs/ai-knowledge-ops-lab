@@ -7,6 +7,7 @@ Requires: playwright Python package and Chromium browser.
 from __future__ import annotations
 
 import tempfile
+import os
 import unittest
 from pathlib import Path
 try:
@@ -47,7 +48,7 @@ class InteractiveBrowserSmoke(unittest.TestCase):
                 requests = []
                 page.on("request", lambda request: requests.append(request.url) if "unpkg.com" in request.url else None)
                 page.route("https://unpkg.com/**", lambda route: route.fulfill(
-                    status=200, content_type="application/javascript", body="window.__widgetStubLoaded=true;"
+                    status=200, content_type="application/javascript", body="window.__widgetStubLoaded=true;customElements.define(\'elevenlabs-convai\',class extends HTMLElement {});"
                 ))
                 page.goto(HTML.as_uri(), wait_until="domcontentloaded")
                 self.assertIn("Systeme verbinden.", page.locator("h1").inner_text())
@@ -57,6 +58,7 @@ class InteractiveBrowserSmoke(unittest.TestCase):
                     self.assertEqual(requests, [], "Third-party widget loaded without visitor click")
                     page.locator("#launch-agent").click()
                     self.assertEqual(page.locator("elevenlabs-convai").count(), 1)
+                    self.assertEqual(page.locator("elevenlabs-convai").get_attribute("agent-id"), "agent_7701m848yn67eqsbb1tyxshf3h13")
                     page.locator("#launch-agent").wait_for(state="hidden", timeout=3000)
                     self.assertEqual(len(requests), 1, "Widget must be loaded exactly once after click")
                 else:
@@ -72,16 +74,112 @@ class InteractiveBrowserSmoke(unittest.TestCase):
                 )
                 page.close()
 
+    def test_public_github_inventory_is_opt_in_and_private_safe(self):
+        """All public repos require one deliberate API request; private/fake records never render."""
+        import json
+        url = "https://api.github.com/users/SFS-Labs/repos?per_page=100&sort=pushed"
+        fixtures = [
+            {"name": "ctf-skills", "owner": {"login": "SFS-Labs"}, "private": False,
+             "html_url": "https://github.com/SFS-Labs/ctf-skills", "pushed_at": "2026-11-23T12:00:00Z"},
+            {"name": "agent-toolkit", "owner": {"login": "SFS-Labs"}, "private": False,
+             "html_url": "https://github.com/SFS-Labs/agent-toolkit", "pushed_at": "2026-11-22T12:00:00Z"},
+            {"name": "private-repo-fixture", "owner": {"login": "SFS-Labs"}, "private": True,
+             "html_url": "https://github.com/SFS-Labs/private-repo-fixture", "pushed_at": "2026-11-23T12:00:00Z"},
+            {"name": "fake-upstream", "owner": {"login": "Elsewhere"}, "private": False,
+             "html_url": "https://github.com/Elsewhere/fake-upstream", "pushed_at": "2026-11-23T12:00:00Z"},
+        ]
+        page = self.browser.new_page(viewport={"width": 1280, "height": 960})
+        hits = []
+        page.route("https://api.github.com/**", lambda route: (
+            hits.append(route.request.url),
+            route.fulfill(status=200, content_type="application/json",
+                          headers={"Access-Control-Allow-Origin": "*"},
+                          body=json.dumps(fixtures))
+        ))
+        try:
+            page.goto((REPO / "docs" / "work.html").as_uri(), wait_until="domcontentloaded")
+            self.assertEqual(hits, [], "GitHub must not be requested before visitor opt-in")
+            page.locator("#refresh-public-repositories").click()
+            page.locator("#public-repository-list li").first.wait_for(timeout=5000)
+            self.assertEqual(hits, [url], "One public account API call per explicit inventory click")
+            self.assertEqual(page.locator("#public-repository-list li").count(), 2)
+            rendered = page.locator("#public-repository-list").inner_text()
+            self.assertIn("ctf-skills", rendered)
+            self.assertIn("Atlan-Upstream, kein SFS-Produkt", rendered)
+            self.assertNotIn("private-repo-fixture", rendered)
+            self.assertNotIn("fake-upstream", rendered)
+            self.assertIn("2 öffentliche Repositories", page.locator("#public-repository-status").inner_text())
+        finally:
+            page.close()
+
+    def test_live_preview_widget_bootstrap(self):
+        """Opt-in external smoke: real Cloudflare preview and real ElevenLabs widget JS.
+
+        Does not initiate a conversation, request microphone access, or spend inference credits.
+        """
+        url = os.environ.get("SFS_INTERACTIVE_PREVIEW_URL")
+        if not url:
+            self.skipTest("External preview URL not configured")
+        page = self.browser.new_page(viewport={"width": 1280, "height": 860})
+        try:
+            page.goto(url, wait_until="domcontentloaded", timeout=25000)
+            button = page.locator("#launch-agent")
+            self.assertTrue(button.is_enabled(), "Preview gate must be active")
+            self.assertEqual(page.locator("elevenlabs-convai").count(), 0)
+            button.click()
+            page.locator("elevenlabs-convai").wait_for(state="attached", timeout=10000)
+            page.wait_for_function(
+                "() => Boolean(customElements.get('elevenlabs-convai'))",
+                timeout=25000
+            )
+            self.assertEqual(
+                page.locator("elevenlabs-convai").get_attribute("agent-id"),
+                "agent_7701m848yn67eqsbb1tyxshf3h13"
+            )
+            page.locator("#launch-agent").wait_for(state="hidden", timeout=6000)
+            self.assertIn("Widget bereit", page.locator("#agentstatus").inner_text())
+        finally:
+            page.close()
+
+    def test_new_cybersecurity_sources_and_widget_target(self):
+        source = HTML.read_text(encoding="utf-8")
+        self.assertIn("const AGENT_PUBLIC_READY = true;", source)
+        self.assertIn("agent_7701m848yn67eqsbb1tyxshf3h13", source)
+        self.assertIn('href="adversarial-evaluation.html"', source)
+        self.assertNotIn("Freebuff", source)
+        self.assertIn("benchmark_engineering", source)
+
+    def test_widget_fallback_when_external_script_never_registers_custom_element(self):
+        """A successful CDN response that never registers the element must not freeze CTA."""
+        page=self.browser.new_page(viewport={"width":1280,"height":860})
+        page.route("https://unpkg.com/**",lambda route:route.fulfill(
+            status=200,content_type="application/javascript",body="window.__loadedWithoutWidget=true;"
+        ))
+        try:
+            page.goto(self.fixture.as_uri(),wait_until="domcontentloaded")
+            page.locator("#launch-agent").click()
+            page.wait_for_function(
+                "() => document.querySelector('#launch-agent').disabled === false",
+                timeout=14000
+            )
+            self.assertEqual(page.locator("elevenlabs-convai").count(),0)
+            self.assertIn("erneut laden",page.locator("#agentstatus").inner_text())
+            self.assertIn("Erneut versuchen",page.locator("#launch-agent").inner_text())
+        finally:
+            page.close()
+
     def test_recruiter_entrypoint_links_the_interactive_page(self):
         recruiter=(REPO / "docs" / "recruiter.html").read_text(encoding="utf-8")
         self.assertIn('class="primary" href="interactive.html"', recruiter)
-        self.assertIn('<nav class="nav"><a href="interactive.html">SFS Interactive</a>', recruiter)
+        self.assertIn('<nav class="nav">', recruiter)
+        self.assertIn('<a href="interactive.html">SFS Interactive</a>', recruiter)
+        self.assertIn('<a href="work.html">Alle Arbeiten</a>', recruiter)
 
     def test_widget_call_injects_exact_allowlisted_client_tool(self):
         page = self.browser.new_page(viewport={"width": 1280, "height": 920})
         # This fixture enables the widget block only in an offline file; remote widget JS never loads.
         page.route("https://unpkg.com/**", lambda route: route.fulfill(
-            status=200, content_type="application/javascript", body="window.__widgetStubLoaded=true;"
+            status=200, content_type="application/javascript", body="window.__widgetStubLoaded=true;customElements.define(\'elevenlabs-convai\',class extends HTMLElement {});"
         ))
         page.goto(self.fixture.as_uri(), wait_until="domcontentloaded")
         self.assertEqual(page.locator("elevenlabs-convai").count(), 0)
@@ -97,13 +195,22 @@ class InteractiveBrowserSmoke(unittest.TestCase):
           const div=document.querySelector("#active-evidence");
           const proof=div.querySelector("a");
           const valid={visible:!div.hidden,text:proof?.textContent||"",href:proof?.href||"",newtab:proof?.target};
+          tools.open_project({project_key:"security_engineering"});
+          const securityHref=div.querySelector("a")?.href || "";
+          tools.open_project({project_key:"benchmark_engineering"});
+          const benchmarkHref=div.querySelector("a")?.href || "";
+          const linksMatch=securityHref.endsWith("/security-engineering.html") && benchmarkHref.endsWith("/adversarial-evaluation.html");
+          tools.open_project({project_key:"tender_intelligence"});
           tools.open_project({project_key:"https://evil.example"});
           const rejected=(div.querySelector("a")?.href === valid.href);
           tools.open_project({project_key:"__proto__"});
-          return {...valid,rejected,prototypeRejected:div.querySelector("a")?.href === valid.href};
+          return {...valid,rejected,linksMatch,securityHref,benchmarkHref,prototypeRejected:div.querySelector("a")?.href === valid.href};
         }""")
         self.assertNotIn("error", result)
         self.assertTrue(result["visible"])
+        self.assertTrue(result["linksMatch"], "New Cybersecurity/benchmark client-tool keys must open exact trusted relative sources")
+        self.assertTrue(result["securityHref"].endswith("/security-engineering.html"))
+        self.assertTrue(result["benchmarkHref"].endswith("/adversarial-evaluation.html"))
         self.assertIn("Tender Intelligence", result["text"])
         self.assertTrue(result["href"].startswith(
             "https://github.com/SFS-Labs/tender-intelligence-case-study/"))
