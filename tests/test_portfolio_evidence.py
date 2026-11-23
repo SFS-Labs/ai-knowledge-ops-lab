@@ -67,6 +67,26 @@ class PortfolioEvidence(unittest.TestCase):
             self.assertIn(f'href="{path}"', interactive)
             self.assertIn(f'href="{path}"', recruiter)
 
+    def test_conversation_entry_is_direct_and_does_not_preload_widget(self):
+        recruiter = (DOCS / "recruiter.html").read_text(encoding="utf-8")
+        interactive = (DOCS / "interactive.html").read_text(encoding="utf-8")
+        self.assertIn('href="interactive.html#launch-agent">Portfolio interaktiv erkunden</a>', recruiter)
+        self.assertIn('id="launch-agent"', interactive)
+        self.assertIn('KI-Guide öffnen: Sprechen oder Schreiben', interactive)
+        self.assertIn('["elevenlabs-convai:call","elevenlabs-convai:message"]', interactive)
+        self.assertIn('script.src="https://unpkg.com/@elevenlabs/convai-widget-embed"', interactive)
+        self.assertIn('trigger.addEventListener("click",function()', interactive)
+        self.assertIn('showWidgetError("Widget antwortet nicht', interactive)
+        self.assertIn('role="status" aria-atomic="true"', interactive)
+        self.assertIn('scroll-margin-top:', interactive)
+        self.assertNotIn('Vor dem Klick laden', interactive)
+
+    def test_recruiter_mobile_navigation_preserves_all_links(self):
+        recruiter = (DOCS / "recruiter.html").read_text(encoding="utf-8")
+        self.assertIn(".nav{flex-wrap:nowrap;max-width:100%;overflow-x:auto;", recruiter)
+        self.assertIn('href="#profil">Profil</a>', recruiter)
+        self.assertIn('href="https://github.com/SFS-Labs/SFS-Labs">GitHub</a>', recruiter)
+
     def test_evidence_claims_are_qualified(self):
         work = (DOCS / "work.html").read_text(encoding="utf-8")
         sec = (DOCS / "security-engineering.html").read_text(encoding="utf-8")
