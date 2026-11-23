@@ -5,6 +5,7 @@ const OWNER="SFS-Labs";
 const ROOT="https://github.com/"+OWNER;
 const RAW="https://raw.githubusercontent.com/"+OWNER;
 const SITE="https://sfs-portfolio-v2-preview.sfs-labs-core.workers.dev/work.html";
+const LAST_PUBLIC_CATALOG=["ai-knowledge-ops-lab","ctf-skills","SFS-Labs","ctf-skill-factory","skills-introduction-to-github","linkedin-preview-leadflow","sfs-genomics","value-rail-mvp","security-reviews","tender-intelligence-case-study","agent-toolkit","DamnVulnerableCryptoApp","awesome-cryptocurrency-security"]; // Dated public fallback; not private repos
 const UA={"User-Agent":"SFS-Interactive-Public-Reader/1.1","Accept":"text/html, text/plain, application/atom+xml"};
 const valid=(s)=>typeof s==="string"&&/^[A-Za-z0-9_.-]{1,100}$/.test(s)&&s!=="."&&s!=="..";
 const tidy=(s,n=220)=>String(s||"").replace(/[\x00-\x1f\x7f]/g," ").replace(/\s+/g," ").trim().slice(0,n);
@@ -90,6 +91,12 @@ async function featured(){
  }
  return {status:"unavailable",cards:[],failures:failures.slice(0,3)};
 }
+async function profileReadmeNames(){
+ const f=await rawFile("SFS-Labs","README.md");
+ if(!f)return [];
+ return [...new Set([...f.text.matchAll(/https:\/\/github\.com\/SFS-Labs\/([A-Za-z0-9_.-]+)/gi)].map(x=>x[1]).filter(valid))];
+}
+
 export default {async fetch(request,env,ctx){
  // POST on /lookup is a read-only *query envelope* for the ElevenLabs server tool.
  // It cannot mutate GitHub or Cloudflare and is immediately normalized to safe GET.
@@ -120,11 +127,16 @@ export default {async fetch(request,env,ctx){
  let result;
  try{
   if(op==="catalog"){
-   const [p,website]=await Promise.all([profile(),featured()]);
+   const [pr,web,links]=await Promise.allSettled([profile(),featured(),profileReadmeNames()]);
+   const sourceOk=pr.status==="fulfilled";
+   const website=web.status==="fulfilled"?web.value:{status:"temporarily_unavailable",cards:[]};
+   const names=[...new Set([...(sourceOk?pr.value.names:LAST_PUBLIC_CATALOG),...(links.status==="fulfilled"?links.value:[])])];
+   const p={names,count:names.length,url:sourceOk?pr.value.url:"https://github.com/SFS-Labs?tab=repositories",may_be_paginated:sourceOk?pr.value.may_be_paginated:true};
+
    const q=tidy(u.searchParams.get("q"),70).toLowerCase();
    const selected=p.names.filter(n=>!q||n.toLowerCase().includes(q));
    const summaries=await Promise.allSettled(p.names.slice(0,8).map(async n=>{try{const f=await rawFile(n,"README.md");return {name:n,preview:f?tidy(f.text,860):null,source:f?.url||null}}catch(e){return {name:n,error:tidy(e.message,75)}}}));
-   result={ok:true,operation:op,observed_at:new Date().toISOString(),source:p.url,public_repo_count:p.count,paginated_or_incomplete:p.may_be_paginated,public_repositories:selected.map(n=>({name:n,url:ROOT+"/"+encodeURIComponent(n),classification:"Mathias Steinbach / SFS.Labs public portfolio repository"})),readme_previews:summaries.map(x=>x.status==="fulfilled"?x.value:{error:"source unavailable"}),featured_website:website,accuracy_note:"Public repositories of this SFS-Labs account belong to Mathias Steinbach’s portfolio. The current catalog shows visible repo links and selected README excerpts; project-specific authorship, test metrics and outcomes can be explored in linked sources when relevant."};
+   result={ok:true,operation:op,observed_at:new Date().toISOString(),source:p.url,catalog_source:sourceOk?"live_public_github_profile":"last_public_snapshot_plus_current_public_profile_readme",last_snapshot_date:sourceOk?null:"2026-11-23",public_repo_count:p.count,paginated_or_incomplete:p.may_be_paginated,public_repositories:selected.map(n=>({name:n,url:ROOT+"/"+encodeURIComponent(n),classification:"Mathias Steinbach / SFS.Labs public portfolio repository"})),readme_previews:summaries.map(x=>x.status==="fulfilled"?x.value:{error:"source unavailable"}),featured_website:website,accuracy_note:"Public repositories of this SFS-Labs account belong to Mathias Steinbach’s portfolio. The current catalog shows visible repo links and selected README excerpts; project-specific authorship, test metrics and outcomes can be explored in linked sources when relevant."};
   }else{
    const name=u.searchParams.get("repo");
    if(!valid(name))return json({ok:false,error:"invalid_repo_name"},400);
