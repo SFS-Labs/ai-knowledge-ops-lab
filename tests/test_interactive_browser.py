@@ -111,6 +111,25 @@ class InteractiveBrowserSmoke(unittest.TestCase):
         self.assertNotIn("Freebuff", source)
         self.assertIn("benchmark_engineering", source)
 
+    def test_widget_fallback_when_external_script_never_registers_custom_element(self):
+        """A successful CDN response that never registers the element must not freeze CTA."""
+        page=self.browser.new_page(viewport={"width":1280,"height":860})
+        page.route("https://unpkg.com/**",lambda route:route.fulfill(
+            status=200,content_type="application/javascript",body="window.__loadedWithoutWidget=true;"
+        ))
+        try:
+            page.goto(self.fixture.as_uri(),wait_until="domcontentloaded")
+            page.locator("#launch-agent").click()
+            page.wait_for_function(
+                "() => document.querySelector('#launch-agent').disabled === false",
+                timeout=14000
+            )
+            self.assertEqual(page.locator("elevenlabs-convai").count(),0)
+            self.assertIn("erneut laden",page.locator("#agentstatus").inner_text())
+            self.assertIn("Erneut versuchen",page.locator("#launch-agent").inner_text())
+        finally:
+            page.close()
+
     def test_recruiter_entrypoint_links_the_interactive_page(self):
         recruiter=(REPO / "docs" / "recruiter.html").read_text(encoding="utf-8")
         self.assertIn('class="primary" href="interactive.html"', recruiter)
