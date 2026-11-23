@@ -94,14 +94,15 @@ details li{margin:8px 0}
 .end small{color:#D6D7D9}
 footer{padding:25px 0 30px;font-size:12px;color:var(--shade)}
 .footer{display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap}
-@media(max-width:770px){.shell{padding:0 20px}.header{min-height:68px}.header-right{gap:13px}.hero{display:block;padding:45px 0 53px}.note{margin-top:38px;padding:24px}.story{padding:49px 0}.steps,.material-grid,.end-inner{grid-template-columns:1fr;gap:26px}.material{padding:49px 0}.step{padding-top:16px}.case{padding:24px 22px}.effect{padding:4px 0 46px}.check{grid-template-columns:105px 1fr}.details{padding:42px 0}.end{padding:43px 0}.facts{font-size:11px}}
+@media(max-width:770px){.shell{padding:0 20px}.header{min-height:68px}.header{flex-direction:column;align-items:flex-start;gap:10px;padding-top:14px;padding-bottom:14px}.header-right{gap:13px;max-width:100%;overflow-x:auto;white-space:nowrap;padding-bottom:4px}.hero{display:block;padding:45px 0 53px}.note{margin-top:38px;padding:24px}.story{padding:49px 0}.steps,.material-grid,.end-inner{grid-template-columns:1fr;gap:26px}.material{padding:49px 0}.step{padding-top:16px}.case{padding:24px 22px}.effect{padding:4px 0 46px}.check{grid-template-columns:105px 1fr}.details{padding:42px 0}.end{padding:43px 0}.facts{font-size:11px}}
+@media(max-width:360px){.shell{min-width:0;overflow-wrap:anywhere}.check{grid-template-columns:minmax(0,105px) minmax(0,1fr)}.steps,.material-grid,.end-inner{grid-template-columns:minmax(0,1fr)}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
 .brandmark{flex:0 0 27px;color:#242629}</style>
 </head>
 <body>
 <header><div class="shell header">
  <div><div class="name"><svg class="brandmark" viewBox="0 0 400 400" width="27" height="27" aria-hidden="true" focusable="false"><path d="M72 80H328V148H152V180H72Z M248 220H328V320H72V252H248Z" fill="currentColor"/></svg> Mathias Steinbach</div><span class="header-sub">AI Implementation · lokaler Integrationsprototyp</span></div>
- <nav class="header-right" aria-label="Seitennavigation"><a href="work.html">Alle Arbeiten</a><a href="interactive.html">SFS Interactive</a><a href="#entscheidung">Arbeitsprobe</a><a href="#nachweise">Nachweise</a><a href="#kontakt">Kontakt</a></nav>
+ <nav class="header-right" aria-label="Seitennavigation"><a href="work.html">Alle Arbeiten</a><a href="interactive.html#launch-agent">SFS Interactive</a><a href="#entscheidung">Arbeitsprobe</a><a href="#nachweise">Nachweise</a><a href="#kontakt">Kontakt</a></nav>
 </div></header>
 <main>
  <section class="shell hero" aria-labelledby="headline">
