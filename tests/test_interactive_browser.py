@@ -7,6 +7,7 @@ Requires: playwright Python package and Chromium browser.
 from __future__ import annotations
 
 import tempfile
+import os
 import unittest
 from pathlib import Path
 try:
@@ -72,6 +73,35 @@ class InteractiveBrowserSmoke(unittest.TestCase):
                     "Horizontal overflow on %spx viewport" % width
                 )
                 page.close()
+
+    def test_live_preview_widget_bootstrap(self):
+        """Opt-in external smoke: real Cloudflare preview and real ElevenLabs widget JS.
+
+        Does not initiate a conversation, request microphone access, or spend inference credits.
+        """
+        url = os.environ.get("SFS_INTERACTIVE_PREVIEW_URL")
+        if not url:
+            self.skipTest("External preview URL not configured")
+        page = self.browser.new_page(viewport={"width": 1280, "height": 860})
+        try:
+            page.goto(url, wait_until="domcontentloaded", timeout=25000)
+            button = page.locator("#launch-agent")
+            self.assertTrue(button.is_enabled(), "Preview gate must be active")
+            self.assertEqual(page.locator("elevenlabs-convai").count(), 0)
+            button.click()
+            page.locator("elevenlabs-convai").wait_for(state="attached", timeout=10000)
+            page.wait_for_function(
+                "() => Boolean(customElements.get('elevenlabs-convai'))",
+                timeout=25000
+            )
+            self.assertEqual(
+                page.locator("elevenlabs-convai").get_attribute("agent-id"),
+                "agent_7701m848yn67eqsbb1tyxshf3h13"
+            )
+            page.locator("#launch-agent").wait_for(state="hidden", timeout=6000)
+            self.assertIn("Widget bereit", page.locator("#agentstatus").inner_text())
+        finally:
+            page.close()
 
     def test_new_cybersecurity_sources_and_widget_target(self):
         source = HTML.read_text(encoding="utf-8")
