@@ -83,8 +83,8 @@ class InteractiveBrowserSmoke(unittest.TestCase):
              "html_url": "https://github.com/SFS-Labs/ctf-skills", "pushed_at": "2026-11-23T12:00:00Z"},
             {"name": "agent-toolkit", "owner": {"login": "SFS-Labs"}, "private": False,
              "html_url": "https://github.com/SFS-Labs/agent-toolkit", "pushed_at": "2026-11-22T12:00:00Z"},
-            {"name": "sfs-personal-restricted", "owner": {"login": "SFS-Labs"}, "private": True,
-             "html_url": "https://github.com/SFS-Labs/sfs-personal-restricted", "pushed_at": "2026-11-23T12:00:00Z"},
+            {"name": "private-repo-fixture", "owner": {"login": "SFS-Labs"}, "private": True,
+             "html_url": "https://github.com/SFS-Labs/private-repo-fixture", "pushed_at": "2026-11-23T12:00:00Z"},
             {"name": "fake-upstream", "owner": {"login": "Elsewhere"}, "private": False,
              "html_url": "https://github.com/Elsewhere/fake-upstream", "pushed_at": "2026-11-23T12:00:00Z"},
         ]
@@ -106,7 +106,7 @@ class InteractiveBrowserSmoke(unittest.TestCase):
             rendered = page.locator("#public-repository-list").inner_text()
             self.assertIn("ctf-skills", rendered)
             self.assertIn("Atlan-Upstream, kein SFS-Produkt", rendered)
-            self.assertNotIn("sfs-personal-restricted", rendered)
+            self.assertNotIn("private-repo-fixture", rendered)
             self.assertNotIn("fake-upstream", rendered)
             self.assertIn("2 öffentliche Repositories", page.locator("#public-repository-status").inner_text())
         finally:
