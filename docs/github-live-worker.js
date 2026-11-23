@@ -13,12 +13,12 @@ function json(data,status=200,ttl=120){
  return Response.json(data,{status,headers:{"Cache-Control":status===200?"public, max-age="+ttl:"no-store","X-Content-Type-Options":"nosniff","X-Robots-Tag":"noindex, nofollow"}});
 }
 async function get(url){
- const res=await fetch(url,{headers:UA,redirect:"follow",signal:AbortSignal.timeout(7300)});
+ const res=await fetch(url,{headers:UA,redirect:"follow",signal:AbortSignal.timeout(9500)});
  if(res.status===429||res.status===403)throw Error("public_source_rate_limited");
  return res;
 }
 async function profile(){
- const r=await get(ROOT+"?tab=repositories&sort=updated");
+ let r; try{r=await get(ROOT+"?tab=repositories&sort=updated");}catch(_){r=await get(ROOT+"?tab=repositories");}
  if(!r.ok)throw Error("public_profile_http_"+r.status);
  const html=(await r.text()).slice(0,700000);
  const names=[...new Set(html.split('href="/'+OWNER+'/').slice(1).map(s=>s.split('"')[0].split('/')[0].split('?')[0]).filter(valid))];
@@ -89,10 +89,9 @@ export default {async fetch(request,env,ctx){
  let result;
  try{
   if(op==="catalog"){
-   const p=await profile();
+   const [p,website]=await Promise.all([profile(),featured()]);
    const q=tidy(u.searchParams.get("q"),70).toLowerCase();
    const selected=p.names.filter(n=>!q||n.toLowerCase().includes(q));
-   const website=await featured();
    result={ok:true,operation:op,observed_at:new Date().toISOString(),source:p.url,public_repo_count:p.count,paginated_or_incomplete:p.may_be_paginated,public_repositories:selected.map(n=>({name:n,url:ROOT+"/"+encodeURIComponent(n),classification:"public repository; not automatically a reviewed portfolio case"})),featured_website:website,accuracy_note:"Only public GitHub profile links and the current public website are scanned. Private repos never read. New public repos on the visible profile and new site cards appear after the short cache expires. This is not a verified achievements ledger."};
   }else{
    const name=u.searchParams.get("repo");
