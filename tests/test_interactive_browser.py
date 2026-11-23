@@ -182,7 +182,7 @@ class InteractiveBrowserSmoke(unittest.TestCase):
             for filename in ("interactive.html", "security-engineering.html",
                              "adversarial-evaluation.html", "agent-systems.html"):
                 self.assertGreater(
-                    page.locator('a[href="' + filename + '"]').count(), 0,
+                    page.locator('a[href="' + (filename + '#launch-agent' if filename == 'interactive.html' else filename) + '"]').count(), 0,
                     "Portfolio index lacks public navigation to " + filename
                 )
             page.locator('a[href="security-engineering.html"]').first.click()
@@ -286,11 +286,36 @@ class InteractiveBrowserSmoke(unittest.TestCase):
                 finally:
                     page.close()
 
+    def test_all_portfolio_pages_reflow_and_direct_guide(self):
+        pages = ("index.html", "recruiter.html", "work.html", "interactive.html",
+                 "security-engineering.html", "agent-systems.html", "adversarial-evaluation.html",
+                 "hubspot-stripe.html", "live.html")
+        for width in (320, 390, 1440):
+            for name in pages:
+                with self.subTest(width=width, page=name):
+                    page = self.browser.new_page(viewport={"width": width, "height": 844})
+                    try:
+                        page.route("https://**/*", lambda route: route.abort())
+                        page.goto((REPO / "docs" / name).as_uri(), wait_until="domcontentloaded")
+                        self.assertLessEqual(page.evaluate("document.documentElement.scrollWidth - innerWidth"), 1)
+                        self.assertEqual(page.locator("elevenlabs-convai").count(), 0)
+                        if name != "interactive.html":
+                            entry = page.locator('a[href="interactive.html#launch-agent"]').first
+                            self.assertGreater(page.locator('a[href="interactive.html#launch-agent"]').count(), 0)
+                            entry.focus()
+                            self.assertTrue(entry.is_visible())
+                            entry.press("Enter")
+                            page.wait_for_url("**/interactive.html#launch-agent")
+                            self.assertTrue(page.locator("#launch-agent").is_visible())
+                            self.assertEqual(page.locator("elevenlabs-convai").count(), 0)
+                    finally:
+                        page.close()
+
     def test_recruiter_entrypoint_links_the_interactive_page(self):
         recruiter=(REPO / "docs" / "recruiter.html").read_text(encoding="utf-8")
         self.assertIn('class="primary" href="interactive.html#launch-agent"', recruiter)
         self.assertIn('<nav class="nav">', recruiter)
-        self.assertIn('<a href="interactive.html">SFS Interactive</a>', recruiter)
+        self.assertIn('<a href="interactive.html#launch-agent">SFS Interactive</a>', recruiter)
         self.assertIn('<a href="work.html">Alle Arbeiten</a>', recruiter)
 
     def test_widget_call_injects_exact_allowlisted_client_tool(self):
