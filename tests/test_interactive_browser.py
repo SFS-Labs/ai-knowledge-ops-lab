@@ -288,9 +288,8 @@ class InteractiveBrowserSmoke(unittest.TestCase):
                     page.close()
 
     def test_all_portfolio_pages_reflow_and_direct_guide(self):
-        pages = ("index.html", "recruiter.html", "work.html", "interactive.html",
-                 "security-engineering.html", "agent-systems.html", "adversarial-evaluation.html",
-                 "hubspot-stripe.html", "live.html")
+        pages = tuple(sorted(p.name for p in (REPO / "docs").glob("*.html")))
+        self.assertIn("interactive.html", pages)
         for width in (320, 390, 1440):
             for name in pages:
                 with self.subTest(width=width, page=name):
