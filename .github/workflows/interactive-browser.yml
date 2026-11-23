@@ -29,7 +29,7 @@ jobs:
         run: |
           python -m pip install --disable-pip-version-check playwright==1.56.0
           python -m playwright install --with-deps chromium
-      - name: Browser interactions + no-inference real preview bootstrap
+      - name: Browser interactions + no-inference production GitHub Pages acceptance
         env:
-          SFS_INTERACTIVE_PREVIEW_URL: https://sfs-portfolio-v2-preview.sfs-labs-core.workers.dev/interactive.html
+          SFS_INTERACTIVE_PRODUCTION_URL: https://sfs-labs.github.io/ai-knowledge-ops-lab/interactive.html
         run: python -m unittest discover -s tests -p 'test_interactive_browser.py' -v
