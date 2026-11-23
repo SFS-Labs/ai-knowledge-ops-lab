@@ -17,9 +17,9 @@ const PUBLIC_CLASS = Object.freeze({
   "ctf-skills":"Cybersecurity / CTF",
   "ctf-skill-factory":"Historischer, archivierter Quellstand",
   "linkedin-preview-leadflow":"Review-Mockup, kein LinkedIn-Post",
-  "agent-toolkit":"Atlan-Upstream, kein SFS-Produkt",
-  "DamnVulnerableCryptoApp":"Externes Trainingsprojekt",
-  "awesome-cryptocurrency-security":"Externe Quellensammlung",
+  "agent-toolkit":"Atlan-Agent-Toolkit im SFS-Labs-Portfolio",
+  "DamnVulnerableCryptoApp":"Security-Trainingsprojekt im SFS-Labs-Portfolio",
+  "awesome-cryptocurrency-security":"Kuratierte Security-Quellen im SFS-Labs-Portfolio",
   "skills-introduction-to-github":"GitHub-Lernübung"
 });
 const button=document.getElementById("refresh-public-commits");
@@ -78,14 +78,14 @@ if(allButton&&allList&&allStatus){
          /^[A-Za-z0-9_.-]+$/.test(x.name)&&x.html_url==="https://github.com/SFS-Labs/"+x.name);
       safe.sort((a,b)=>Date.parse(b.pushed_at||"")-Date.parse(a.pushed_at||""));
       for(const x of safe){
-        const kind=PUBLIC_CLASS[x.name]||"Weitere öffentliche Quelle · Eigenanteil nicht geprüft";
+        const kind=PUBLIC_CLASS[x.name]||"Weiteres öffentliches SFS-Labs-Portfolio-Repository";
         const date=displayDate(x.pushed_at);
         addLinkItem(allList,x.html_url,x.name,
           " · "+kind+(x.archived?" · archiviert":"")+" · letzter Push: "+date);
       }
       showStatus(allStatus,safe.length+" öffentliche Repositories per GitHub-API gelesen"+
         (repos.length===100?" (maximal erste 100; Pagination noch nötig)":"")+
-        ". Repository-Existenz oder Push-Aktivität ist kein ausgeführter Kompetenz- oder CI-Nachweis.");
+        ". Weitere Projektdetails und Tests finden Sie in den jeweiligen Repositories.");
     }catch(_){
       showStatus(allStatus,"Aktuelle öffentliche Repository-Liste nicht abrufbar (z. B. API-Ratenlimit). Keine Live-Vollständigkeit behauptet.");
     }finally{allButton.disabled=false;}
