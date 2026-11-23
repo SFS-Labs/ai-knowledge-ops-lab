@@ -66,18 +66,29 @@ async function activity(name){
  return {recent_commits:[],limitations:"No public main/master Atom feed available. Do not infer there are no commits."};
 }
 async function featured(){
- try{
-  const r=await get(SITE);if(!r.ok)return {status:"unavailable",cards:[]};
-  const html=(await r.text()).slice(0,180000);const cards=[];
-  for(const x of html.matchAll(/<article\s+class="card[^"]*"[^>]*>([\s\S]*?)<\/article>/g)){
-   const title=x[1].match(/<h3[^>]*>([\s\S]*?)<\/h3>/)?.[1];
-   const href=x[1].match(/<a\s+[^>]*href="([^"]+)"/)?.[1];
-   if(!title||!href)continue;const resolved=new URL(href,SITE);
-   if(!["github.com","sfs-portfolio-v2-preview.sfs-labs-core.workers.dev"].includes(resolved.hostname))continue;
-   cards.push({title:decode(title.replace(/<[^>]+>/g,"")),url:resolved.href});
-  }
-  return {status:"read_live_website",source:SITE,cards:cards.slice(0,60)};
- }catch(e){return {status:"unavailable",cards:[],reason:tidy(e.message,95)}}
+ const sourceOptions=[
+  {url:SITE,status:"read_live_website"},
+  {url:RAW+"/ai-knowledge-ops-lab/feat/portfolio-live-evidence-nov2026/docs/work.html",status:"read_public_review_branch_not_production"},
+  {url:RAW+"/ai-knowledge-ops-lab/main/docs/work.html",status:"read_public_main_source"}
+ ];
+ const failures=[];
+ for(const option of sourceOptions){
+  try{
+   const r=await get(option.url);
+   if(!r.ok){failures.push(option.status+" "+r.status);continue}
+   const html=(await r.text()).slice(0,200000);const cards=[];
+   for(const x of html.matchAll(/<article\s+class="card[^"]*"[^>]*>([\s\S]*?)<\/article>/g)){
+    const title=x[1].match(/<h3[^>]*>([\s\S]*?)<\/h3>/)?.[1];
+    const href=x[1].match(/<a\s+[^>]*href="([^"]+)"/)?.[1];
+    if(!title||!href)continue;
+    const resolved=new URL(href,SITE);
+    if(!["github.com","sfs-portfolio-v2-preview.sfs-labs-core.workers.dev"].includes(resolved.hostname))continue;
+    cards.push({title:decode(title.replace(/<[^>]+>/g,"")),url:resolved.href});
+   }
+   if(cards.length)return {status:option.status,source:option.url,cards:cards.slice(0,60)};
+  }catch(e){failures.push(tidy(e.message,70))}
+ }
+ return {status:"unavailable",cards:[],failures:failures.slice(0,3)};
 }
 export default {async fetch(request,env,ctx){
  if(request.method!=="GET")return json({ok:false,error:"read_only_get_required"},405);
@@ -92,7 +103,8 @@ export default {async fetch(request,env,ctx){
    const [p,website]=await Promise.all([profile(),featured()]);
    const q=tidy(u.searchParams.get("q"),70).toLowerCase();
    const selected=p.names.filter(n=>!q||n.toLowerCase().includes(q));
-   result={ok:true,operation:op,observed_at:new Date().toISOString(),source:p.url,public_repo_count:p.count,paginated_or_incomplete:p.may_be_paginated,public_repositories:selected.map(n=>({name:n,url:ROOT+"/"+encodeURIComponent(n),classification:"public repository; not automatically a reviewed portfolio case"})),featured_website:website,accuracy_note:"Only public GitHub profile links and the current public website are scanned. Private repos never read. New public repos on the visible profile and new site cards appear after the short cache expires. This is not a verified achievements ledger."};
+   const summaries=await Promise.allSettled(p.names.slice(0,8).map(async n=>{try{const f=await rawFile(n,"README.md");return {name:n,preview:f?tidy(f.text,860):null,source:f?.url||null}}catch(e){return {name:n,error:tidy(e.message,75)}}}));
+   result={ok:true,operation:op,observed_at:new Date().toISOString(),source:p.url,public_repo_count:p.count,paginated_or_incomplete:p.may_be_paginated,public_repositories:selected.map(n=>({name:n,url:ROOT+"/"+encodeURIComponent(n),classification:"public repository; not automatically a reviewed portfolio case"})),readme_previews:summaries.map(x=>x.status==="fulfilled"?x.value:{error:"source unavailable"}),featured_website:website,accuracy_note:"Only public GitHub profile links and the current public website are scanned. Private repos never read. New public repos on the visible profile and new site cards appear after the short cache expires. This is not a verified achievements ledger."};
   }else{
    const name=u.searchParams.get("repo");
    if(!valid(name))return json({ok:false,error:"invalid_repo_name"},400);
