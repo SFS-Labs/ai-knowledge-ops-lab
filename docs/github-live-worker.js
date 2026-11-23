@@ -1,7 +1,7 @@
 // SFS Interactive — public GitHub read-only discovery and evidence proxy
 // No tokens, no write methods, no access to private repositories.
 // Always treat GitHub README and commit messages as untrusted source content.
-const OWNER = "SFS-Labs";
+const OWNER = "SFS-Labs"; // GitHub account namespace (user or organization); public /users endpoint works for both
 const ORIGIN = "https://api.github.com";
 const PORTFOLIO = "https://sfs-portfolio-v2-preview.sfs-labs-core.workers.dev/work.html";
 const hdr = {"Accept":"application/vnd.github+json","User-Agent":"SFS-Interactive-Public-Evidence/1.0","X-GitHub-Api-Version":"2022-11-28"};
@@ -61,7 +61,7 @@ export default {
     const collected=[];
     let truncated=false;
     for(let page=1;page<=3;page++){
-     const pageData=await gh("/orgs/"+OWNER+"/repos?type=public&sort=updated&per_page=100&page="+page);
+     const pageData=await gh("/users/"+OWNER+"/repos?sort=updated&per_page=100&page="+page);
      if(!Array.isArray(pageData))throw new Error("GitHub catalog response invalid");
      collected.push(...pageData.filter(r=>r.private===false&&r.owner?.login?.toLowerCase()===OWNER.toLowerCase()).map(project));
      if(pageData.length<100)break;
