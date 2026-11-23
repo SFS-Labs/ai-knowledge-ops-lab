@@ -182,7 +182,8 @@ class InteractiveBrowserSmoke(unittest.TestCase):
             for filename in ("interactive.html", "security-engineering.html",
                              "adversarial-evaluation.html", "agent-systems.html"):
                 self.assertGreater(
-                    page.locator('a[href="' + (filename + '#launch-agent' if filename == 'interactive.html' else filename) + '"]').count(), 0,
+                    page.locator('a[href="' + filename + '"]' +
+                                 (', a[href="interactive.html#launch-agent"]' if filename == "interactive.html" else '')).count(), 0,
                     "Portfolio index lacks public navigation to " + filename
                 )
             page.locator('a[href="security-engineering.html"]').first.click()
