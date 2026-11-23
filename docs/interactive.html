@@ -41,7 +41,7 @@ header{border-bottom:1px solid var(--line)}.nav{min-height:95px;display:flex;ali
 <div class="about"><div class="kicker">Was Sie hier erfahren</div><p>Welche Probleme wurden bearbeitet? Welche Entscheidungen wurden getroffen? Was ist tatsächlich nachgewiesen?</p><p class="foot">Ein KI-Portfolioguide spricht über meine Arbeit – nicht an meiner Stelle.</p></div>
 </div>
 <section class="agent" id="interaktiv" aria-labelledby="agentheading">
-<div class="agenttop"><div><div class="kicker">SFS Interactive / KI-Portfolioguide</div><h2 id="agentheading">Fragen Sie nach.</h2></div><div class="status"><b>VOICE + TEXT</b><span id="agentstatus" role="status" aria-atomic="true">V2 · Direkt im Browser, nach Klick</span></div></div>
+<div class="agenttop"><div><div class="kicker">SFS Interactive / KI-Portfolioguide</div><h2 id="agentheading">Fragen Sie nach.</h2></div><div class="status"><b>VOICE + TEXT</b><span id="agentstatus" role="status" aria-atomic="true" tabindex="-1">V2 · Direkt im Browser, nach Klick</span></div></div>
 <div class="bubble"><b>BEISPIELFRAGE</b><p id="question">Woran erkennt man bei Ihren Projekten, ob KI tatsächlich einen Mehrwert bringt?</p></div>
 <div class="bubble" role="region" aria-live="polite" aria-label="Belegbasierte Beispielantwort"><b>KURATIERTE ANTWORT – KEINE LIVE-KI</b><p id="answer">Im Tender-Intelligence-Projekt wurde der Zusatznutzen kontrolliert verglichen. Ein Qualitätsvorteil ließ sich nicht belegen – deshalb wurde die kommerzielle Entwicklung pausiert.</p><p class="source"><a id="answerlink" href="https://github.com/SFS-Labs/tender-intelligence-case-study/blob/main/docs/DECISION-LOG.md" target="_blank" rel="noopener noreferrer">↗ Decision log / Primärbeleg</a></p></div>
 <div class="chips" role="group" aria-label="Beispielfragen">
@@ -56,7 +56,7 @@ header{border-bottom:1px solid var(--line)}.nav{min-height:95px;display:flex;ali
 <div id="widget-mount"></div>
 <div id="active-evidence" class="bubble evidence-selection" hidden role="status" aria-live="polite"></div>
 <button type="button" class="btn launch" id="launch-agent" disabled aria-describedby="launchinfo">KI-Guide öffnen: Sprechen oder Schreiben</button>
-<p class="disclosure" id="launchinfo">Die Beispielantworten sind kuratiert. Das ElevenLabs-Widget wird erst nach dem Klick geladen. Vor dem Gespräch informiert es über Datenverarbeitung und Aufbewahrung; die Mikrofonfreigabe ist nur für Sprache erforderlich. Bitte keine vertraulichen Daten teilen.</p>
+<p class="disclosure" id="launchinfo">Die Beispielantworten sind kuratiert. Nach dem Klick wird ElevenLabs geladen. Dort kannst du schreiben oder sprechen; nur Sprache benötigt ein Mikrofon. Gesprächsinhalte können bis zu sieben Tage gespeichert werden. Bitte keine vertraulichen Daten teilen.</p>
 </section>
 </section>
 <section class="wrap proofs" id="nachweise" aria-labelledby="proofheading"><div class="proofhead"><h2 id="proofheading">Ausgewählte Nachweise</h2><a href="work.html">Alle zehn Engineering-Arbeiten ↗</a></div>
@@ -149,6 +149,12 @@ if(AGENT_PUBLIC_READY){
  trigger.addEventListener("click",function(){
   if(trigger.dataset.loaded==="1")return;
   trigger.dataset.loaded="1";
+  const status=document.getElementById("agentstatus");
+  // In-memory timing only: no analytics requests, identifiers or conversation contents.
+  ["sfs:widget-load","sfs:widget-defined","sfs:widget-error","sfs:widget-bootstrap"].forEach(function(name){
+   performance.clearMarks(name);performance.clearMeasures(name);
+  });
+  performance.mark("sfs:widget-load");
   trigger.disabled=true;
   trigger.textContent="Gesprächsoptionen werden geladen …";
   document.getElementById("agentstatus").textContent="Lädt Gesprächsoptionen …";
@@ -174,6 +180,9 @@ if(AGENT_PUBLIC_READY){
    script.remove();
    trigger.dataset.loaded="0";
    trigger.disabled=false;
+   performance.mark("sfs:widget-error");
+   performance.measure("sfs:widget-bootstrap","sfs:widget-load","sfs:widget-error");
+   if(document.activeElement===document.body)trigger.focus({preventScroll:true});
    trigger.textContent="Erneut versuchen: Sprechen oder Schreiben";
    document.getElementById("agentstatus").textContent=message;
   }
@@ -187,7 +196,11 @@ if(AGENT_PUBLIC_READY){
     if(hasFailed)return;
     window.clearTimeout(initTimer);
     trigger.hidden=true;
-    document.getElementById("agentstatus").textContent="Widget bereit · unten rechts Sprechen oder Schreiben wählen";
+    performance.mark("sfs:widget-defined");
+    performance.measure("sfs:widget-bootstrap","sfs:widget-load","sfs:widget-defined");
+    status.textContent="Widget bereit · unten rechts Schreiben oder Sprechen wählen";
+    // Do not steal focus if the visitor has continued browsing during the load.
+    if(document.activeElement===document.body || document.activeElement===trigger)status.focus({preventScroll:true});
    });
   };
   script.onerror=function(){
