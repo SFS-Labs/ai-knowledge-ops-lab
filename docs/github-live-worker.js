@@ -4,7 +4,7 @@
 const OWNER="SFS-Labs";
 const ROOT="https://github.com/"+OWNER;
 const RAW="https://raw.githubusercontent.com/"+OWNER;
-const SITE="https://sfs-portfolio-v2-preview.sfs-labs-core.workers.dev/work.html";
+const SITE="https://sfs-labs.github.io/ai-knowledge-ops-lab/work.html";
 const LAST_PUBLIC_CATALOG=["ai-knowledge-ops-lab","ctf-skills","SFS-Labs","ctf-skill-factory","skills-introduction-to-github","linkedin-preview-leadflow","sfs-genomics","value-rail-mvp","security-reviews","tender-intelligence-case-study","agent-toolkit","DamnVulnerableCryptoApp","awesome-cryptocurrency-security"]; // Dated public fallback; not private repos
 const UA={"User-Agent":"SFS-Interactive-Public-Reader/1.1","Accept":"text/html, text/plain, application/atom+xml"};
 const valid=(s)=>typeof s==="string"&&/^[A-Za-z0-9_.-]{1,100}$/.test(s)&&s!=="."&&s!=="..";
@@ -69,7 +69,6 @@ async function activity(name){
 async function featured(){
  const sourceOptions=[
   {url:SITE,status:"read_live_website"},
-  {url:RAW+"/ai-knowledge-ops-lab/feat/portfolio-live-evidence-nov2026/docs/work.html",status:"read_public_review_branch_not_production"},
   {url:RAW+"/ai-knowledge-ops-lab/main/docs/work.html",status:"read_public_main_source"}
  ];
  const failures=[];
@@ -83,7 +82,7 @@ async function featured(){
     const href=x[1].match(/<a\s+[^>]*href="([^"]+)"/)?.[1];
     if(!title||!href)continue;
     const resolved=new URL(href,SITE);
-    if(!["github.com","sfs-portfolio-v2-preview.sfs-labs-core.workers.dev"].includes(resolved.hostname))continue;
+    if(!["github.com","sfs-labs.github.io"].includes(resolved.hostname))continue;
     cards.push({title:decode(title.replace(/<[^>]+>/g,"")),url:resolved.href});
    }
    if(cards.length)return {status:option.status,source:option.url,cards:cards.slice(0,60)};
