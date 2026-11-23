@@ -74,6 +74,44 @@ class InteractiveBrowserSmoke(unittest.TestCase):
                 )
                 page.close()
 
+    def test_public_github_inventory_is_opt_in_and_private_safe(self):
+        """All public repos require one deliberate API request; private/fake records never render."""
+        import json
+        url = "https://api.github.com/users/SFS-Labs/repos?per_page=100&sort=pushed"
+        fixtures = [
+            {"name": "ctf-skills", "owner": {"login": "SFS-Labs"}, "private": False,
+             "html_url": "https://github.com/SFS-Labs/ctf-skills", "pushed_at": "2026-11-23T12:00:00Z"},
+            {"name": "agent-toolkit", "owner": {"login": "SFS-Labs"}, "private": False,
+             "html_url": "https://github.com/SFS-Labs/agent-toolkit", "pushed_at": "2026-11-22T12:00:00Z"},
+            {"name": "sfs-personal-restricted", "owner": {"login": "SFS-Labs"}, "private": True,
+             "html_url": "https://github.com/SFS-Labs/sfs-personal-restricted", "pushed_at": "2026-11-23T12:00:00Z"},
+            {"name": "fake-upstream", "owner": {"login": "Elsewhere"}, "private": False,
+             "html_url": "https://github.com/Elsewhere/fake-upstream", "pushed_at": "2026-11-23T12:00:00Z"},
+        ]
+        page = self.browser.new_page(viewport={"width": 1280, "height": 960})
+        hits = []
+        page.route("https://api.github.com/**", lambda route: (
+            hits.append(route.request.url),
+            route.fulfill(status=200, content_type="application/json",
+                          headers={"Access-Control-Allow-Origin": "*"},
+                          body=json.dumps(fixtures))
+        ))
+        try:
+            page.goto((REPO / "docs" / "work.html").as_uri(), wait_until="domcontentloaded")
+            self.assertEqual(hits, [], "GitHub must not be requested before visitor opt-in")
+            page.locator("#refresh-public-repositories").click()
+            page.locator("#public-repository-list li").first.wait_for(timeout=5000)
+            self.assertEqual(hits, [url], "One public account API call per explicit inventory click")
+            self.assertEqual(page.locator("#public-repository-list li").count(), 2)
+            rendered = page.locator("#public-repository-list").inner_text()
+            self.assertIn("ctf-skills", rendered)
+            self.assertIn("Atlan-Upstream, kein SFS-Produkt", rendered)
+            self.assertNotIn("sfs-personal-restricted", rendered)
+            self.assertNotIn("fake-upstream", rendered)
+            self.assertIn("2 öffentliche Repositories", page.locator("#public-repository-status").inner_text())
+        finally:
+            page.close()
+
     def test_live_preview_widget_bootstrap(self):
         """Opt-in external smoke: real Cloudflare preview and real ElevenLabs widget JS.
 
