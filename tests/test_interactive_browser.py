@@ -220,7 +220,7 @@ class InteractiveBrowserSmoke(unittest.TestCase):
 
     def test_recruiter_entrypoint_links_the_interactive_page(self):
         recruiter=(REPO / "docs" / "recruiter.html").read_text(encoding="utf-8")
-        self.assertIn('class="primary" href="interactive.html"', recruiter)
+        self.assertIn('class="primary" href="interactive.html#launch-agent"', recruiter)
         self.assertIn('<nav class="nav">', recruiter)
         self.assertIn('<a href="interactive.html">SFS Interactive</a>', recruiter)
         self.assertIn('<a href="work.html">Alle Arbeiten</a>', recruiter)
