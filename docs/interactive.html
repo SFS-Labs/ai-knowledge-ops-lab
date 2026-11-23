@@ -21,7 +21,7 @@ header{border-bottom:1px solid var(--line)}.nav{min-height:95px;display:flex;ali
 .chips{display:flex;gap:8px;flex-wrap:wrap;margin:17px 0}.chip{border:1px solid var(--line);border-radius:4px;background:#fff;font-size:12px;font-weight:650;padding:10px 13px;color:var(--ink);text-align:left}.chip[aria-pressed=true]{background:var(--ink);color:#fff}.launch{width:100%;text-align:left}.disclosure{font-size:11px;line-height:1.5;color:var(--muted);margin:13px 0 0}
 .proofs{padding-top:28px;padding-bottom:58px}.proofhead{display:flex;align-items:center;justify-content:space-between;gap:20px}.proofgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;margin-top:18px}.proof{border:1px solid var(--line);padding:24px;min-width:0;border-radius:5px}.proof .kicker{font-size:10px}.proof h3{margin:13px 0 14px;font-size:20px}.proof p{font-size:13px;color:var(--muted);margin:0 0 17px;line-height:1.55}.proof a{font-size:12px;font-weight:700}
 .method{border-top:1px solid var(--line);padding:30px 0}.method p{font-size:13px;color:var(--muted)}footer{border-top:1px solid var(--line);padding:28px 0;color:var(--muted);font-size:12px}.footerrow{display:flex;justify-content:space-between;align-items:center;gap:20px}.footerrow a{margin-left:16px}
-#widget-mount{margin-top:10px}.visually-hidden{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+#widget-mount{margin-top:10px}#launch-agent{scroll-margin-top:clamp(100px,18vh,240px)}.visually-hidden{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 @media(max-width:940px){.hero{grid-template-columns:1fr;gap:30px;padding-top:38px}.actions{margin-bottom:26px}.agent{max-width:760px}.proofgrid{grid-template-columns:1fr 1fr}.navlinks{gap:15px}}
 @media(max-width:640px){.wrap{padding:0 20px}.nav{min-height:72px}.navlinks a:not(.btn){display:none}.navlinks .btn{padding:10px 12px}h1{margin:22px 0;font-size:35px}.lead{font-size:15px}.actions{display:grid;grid-template-columns:1fr}.agent{padding:16px}.agenttop{display:block}.status{display:inline-block;margin-top:10px}.proofgrid{grid-template-columns:1fr}.proofhead{display:block}.footerrow{display:block}.footerrow a{margin:0 12px 0 0;display:inline-block}.chips{display:grid;grid-template-columns:1fr 1fr}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation:none!important;transition:none!important}}
@@ -41,7 +41,7 @@ header{border-bottom:1px solid var(--line)}.nav{min-height:95px;display:flex;ali
 <div class="about"><div class="kicker">Was Sie hier erfahren</div><p>Welche Probleme wurden bearbeitet? Welche Entscheidungen wurden getroffen? Was ist tatsächlich nachgewiesen?</p><p class="foot">Ein KI-Portfolioguide spricht über meine Arbeit – nicht an meiner Stelle.</p></div>
 </div>
 <section class="agent" id="interaktiv" aria-labelledby="agentheading">
-<div class="agenttop"><div><div class="kicker">SFS Interactive / KI-Portfolioguide</div><h2 id="agentheading">Fragen Sie nach.</h2></div><div class="status"><b>VOICE + TEXT</b><span id="agentstatus">V2 · Direkt im Browser, nach Klick</span></div></div>
+<div class="agenttop"><div><div class="kicker">SFS Interactive / KI-Portfolioguide</div><h2 id="agentheading">Fragen Sie nach.</h2></div><div class="status"><b>VOICE + TEXT</b><span id="agentstatus" role="status" aria-atomic="true">V2 · Direkt im Browser, nach Klick</span></div></div>
 <div class="bubble"><b>BEISPIELFRAGE</b><p id="question">Woran erkennt man bei Ihren Projekten, ob KI tatsächlich einen Mehrwert bringt?</p></div>
 <div class="bubble" role="region" aria-live="polite" aria-label="Belegbasierte Beispielantwort"><b>KURATIERTE ANTWORT – KEINE LIVE-KI</b><p id="answer">Im Tender-Intelligence-Projekt wurde der Zusatznutzen kontrolliert verglichen. Ein Qualitätsvorteil ließ sich nicht belegen – deshalb wurde die kommerzielle Entwicklung pausiert.</p><p class="source"><a id="answerlink" href="https://github.com/SFS-Labs/tender-intelligence-case-study/blob/main/docs/DECISION-LOG.md" target="_blank" rel="noopener noreferrer">↗ Decision log / Primärbeleg</a></p></div>
 <div class="chips" role="group" aria-label="Beispielfragen">
@@ -55,8 +55,8 @@ header{border-bottom:1px solid var(--line)}.nav{min-height:95px;display:flex;ali
 </div>
 <div id="widget-mount"></div>
 <div id="active-evidence" class="bubble evidence-selection" hidden role="status" aria-live="polite"></div>
-<button type="button" class="btn launch" id="launch-agent" disabled aria-describedby="launchinfo">Sprachgespräch im Website-Widget starten</button>
-<p class="disclosure" id="launchinfo">Die Beispielantworten sind kuratiert. Nach Ihrem Klick erscheint unten rechts das ElevenLabs-Widget. Dort starten Sie Sprache oder Text. Es wird erst nach Ihrem Klick geladen; anschließend werden Gespräche an ElevenLabs übermittelt. Sprachaufzeichnungen sind deaktiviert; Gesprächsinhalte können bis zu sieben Tage gespeichert werden. Keine vertraulichen Daten eingeben.</p>
+<button type="button" class="btn launch" id="launch-agent" disabled aria-describedby="launchinfo">KI-Guide öffnen: Sprechen oder Schreiben</button>
+<p class="disclosure" id="launchinfo">Die Beispielantworten sind kuratiert. Das ElevenLabs-Widget wird erst nach dem Klick geladen. Vor dem Gespräch informiert es über Datenverarbeitung und Aufbewahrung; die Mikrofonfreigabe ist nur für Sprache erforderlich. Bitte keine vertraulichen Daten teilen.</p>
 </section>
 </section>
 <section class="wrap proofs" id="nachweise" aria-labelledby="proofheading"><div class="proofhead"><h2 id="proofheading">Ausgewählte Nachweise</h2><a href="work.html">Alle zehn Engineering-Arbeiten ↗</a></div>
@@ -145,18 +145,20 @@ document.querySelectorAll("[data-example]").forEach(function(btn){
 if(AGENT_PUBLIC_READY){
  const trigger=document.getElementById("launch-agent");
  trigger.disabled=false;
- trigger.textContent="Sprach- oder Textgespräch laden";
+ trigger.textContent="KI-Guide öffnen: Sprechen oder Schreiben";
  trigger.addEventListener("click",function(){
   if(trigger.dataset.loaded==="1")return;
   trigger.dataset.loaded="1";
   trigger.disabled=true;
-  trigger.textContent="ElevenLabs-Widget wird geladen …";
-  document.getElementById("agentstatus").textContent="Lädt Widget von ElevenLabs …";
+  trigger.textContent="Gesprächsoptionen werden geladen …";
+  document.getElementById("agentstatus").textContent="Lädt Gesprächsoptionen …";
   const widget=document.createElement("elevenlabs-convai");
   widget.setAttribute("agent-id",AGENT_ID);
-  widget.addEventListener("elevenlabs-convai:call",function(e){
-   if(!e.detail||!e.detail.config)return;
-   e.detail.config.clientTools={open_project:showProjectEvidence};
+  ["elevenlabs-convai:call","elevenlabs-convai:message"].forEach(function(eventName){
+   widget.addEventListener(eventName,function(e){
+    if(!e.detail||!e.detail.config)return;
+    e.detail.config.clientTools={open_project:showProjectEvidence};
+   });
   });
   document.getElementById("widget-mount").appendChild(widget);
   const script=document.createElement("script");
@@ -172,7 +174,7 @@ if(AGENT_PUBLIC_READY){
    script.remove();
    trigger.dataset.loaded="0";
    trigger.disabled=false;
-   trigger.textContent="Erneut versuchen: Sprach- oder Textgespräch laden";
+   trigger.textContent="Erneut versuchen: Sprechen oder Schreiben";
    document.getElementById("agentstatus").textContent=message;
   }
   // A script can load successfully without defining its custom element.
@@ -185,7 +187,7 @@ if(AGENT_PUBLIC_READY){
     if(hasFailed)return;
     window.clearTimeout(initTimer);
     trigger.hidden=true;
-    document.getElementById("agentstatus").textContent="Widget bereit · unten rechts Gespräch beginnen";
+    document.getElementById("agentstatus").textContent="Bereit · unten rechts Sprechen oder Schreiben wählen";
    });
   };
   script.onerror=function(){
