@@ -2,6 +2,19 @@
 
 **Purpose:** Evidence-only supplement to the public portfolio and ElevenLabs agent. This document is a dated GitHub source snapshot, NOT a live-synchronized knowledge base. Private repositories and blind-evaluation reference material are outside scope.
 
+## Release state and correct live links (23 November 2026)
+
+**Important:** The newly authored `security-engineering.html`, `adversarial-evaluation.html`, `agent-systems.html`, and `work.html` are on draft website PR #58, **not yet published on production GitHub Pages**. Do not claim a production `sfs-labs.github.io` page works before merge.
+
+Current clickable public development preview:
+- Portfolio and opt-in voice agent: https://sfs-portfolio-v2-preview.sfs-labs-core.workers.dev/interactive.html
+- Cybersecurity / CTF case: https://sfs-portfolio-v2-preview.sfs-labs-core.workers.dev/security-engineering.html
+- Native benchmark case: https://sfs-portfolio-v2-preview.sfs-labs-core.workers.dev/adversarial-evaluation.html
+- REA/MCP case: https://sfs-portfolio-v2-preview.sfs-labs-core.workers.dev/agent-systems.html
+- Curated engineering work: https://sfs-portfolio-v2-preview.sfs-labs-core.workers.dev/work.html
+
+The canonical public GitHub repositories and merged commit / run links in the other sections can be used as live primary sources. The `open_project` tool only displays an allowlisted link in the webpage; do not promise that it opens a browser tab automatically. After publishing the site, the knowledge-base source URLs must be refreshed.
+
 ## Agent ground rules
 - Speak about Mathias Steinbach in the third person. Never claim to be him.
 - Distinguish merged integration, separate draft PR, historically executed local toolchain, blind discovery, and independent verification.
