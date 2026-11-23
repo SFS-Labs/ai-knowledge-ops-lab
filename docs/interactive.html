@@ -84,7 +84,7 @@ header{border-bottom:1px solid var(--line)}.nav{min-height:95px;display:flex;ali
 const AGENT_PUBLIC_READY = true;
 const AGENT_ID = "agent_7701m848yn67eqsbb1tyxshf3h13";
 const PROJECT_URLS = Object.freeze({
- hubspot_stripe:"https://sfs-labs.github.io/ai-knowledge-ops-lab/hubspot-stripe.html",
+ hubspot_stripe:new URL("hubspot-stripe.html",location.href).href,
  knowledge_ops:"https://github.com/SFS-Labs/ai-knowledge-ops-lab/blob/main/showcases/internal-service-intake/DECISION_EVIDENCE_BRIEF.md",
  tender_intelligence:"https://github.com/SFS-Labs/tender-intelligence-case-study/blob/main/docs/DECISION-LOG.md",
  sfs_genomics:"https://github.com/SFS-Labs/sfs-genomics/blob/main/genomics/PORTFOLIO.md",
@@ -93,7 +93,7 @@ const PROJECT_URLS = Object.freeze({
  security_engineering:new URL("security-engineering.html",location.href).href,
  benchmark_engineering:new URL("adversarial-evaluation.html",location.href).href,
  agent_execution:new URL("agent-systems.html",location.href).href,
- profile:"https://sfs-labs.github.io/ai-knowledge-ops-lab/recruiter.html"
+ profile:new URL("recruiter.html",location.href).href
 });
 const PROJECT_LABELS = Object.freeze({
  hubspot_stripe:"HubSpot × Stripe",
