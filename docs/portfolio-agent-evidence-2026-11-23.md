@@ -19,11 +19,11 @@ Diese zehn sind eine kuratierte Auswahl aus Mathias' öffentlichem GitHub-Portfo
 - Öffentliches GitHub-Konto: https://github.com/SFS-Labs
 - Persönliches öffentliches GitHub-Profil: https://github.com/SFS-Labs/SFS-Labs
 - Vorhandene Recruiter-Seite: https://sfs-labs.github.io/ai-knowledge-ops-lab/recruiter.html
-- GitHub-Pages-Projektübersicht nach Website-Release: https://sfs-labs.github.io/ai-knowledge-ops-lab/work.html
-- SFS Interactive auf GitHub Pages nach Website-Release: https://sfs-labs.github.io/ai-knowledge-ops-lab/interactive.html
+- Öffentlich erreichbare GitHub-Pages-Projektübersicht: https://sfs-labs.github.io/ai-knowledge-ops-lab/work.html
+- Öffentlich erreichbarer Sprach-/Textagent auf GitHub Pages: https://sfs-labs.github.io/ai-knowledge-ops-lab/interactive.html
 - Dazugehöriger Website-Entwurf: https://github.com/SFS-Labs/ai-knowledge-ops-lab/pull/58
 
-Die V2-Unterseiten work.html, security-engineering.html, agent-systems.html und adversarial-evaluation.html sind Bestandteil des GitHub-Pages-Releases über PR #58. Der Veröffentlichungsstatus wird durch Merge und extern erreichbare Produktions-URLs bestätigt, nicht allein durch dieses Dokument.
+Die V2-Unterseiten work.html, security-engineering.html, agent-systems.html und adversarial-evaluation.html wurden mit dem Merge von PR #58 in main veröffentlicht und anschließend unter den produktiven GitHub-Pages-URLs extern abgerufen.
 
 ## 2. HubSpot × Stripe — Finance / Revenue Operations / API reconciliation
 
