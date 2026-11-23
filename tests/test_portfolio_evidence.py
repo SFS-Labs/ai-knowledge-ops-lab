@@ -11,7 +11,8 @@ ROOT = Path(__file__).resolve().parents[1]
 DOCS = ROOT / "docs"
 NEW_PAGES = ("work.html", "security-engineering.html", "agent-systems.html", "adversarial-evaluation.html")
 EXISTING_PAGES = ("interactive.html", "recruiter.html")
-ALL_PORTFOLIO_PAGES = NEW_PAGES + EXISTING_PAGES + ("index.html", "hubspot-stripe.html", "live.html")
+ALL_PORTFOLIO_PAGES = tuple(sorted(p.name for p in DOCS.glob("*.html")))
+REQUIRED_PORTFOLIO_PAGES = NEW_PAGES + EXISTING_PAGES + ("index.html", "hubspot-stripe.html", "live.html")
 AGENT_SOURCE = DOCS / "portfolio-agent-evidence-2026-11-23.md"
 
 class TagAudit(HTMLParser):
@@ -94,6 +95,7 @@ class PortfolioEvidence(unittest.TestCase):
         self.assertIn('href="https://github.com/SFS-Labs/SFS-Labs">GitHub</a>', recruiter)
 
     def test_all_portfolio_routes_and_assets_resolve_offline(self):
+        self.assertTrue(set(REQUIRED_PORTFOLIO_PAGES).issubset(ALL_PORTFOLIO_PAGES))
         pages = {}
         for name in ALL_PORTFOLIO_PAGES:
             parser = TagAudit()
